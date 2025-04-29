@@ -55,6 +55,22 @@ namespace TennisLibrary.Models
 
         #region methods
 
+        public bool CheckPass(string hashPass)
+        {
+            if (hashPass == _hashPass) return true;
+            else return false;
+        }
+
+        public bool ChangePass(string hashPass, string newHashPass)
+        {
+            if(CheckPass(hashPass))
+            {
+                _hashPass = newHashPass;
+                return true;
+            }
+            return false;
+        }
+
         public bool ChangeAccess(User attemptor, AccessLevel newLevel)
         {
             if (attemptor.AccessLevel >= AccessLevel.Admin) return false;
@@ -63,7 +79,6 @@ namespace TennisLibrary.Models
                 AccessLevel = newLevel;
                 return true;
             }
-
         }
 
 
