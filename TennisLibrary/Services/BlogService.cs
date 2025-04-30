@@ -8,6 +8,20 @@ namespace TennisLibrary.Services
 {
     public class BlogService
     {
+        #region Instances
 
+        #endregion
+
+        #region Properties
+
+        #endregion
+
+        #region Constructor
+
+        #endregion
+
+        #region Methods
+
+        #endregion
     }
 }
