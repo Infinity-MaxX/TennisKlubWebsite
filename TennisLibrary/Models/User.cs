@@ -71,14 +71,24 @@ namespace TennisLibrary.Models
             return false;
         }
 
+        public bool ChangePass(User attemptor, string newHashPass)
+        {
+            if (attemptor.AccessLevel >= AccessLevel.Admin)
+            {
+                _hashPass = newHashPass;
+                return true;
+            }
+            return false;
+        }
+
         public bool ChangeAccess(User attemptor, AccessLevel newLevel)
         {
-            if (attemptor.AccessLevel >= AccessLevel.Admin) return false;
-            else
+            if (attemptor.AccessLevel >= AccessLevel.Admin)
             {
                 AccessLevel = newLevel;
                 return true;
             }
+            else return false;
         }
 
 
@@ -86,7 +96,7 @@ namespace TennisLibrary.Models
         {
             return $"User: {Name} ({Gender}) {AccessLevel}.\n" +
                 $"Contact information: Phone number: {Phone}, Email-address: {Email}, Address {Address}, HomeMunicipality {HomeMunicipality}\n" +
-                $"Profile: {Username} with the hashed password {_hashPass}";
+                $"Profile: {Username}";
         }
         #endregion
     }
