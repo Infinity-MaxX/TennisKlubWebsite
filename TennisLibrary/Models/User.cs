@@ -29,6 +29,21 @@ namespace TennisLibrary.Models
 
             AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0
         }
+
+        public User(User user, string hashPass)
+        {
+            Name = user.Name;
+            Gender = user.Gender;
+            Username = user.Username;
+            _hashPass = hashPass;
+            Phone = user.Phone;
+            Email = user.Email;
+            Address = user.Address;
+            HomeMunicipality = user.HomeMunicipality;
+            BirthDate = user.BirthDate;
+
+            AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0
+        }
         #endregion
 
         #region properties
@@ -55,7 +70,7 @@ namespace TennisLibrary.Models
 
         #region methods
 
-        public bool CheckPass(string hashPass)
+        public bool CheckPass(string hashPass) //You can ask the user if a given hash matches it's own, but you cannot get direct access to the hash.
         {
             if (hashPass == _hashPass) return true;
             else return false;
