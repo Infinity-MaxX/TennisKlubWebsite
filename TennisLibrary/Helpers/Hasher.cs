@@ -9,15 +9,15 @@ namespace TennisLibrary.Helpers
 {
     public class Hasher
     {
-        public static async Task<string?> CreateHashStringAsync(string inputString)
+        public static string CreateHashString(string inputString)
         {
             string result = "";
-            result = BitConverter.ToString(await CreateHashByteArrayAsync(inputString));
+            result = BitConverter.ToString(CreateHashByteArray(inputString));
 
             return result;
         }
 
-        public static async Task<Byte[]> CreateHashByteArrayAsync(string inputString)
+        public static Byte[] CreateHashByteArray(string inputString)
         {
             Byte[] tmpSource = ASCIIEncoding.ASCII.GetBytes(inputString);
             Byte[] tmpHash = SHA256.Create().ComputeHash(tmpSource);
@@ -25,7 +25,7 @@ namespace TennisLibrary.Helpers
             return tmpHash;
         }
 
-        public static async Task<bool> CompareByteArrayHashAsync(Byte[] bArray1, Byte[] bArray2)
+        public static bool CompareByteArrayHash(Byte[] bArray1, Byte[] bArray2)
         {
             if (bArray1.Length == bArray2.Length)
             {

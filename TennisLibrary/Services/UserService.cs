@@ -15,7 +15,7 @@ namespace TennisLibrary.Services
 
         private string
 
-            insertQuery = "",
+            insertQuery = "INSERT into TennisUser Values(@username, @gender, @name, @phone, @email, @address, @homeMunicipality, @birthdate, @accessLevel)",
             searchByIdentQuery = "SELECT * From TennisUser Where Username = @username",
             searchAllQuery = "",
             editQuery = "",
