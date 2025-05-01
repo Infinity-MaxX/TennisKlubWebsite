@@ -9,11 +9,12 @@ namespace TennisLibrary.Interfaces
 {
     public interface IBlogService
     {
-        Task<bool> CreatePostAsync(Blog newPost);
+        Task<bool> CreatePostAsync(Blog post);
         Task<bool> DeletePostAsync(int id);
         Task<List<Blog>> GetAllPostsAsync();
-        Task<Blog> GetByAuthorAsync(string author);
-        Task<Blog> GetByDateAsync(DateOnly date);
+        Task<List<Blog>> GetByAuthorAsync(string author);
+        Task<List<Blog>> GetByDateAsync(DateOnly date);
+        Task<Blog> GetByIdAsync(int id);
         Task<bool> UpdatePostAsync(string post, Blog newPost);
     }
 }
