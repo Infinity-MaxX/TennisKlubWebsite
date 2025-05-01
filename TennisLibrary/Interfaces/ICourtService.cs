@@ -13,7 +13,7 @@ namespace TennisLibrary.Interfaces
         Task<Court> GetCourtAsync(string name);
         Task<List<Court>> GetCourtsOfTypeAsync(string type);
         Task<List<Court>> GetAllCourts();
-        Task<bool> UpdateLastMaintenanceAsync(string name, Court newCourt);
+        Task<bool> UpdateLastMaintenanceAsync(string name, DateOnly maintenance);
         Task<bool> DeleteCourtAsync(string name);
     }
 }
