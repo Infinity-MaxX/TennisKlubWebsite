@@ -18,6 +18,7 @@ namespace TennisLibrary.Services
         private string queryString = "SELECT * FROM Blog";
         private string filterByAuthorSql = "SELECT * FROM Blog WHERE Author = @Author";
         private string filterByDateSql = "SELECT * FROM Blog WHERE Date = @Date";
+        private string filterByIdSql = "SELECT * FROM Blog WHERE BlogPostID = @ID";
         private string insertSql = "INSERT INTO Blog Values(@ID, @Author, @Title, @Body, @Date)";
         private string deleteSql = "DELETE FROM Blog WHERE BlogPostID = @ID";
         private string updateSql = "UPDATE Blog SET Author = @Author, Title = @Title, Body = @Body WHERE BlogPostID = @ID";
@@ -62,49 +63,43 @@ namespace TennisLibrary.Services
                 }
                 finally
                 {
-
+                    await connection.CloseAsync();
                 }
             }
         }
 
         async public Task<bool> DeletePostAsync(int id)
         {
-            throw new NotImplementedException();
+            Blog toDelete = await GetByIdAsync(id);
+            if (toDelete == null) { return false; }
+
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(deleteSql, connection);
+                    command.Parameters.AddWithValue("@ID", id);
+                    await connection.OpenAsync();
+
+                    int numberOfRows = await command.ExecuteNonQueryAsync();
+                    if (numberOfRows == 0) { return false; }
+                    return true;
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error" + sqlExp.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+                return false;
+            }
         }
-        //{
-        //    Blog toDelete = await GetByIdAsync(id);
-
-        //    if (toDelete == null) { return null; }
-
-        //    using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            SqlCommand command = new SqlCommand(deleteSql, connection);
-        //            command.Parameters.AddWithValue("@ID", id);
-        //            await connection.OpenAsync();
-
-        //            int numberOfRows = await command.ExecuteNonQueryAsync();
-        //            if (numberOfRows == 0) { return null; }
-        //            return toDelete;
-        //        }
-        //        catch (SqlException sqlExp)
-        //        {
-        //            Console.WriteLine("Database error" + sqlExp.Message);
-        //            toDelete = null;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine("Error: " + ex.Message);
-        //            toDelete = null;
-        //        }
-        //        finally
-        //        {
-
-        //        }
-        //        return null;
-        //    }
-        //}
 
         async public Task<List<Blog>> GetAllPostsAsync()
         {
@@ -136,7 +131,7 @@ namespace TennisLibrary.Services
                 }
                 finally
                 {
-
+                    await connection.CloseAsync();
                 }
             }
             return posts;
@@ -149,7 +144,7 @@ namespace TennisLibrary.Services
 
                 try
                 {
-                    SqlCommand command = new SqlCommand(queryString + " WHERE Author = @Author", connection);
+                    SqlCommand command = new SqlCommand(filterByAuthorSql, connection);
                     command.Parameters.AddWithValue("@Author", author);
                     await connection.OpenAsync();
                     SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -174,7 +169,7 @@ namespace TennisLibrary.Services
                 }
                 finally
                 {
-
+                    await connection.CloseAsync();
                 }
                 return posts;
             }
@@ -187,7 +182,7 @@ namespace TennisLibrary.Services
 
                 try
                 {
-                    SqlCommand command = new SqlCommand(queryString + " WHERE Date = @Date", connection);
+                    SqlCommand command = new SqlCommand(filterByDateSql, connection);
                     command.Parameters.AddWithValue("@Date", date);
                     await connection.OpenAsync();
                     SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -212,7 +207,7 @@ namespace TennisLibrary.Services
                 }
                 finally
                 {
-
+                    await connection.CloseAsync();
                 }
                 return posts;
             }
@@ -225,7 +220,7 @@ namespace TennisLibrary.Services
 
                 try
                 {
-                    SqlCommand command = new SqlCommand(queryString + " WHERE BlogPostID = @ID", connection);
+                    SqlCommand command = new SqlCommand(filterByIdSql, connection);
                     command.Parameters.AddWithValue("@ID", id);
                     await connection.OpenAsync();
                     SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -249,15 +244,43 @@ namespace TennisLibrary.Services
                 }
                 finally
                 {
-
+                    await connection.CloseAsync();
                 }
                 return post;
             }
         }
 
-        async public Task<bool> UpdatePostAsync(string post, Blog newPost)
+        async public Task<bool> UpdatePostAsync(string author, string? title, string body)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(updateSql, connection);
+                    command.Parameters.AddWithValue("@Author", author);
+                    command.Parameters.AddWithValue("@Title", title);
+                    command.Parameters.AddWithValue("@Body", body);
+                    await connection.OpenAsync();
+
+                    int numberOfRows = await command.ExecuteNonQueryAsync();
+
+                    return numberOfRows > 0;
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error" + sqlExp.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                    return false;
+                }
+                finally 
+                {
+                    await connection.CloseAsync();
+                }
+            }
         }
         #endregion
     }
