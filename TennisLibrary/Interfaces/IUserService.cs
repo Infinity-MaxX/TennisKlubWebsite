@@ -12,7 +12,9 @@ namespace TennisLibrary.Interfaces
         //Task<bool> AddUserAsync(User newUser);
         Task<bool> AddUserAsync(string name, string gender, string username, string hashPass, string phone, string email, string address, string homeMunicipality, DateOnly birthDate);
 
-        Task<User> GetUser(string username);
+        Task<User> GetUserAsAdmin(string username);
+
+        Task<User> GetUserLogin(string username, string password);
         Task<List<User>> GetAllUsersAsync();
 
         Task<bool> EditUserAsync(string usernameIdent, string newName, string newGender, string newPhone, string newEmail, string newAddress, string newHomeMunicipality, DateOnly newBirthDate);

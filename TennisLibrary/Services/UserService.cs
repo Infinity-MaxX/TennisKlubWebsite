@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
 using Microsoft.Data.SqlClient;
+using System.Net;
+using System.Numerics;
+using System.Reflection;
+using System.Data;
+using System.IO;
 
 namespace TennisLibrary.Services
 {
@@ -17,6 +22,7 @@ namespace TennisLibrary.Services
 
             insertQuery = "INSERT into TennisUser Values(@username, @gender, @name, @phone, @email, @address, @homeMunicipality, @birthdate, @accessLevel)",
             searchByIdentQuery = "SELECT * From TennisUser Where Username = @username",
+            searchLoginQuery = "SELECT * From TennisUser Where Username = @username AND @password",
             searchAllQuery = "",
             editQuery = "",
             deleteQuery = ""
@@ -29,7 +35,18 @@ namespace TennisLibrary.Services
                 try
                 {
                     await connection.OpenAsync();
-                    SqlCommand insertCommand;
+                    SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
+
+                    insertCommand.Parameters.AddWithValue("@username", username);
+                    insertCommand.Parameters.AddWithValue("@gender", gender);
+                    insertCommand.Parameters.AddWithValue("@name", name);
+                    insertCommand.Parameters.AddWithValue("@phone", phone);
+                    insertCommand.Parameters.AddWithValue("@email", email);
+                    insertCommand.Parameters.AddWithValue("@address", address);
+                    insertCommand.Parameters.AddWithValue("@homeMunicipality", homeMunicipality);
+                    insertCommand.Parameters.AddWithValue("@birthDate",birthDate);
+
+                    return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)
                 {
@@ -38,9 +55,79 @@ namespace TennisLibrary.Services
             }
             return false;
         }
-        public Task<User> GetUser(string username)
+        public async Task<User> GetUserAsAdmin(string queryUsername)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection())
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    SqlCommand searchCommand = new SqlCommand(searchByIdentQuery, connection);
+                    searchCommand.Parameters.AddWithValue("@username", queryUsername);
+
+                    SqlDataReader reader = await searchCommand.ExecuteReaderAsync();
+
+
+
+                    while (reader.Read())
+                    {
+                        string imagePath = reader.GetString("ImagePath");
+                        string name = reader.GetString("Name");
+                        char gender = reader.GetChar("Gender");
+                        string username = reader.GetString("Username");
+                        string phone = reader.GetString("Phone");
+                        string email = reader.GetString("Email");
+                        string address = reader.GetString("Address");
+                        string homeMunicipality = reader.GetString("HomeMunicipality");
+                        DateOnly birthDate = DateOnly.FromDateTime(reader.GetDateTime("Birthdate"));
+                        return new User(imagePath, name, gender, username, phone, email, address, homeMunicipality, birthDate);
+                    }
+                    return null;
+
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+            }
+        }
+
+        public async Task<User> GetUserLogin(string queryUsername, string password)
+        {
+            using (SqlConnection connection = new SqlConnection())
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    SqlCommand searchCommand = new SqlCommand(searchLoginQuery, connection);
+                    searchCommand.Parameters.AddWithValue("@username", queryUsername);
+                    searchCommand.Parameters.AddWithValue("@password", password);
+
+                    SqlDataReader reader = await searchCommand.ExecuteReaderAsync();
+
+
+
+                    while (reader.Read())
+                    {
+                        string imagePath = reader.GetString("ImagePath");
+                        string name = reader.GetString("Name");
+                        char gender = reader.GetChar("Gender");
+                        string username = reader.GetString("Username");
+                        string phone = reader.GetString("Phone");
+                        string email = reader.GetString("Email");
+                        string address = reader.GetString("Address");
+                        string homeMunicipality = reader.GetString("HomeMunicipality");
+                        DateOnly birthDate = DateOnly.FromDateTime(reader.GetDateTime("Birthdate"));
+                        return new User(imagePath, name, gender, username, phone, email, address, homeMunicipality, birthDate);
+                    }
+                    return null;
+
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+            }
         }
 
         public Task<List<User>> GetAllUsersAsync()
