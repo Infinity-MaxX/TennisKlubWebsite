@@ -28,9 +28,20 @@ namespace TennisLibrary.Models
         /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
         /// <param name="homeMunicipality">The municipality that the user lives in</param>
         /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
-        public User(string imagePath, string name, char gender, string username, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
+        /// <param name="accessLevel">The accesslevel of the user</param>
+        public User(
+            string imagePath,
+            string name,
+            char gender,
+            string username,
+            string phone,
+            string email,
+            string address,
+            string homeMunicipality,
+            DateOnly birthDate,
+            AccessLevel accessLevel)
         {
-            imagePath = imagePath;
+            ImagePath = imagePath;
 
             Name = name;
             Gender = gender;
@@ -41,7 +52,7 @@ namespace TennisLibrary.Models
             HomeMunicipality = homeMunicipality;
             BirthDate = birthDate;
 
-            AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0
+            AccessLevel = accessLevel;
         }
 
         /// <summary>
@@ -55,7 +66,7 @@ namespace TennisLibrary.Models
         /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
         /// <param name="homeMunicipality">The municipality that the user lives in</param>
         /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
-        public User(string name, char gender, string username, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
+        public User(string name, char gender, string username, string phone, string email, string address, string homeMunicipality, DateOnly birthDate, AccessLevel acc)
         {
             Name = name;
             Gender = gender;

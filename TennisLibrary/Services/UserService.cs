@@ -11,16 +11,16 @@ using System.Numerics;
 using System.Reflection;
 using System.Data;
 using System.IO;
+using TennisLibrary.Helpers;
 
 namespace TennisLibrary.Services
 {
     public class UserService : IUserService
     {
-        private string connectionString = ConnectionManager.ConnectionString;
 
         private string
 
-            insertQuery = "INSERT into TennisUser Values(@username, @gender, @name, @phone, @email, @address, @homeMunicipality, @birthdate, @accessLevel)",
+            insertQuery = "INSERT into TennisUser Values(@username, @gender, @name, @phone, @email, @address, @homeMunicipality, @birthdate, @accessLevel, @imagePath, @hashPass)",
             searchByIdentQuery = "SELECT * From TennisUser Where Username = @username",
             searchLoginQuery = "SELECT * From TennisUser Where Username = @username AND @password",
             searchAllQuery = "",
@@ -28,23 +28,27 @@ namespace TennisLibrary.Services
             deleteQuery = ""
             ;
 
-        public async Task<bool> AddUserAsync(string name, string gender, string username, string hashPass, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
+        public async Task<bool> AddUserAsync(User newUser, string password)
         {
-            using (SqlConnection connection = new SqlConnection())
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
                 {
                     await connection.OpenAsync();
                     SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
 
-                    insertCommand.Parameters.AddWithValue("@username", username);
-                    insertCommand.Parameters.AddWithValue("@gender", gender);
-                    insertCommand.Parameters.AddWithValue("@name", name);
-                    insertCommand.Parameters.AddWithValue("@phone", phone);
-                    insertCommand.Parameters.AddWithValue("@email", email);
-                    insertCommand.Parameters.AddWithValue("@address", address);
-                    insertCommand.Parameters.AddWithValue("@homeMunicipality", homeMunicipality);
-                    insertCommand.Parameters.AddWithValue("@birthDate",birthDate);
+                    insertCommand.Parameters.AddWithValue("@imagePath", newUser.ImagePath);
+                    insertCommand.Parameters.AddWithValue("@username", newUser.Username);
+                    insertCommand.Parameters.AddWithValue("@gender", newUser.Gender);
+                    insertCommand.Parameters.AddWithValue("@name", newUser.Name);
+                    insertCommand.Parameters.AddWithValue("@phone", newUser.Phone);
+                    insertCommand.Parameters.AddWithValue("@email", newUser.Email);
+                    insertCommand.Parameters.AddWithValue("@address", newUser.Address);
+                    insertCommand.Parameters.AddWithValue("@homeMunicipality", newUser.HomeMunicipality);
+                    insertCommand.Parameters.AddWithValue("@birthDate", newUser.BirthDate);
+                    insertCommand.Parameters.AddWithValue("@accessLevel", newUser.AccessLevel);
+
+                    insertCommand.Parameters.AddWithValue("@hashPass", Hasher.CreateHashString(password));
 
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
@@ -53,11 +57,10 @@ namespace TennisLibrary.Services
                     throw sqlExp;
                 }
             }
-            return false;
         }
-        public async Task<User> GetUserAsAdmin(string queryUsername)
+        public async Task<User> GetUserAsAdminAsync(string queryUsername)
         {
-            using (SqlConnection connection = new SqlConnection())
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
                 {
@@ -80,7 +83,8 @@ namespace TennisLibrary.Services
                         string address = reader.GetString("Address");
                         string homeMunicipality = reader.GetString("HomeMunicipality");
                         DateOnly birthDate = DateOnly.FromDateTime(reader.GetDateTime("Birthdate"));
-                        return new User(imagePath, name, gender, username, phone, email, address, homeMunicipality, birthDate);
+                        AccessLevel accessLevel = (AccessLevel)reader.GetInt32("AccessLevel");
+                        return new User(imagePath, name, gender, username, phone, email, address, homeMunicipality, birthDate, accessLevel);
                     }
                     return null;
 
@@ -92,9 +96,9 @@ namespace TennisLibrary.Services
             }
         }
 
-        public async Task<User> GetUserLogin(string queryUsername, string password)
+        public async Task<User> GetUserLoginAsync(string queryUsername, string password)
         {
-            using (SqlConnection connection = new SqlConnection())
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
                 {
@@ -118,7 +122,8 @@ namespace TennisLibrary.Services
                         string address = reader.GetString("Address");
                         string homeMunicipality = reader.GetString("HomeMunicipality");
                         DateOnly birthDate = DateOnly.FromDateTime(reader.GetDateTime("Birthdate"));
-                        return new User(imagePath, name, gender, username, phone, email, address, homeMunicipality, birthDate);
+                        AccessLevel accessLevel = (AccessLevel)reader.GetInt32("AccessLevel");
+                        return new User(imagePath, name, gender, username, phone, email, address, homeMunicipality, birthDate, accessLevel);
                     }
                     return null;
 
