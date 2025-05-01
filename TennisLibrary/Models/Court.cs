@@ -11,5 +11,16 @@ namespace TennisLibrary.Models
         public string Name { get; set; }
         public string Type {  get; set; }
         public DateOnly LastMaintenance {  get; set; }
+
+        public Court() 
+        {
+
+        }
+
+        public Court(string name, string type)
+        {
+            Name = name;
+            Type = type;
+        }
     }
 }

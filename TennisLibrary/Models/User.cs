@@ -10,7 +10,7 @@ namespace TennisLibrary.Models
     public class User
     {
         #region instance fields
-        private string _hashPass;
+
         #endregion
 
 
@@ -23,20 +23,18 @@ namespace TennisLibrary.Models
         /// <param name="name">The displayname of the user</param>
         /// <param name="gender">The gender identity of the user, expressed as a single character</param>
         /// <param name="username">The username and unique identifier of the user</param>
-        /// <param name="password">The user's password</param>
         /// <param name="phone">The phone number of the user</param>
         /// <param name="email">The email address of the user</param>
         /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
         /// <param name="homeMunicipality">The municipality that the user lives in</param>
         /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
-        public User(string imagePath, string name, char gender, string username, string password, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
+        public User(string imagePath, string name, char gender, string username, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
         {
             imagePath = imagePath;
 
             Name = name;
             Gender = gender;
             Username = username;
-            _hashPass = Hasher.CreateHashString(password);
             Phone = phone;
             Email = email;
             Address = address;
@@ -52,18 +50,16 @@ namespace TennisLibrary.Models
         /// <param name="name">The displayname of the user</param>
         /// <param name="gender">The gender identity of the user, expressed as a single character</param>
         /// <param name="username">The username and unique identifier of the user</param>
-        /// <param name="password">The user's password</param>
         /// <param name="phone">The phone number of the user</param>
         /// <param name="email">The email address of the user</param>
         /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
         /// <param name="homeMunicipality">The municipality that the user lives in</param>
         /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
-        public User(string name, char gender, string username, string password, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
+        public User(string name, char gender, string username, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
         {
             Name = name;
             Gender = gender;
             Username = username;
-            _hashPass = Hasher.CreateHashString(password);
             Phone = phone;
             Email = email;
             Address = address;
@@ -77,15 +73,13 @@ namespace TennisLibrary.Models
         /// A variant of the constructor for the user object. Uses a user object and a password to create a new user object. The new user is identical to the input object, except for the saved password which cannot be extracted from user.
         /// </summary>
         /// <param name="user"></param>
-        /// <param name="password">A new password, since the old one is not accessible from the user object</param>
-        public User(User user, string password)
+        public User(User user)
         {
             ImagePath = user.ImagePath;
 
             Name = user.Name;
             Gender = user.Gender;
             Username = user.Username;
-            _hashPass = Hasher.CreateHashString(password);
             Phone = user.Phone;
             Email = user.Email;
             Address = user.Address;
@@ -122,42 +116,6 @@ namespace TennisLibrary.Models
 
         #region methods
 
-        public bool CheckPass(string password)
-        //You can ask the user if a given password matches it's own, but you cannot get direct access to the hash.
-        {
-            if (Hasher.CreateHashString(password) == _hashPass) return true;
-            else return false;
-        }
-
-        public bool ChangePass(string password, string newPassword)
-        {
-            if(CheckPass(password))
-            {
-                _hashPass = Hasher.CreateHashString(newPassword);
-                return true;
-            }
-            return false;
-        }
-
-        public bool ChangePass(User attemptor, string newPassword)
-        {
-            if (attemptor.AccessLevel >= AccessLevel.Admin)
-            {
-                _hashPass = Hasher.CreateHashString(newPassword);
-                return true;
-            }
-            return false;
-        }
-
-        public bool ChangeAccess(User attemptor, AccessLevel newLevel)
-        {
-            if (attemptor.AccessLevel >= AccessLevel.Admin)
-            {
-                AccessLevel = newLevel;
-                return true;
-            }
-            else return false;
-        }
 
 
         public override string ToString()
