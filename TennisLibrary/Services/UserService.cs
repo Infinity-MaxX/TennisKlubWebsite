@@ -24,8 +24,8 @@ namespace TennisLibrary.Services
             searchByIdentQuery = "SELECT * From TennisUser Where Username = @username",
             searchLoginQuery = "SELECT * From TennisUser Where Username = @username AND @password",
             searchAllQuery = "",
-            editQuery = "",
-            deleteQuery = ""
+            editQuery = "Delete From Hotel Where Hotel_No = @ID",
+            deleteQuery = "Delete From TennisUser Where Username = @username"
             ;
 
         public async Task<bool> AddUserAsync(User newUser, string password)
@@ -135,17 +135,31 @@ namespace TennisLibrary.Services
             }
         }
 
-        public Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteUserAsync(string usernameIdent, out User? discarded)
+        public async Task<bool> DeleteUserAsync(string queryUsername)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    SqlCommand insertCommand = new SqlCommand(deleteQuery, connection);
+                    insertCommand.Parameters.AddWithValue("@username", queryUsername);
+
+                    return 0 < await insertCommand.ExecuteNonQueryAsync();
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+            }
         }
 
-        public Task<bool> EditUserAsync(string usernameIdent, string newName, string newGender, string newPhone, string newEmail, string newAddress, string newHomeMunicipality, DateOnly newBirthDate)
+        public async Task<bool> EditUserAsync(string usernameIdent, string newName, string newGender, string newPhone, string newEmail, string newAddress, string newHomeMunicipality, DateOnly newBirthDate)
         {
             throw new NotImplementedException();
         }
