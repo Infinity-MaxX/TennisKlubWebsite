@@ -18,4 +18,8 @@
     <None Include="ClassLibrary\tennis.troglodyte.dk\Tennis\TennisLibrary.deps.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+  </ItemGroup>
+
 </Project>
