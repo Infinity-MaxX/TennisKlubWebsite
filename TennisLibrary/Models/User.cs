@@ -10,22 +10,92 @@ namespace TennisLibrary.Models
     public class User
     {
         #region instance fields
-        private string _hashPass;
+
         #endregion
 
 
         #region constructors
-        public User(string name, char gender, string username, string hashPass, string phone, string email, string address, string homeMunicipality, DateOnly birthDate)
+
+        /// <summary>
+        /// The constructor for the user object, a variant also exists without imagePath.
+        /// </summary>
+        /// <param name="imagePath">The path to the user's portrait as stored in the system</param>
+        /// <param name="name">The displayname of the user</param>
+        /// <param name="gender">The gender identity of the user, expressed as a single character</param>
+        /// <param name="username">The username and unique identifier of the user</param>
+        /// <param name="phone">The phone number of the user</param>
+        /// <param name="email">The email address of the user</param>
+        /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
+        /// <param name="homeMunicipality">The municipality that the user lives in</param>
+        /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
+        /// <param name="accessLevel">The accesslevel of the user</param>
+        public User(
+            string imagePath,
+            string name,
+            char gender,
+            string username,
+            string phone,
+            string email,
+            string address,
+            string homeMunicipality,
+            DateOnly birthDate,
+            AccessLevel accessLevel)
         {
+            ImagePath = imagePath;
+
             Name = name;
             Gender = gender;
             Username = username;
-            _hashPass = hashPass;
             Phone = phone;
             Email = email;
             Address = address;
             HomeMunicipality = homeMunicipality;
             BirthDate = birthDate;
+
+            AccessLevel = accessLevel;
+        }
+
+        /// <summary>
+        /// A variant of the constructor for the user object, a variant also exists starting with a string imagePath.
+        /// </summary>
+        /// <param name="name">The displayname of the user</param>
+        /// <param name="gender">The gender identity of the user, expressed as a single character</param>
+        /// <param name="username">The username and unique identifier of the user</param>
+        /// <param name="phone">The phone number of the user</param>
+        /// <param name="email">The email address of the user</param>
+        /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
+        /// <param name="homeMunicipality">The municipality that the user lives in</param>
+        /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
+        public User(string name, char gender, string username, string phone, string email, string address, string homeMunicipality, DateOnly birthDate, AccessLevel acc)
+        {
+            Name = name;
+            Gender = gender;
+            Username = username;
+            Phone = phone;
+            Email = email;
+            Address = address;
+            HomeMunicipality = homeMunicipality;
+            BirthDate = birthDate;
+
+            AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0
+        }
+
+        /// <summary>
+        /// A variant of the constructor for the user object. Uses a user object and a password to create a new user object. The new user is identical to the input object, except for the saved password which cannot be extracted from user.
+        /// </summary>
+        /// <param name="user"></param>
+        public User(User user)
+        {
+            ImagePath = user.ImagePath;
+
+            Name = user.Name;
+            Gender = user.Gender;
+            Username = user.Username;
+            Phone = user.Phone;
+            Email = user.Email;
+            Address = user.Address;
+            HomeMunicipality = user.HomeMunicipality;
+            BirthDate = user.BirthDate;
 
             AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0
         }
@@ -50,43 +120,20 @@ namespace TennisLibrary.Models
         public DateOnly BirthDate { get; set; }
 
         public AccessLevel AccessLevel { get; private set; }
+
+        public string? ImagePath { get; set; }
         #endregion
 
 
         #region methods
 
-        public bool CheckPass(string hashPass)
-        {
-            if (hashPass == _hashPass) return true;
-            else return false;
-        }
-
-        public bool ChangePass(string hashPass, string newHashPass)
-        {
-            if(CheckPass(hashPass))
-            {
-                _hashPass = newHashPass;
-                return true;
-            }
-            return false;
-        }
-
-        public bool ChangeAccess(User attemptor, AccessLevel newLevel)
-        {
-            if (attemptor.AccessLevel >= AccessLevel.Admin) return false;
-            else
-            {
-                AccessLevel = newLevel;
-                return true;
-            }
-        }
 
 
         public override string ToString()
         {
             return $"User: {Name} ({Gender}) {AccessLevel}.\n" +
                 $"Contact information: Phone number: {Phone}, Email-address: {Email}, Address {Address}, HomeMunicipality {HomeMunicipality}\n" +
-                $"Profile: {Username} with the hashed password {_hashPass}";
+                $"Profile: {Username}";
         }
         #endregion
     }

@@ -9,10 +9,16 @@ namespace TennisLibrary.Interfaces
 {
     public interface IUserService
     {
-        Task<bool> AddUserAsync(User newUser);
-        //Task<bool> AddUserAsync(string name, string gender, string username, string hashPass, string phone, string email, string address, string homeMunicipality, DateOnly birthDate);
+        //Task<bool> AddUserAsync(User newUser);
+        Task<bool> AddUserAsync(User newUser, string password);
+
+        Task<User> GetUserAsAdminAsync(string username);
+
+        Task<User> GetUserLoginAsync(string username, string password);
         Task<List<User>> GetAllUsersAsync();
 
-        Task<User> LoginAsAsync(string userName, string hashPass);
+        Task<bool> EditUserAsync(string queryUsername, string newImagePath, string newName, string newGender, string newPhone, string newEmail, string newAddress, string newHomeMunicipality, DateOnly newBirthDate);
+
+        Task<bool> DeleteUserAsync(string queryUsernameIdent);
     }
 }
