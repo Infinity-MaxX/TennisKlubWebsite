@@ -17,7 +17,7 @@ namespace TennisLibrary.Models
         #region constructors
 
         /// <summary>
-        /// The constructor for the user object, a variant also exists without imagePath.
+        /// The constructor for the user object, a variant also exists without Accesslevel.
         /// </summary>
         /// <param name="imagePath">The path to the user's portrait as stored in the system</param>
         /// <param name="name">The displayname of the user</param>
@@ -56,7 +56,7 @@ namespace TennisLibrary.Models
         }
 
         /// <summary>
-        /// A variant of the constructor for the user object, a variant also exists starting with a string imagePath.
+        /// A variant of the constructor for the user object, a variant also exists starting with defined accesslevel.
         /// </summary>
         /// <param name="name">The displayname of the user</param>
         /// <param name="gender">The gender identity of the user, expressed as a single character</param>
@@ -66,8 +66,20 @@ namespace TennisLibrary.Models
         /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
         /// <param name="homeMunicipality">The municipality that the user lives in</param>
         /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
-        public User(string name, char gender, string username, string phone, string email, string address, string homeMunicipality, DateOnly birthDate, AccessLevel acc)
+        /// /// <param name="imagePath">The path to the user's portrait as stored in the system</param>
+        public User(
+            string imagePath,
+            string name,
+            char gender,
+            string username,
+            string phone,
+            string email,
+            string address,
+            string homeMunicipality,
+            DateOnly birthDate)
         {
+            ImagePath = imagePath;
+
             Name = name;
             Gender = gender;
             Username = username;
@@ -77,7 +89,7 @@ namespace TennisLibrary.Models
             HomeMunicipality = homeMunicipality;
             BirthDate = birthDate;
 
-            AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0
+            AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0. For creating fresh users
         }
 
         /// <summary>
@@ -97,7 +109,7 @@ namespace TennisLibrary.Models
             HomeMunicipality = user.HomeMunicipality;
             BirthDate = user.BirthDate;
 
-            AccessLevel = AccessLevel.Guest; //Can be read as AccessLevel = 0
+            AccessLevel = user.AccessLevel;
         }
         #endregion
 

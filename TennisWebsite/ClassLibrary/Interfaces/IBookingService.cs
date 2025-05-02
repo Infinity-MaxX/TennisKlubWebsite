@@ -9,14 +9,18 @@ namespace TennisLibrary.Interfaces
 {
     public interface IBookingService
     {
-        Task<bool> AddBookingAsync(Booking newBooking);
+        Task<bool> AddBookingUserAsync(Booking newBooking);
 
-        /*Task<List<Booking>> GetAllBookingsAsync();
+        Task<bool> AddBookingAdminAsync(Booking newBooking);
+
+        Task<List<Booking>> GetAllBookingsAsync();
 
         Task<List<Booking>> GetBookingsByUserAsync(string Username);
 
-        Task<bool> DeleteBooking();*/
+        Task<bool> DeleteBooking(Booking booking);
 
+        Task<Booking> UpdateBooking(int ID, User Player2);
 
+        Task<Booking> UpdateBooking(int ID, DateTime Start);
     }
 }

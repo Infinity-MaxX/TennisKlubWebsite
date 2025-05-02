@@ -35,5 +35,30 @@ namespace TennisLibrary.Services
             }
             
         }
+
+        Task<bool> IBookingService.DeleteBooking(Booking booking)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<Booking>> IBookingService.GetAllBookingsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Booking> IBookingService.GetBooking(Booking booking)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<Booking>> IBookingService.GetBookingsByUserAsync(string Username)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Booking> IBookingService.UpdateBooking(Booking updateBooking)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
