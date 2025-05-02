@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /TennisLibrary/Secret.cs
 /TennisLibrary/ConnectionManager.cs
+/DebugConsole/Program.cs
