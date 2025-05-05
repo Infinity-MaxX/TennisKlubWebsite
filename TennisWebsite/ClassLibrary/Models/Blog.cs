@@ -22,9 +22,15 @@ namespace TennisLibrary.Models
         #endregion
 
         #region Constructor
+        //default constructor
+        public Blog()
+        {
+
+        }
+        //parameterised constructor
         public Blog(string author, string? title, string body)
         {
-            //_blogPostId++;
+            _blogPostId++;
             Author = author;
             Title = title;
             Body = body;

@@ -49,12 +49,12 @@ namespace TennisWebsite.Pages.Blogs
         #region Methods
         public async Task OnGetAsync()
         {
-            SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
+            //SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
         }
         public async Task<IActionResult> OnPostAsync()
         {
             await _blogPostService.CreatePostAsync(new Blog(BlogPost.Author, BlogPost.Title, BlogPost.Body));
-            return RedirectToPage("ShowPosts");
+            return RedirectToPage("ShowBlogPosts");
         }
         #endregion
     }
