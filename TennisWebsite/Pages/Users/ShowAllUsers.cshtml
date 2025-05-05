@@ -54,7 +54,12 @@
                     @user.BirthDate
                 </td>
                 <td>
-                    <img src="~/Images/MemberImages/@(user.ImagePath)" class="img-fluid">
+                    <img src="~/Images/MemberImages/@(user.ImagePath)" width="140" height="140px">
+                </td>
+                <td>
+                    <form asp-page-handler="Delete" asp-route-Username="@user.Username">
+                        <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
+                    </form>
                 </td>
             </tr>
         }

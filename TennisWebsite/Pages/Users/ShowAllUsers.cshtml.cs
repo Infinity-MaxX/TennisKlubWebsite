@@ -21,5 +21,11 @@ namespace TennisWebsite.Pages.Users
         {
             Users = await _userService.GetAllUsersAsync();
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync(string Username)
+        {
+            await _userService.DeleteUserAsync(Username);
+            return RedirectToPage("ShowAllUsers");
+        }
     }
 }
