@@ -47,7 +47,7 @@ namespace TennisWebsite.Pages.Blogs
         #endregion
 
         #region Methods
-        public void OnGet()
+        public async Task OnGetAsync()
         {
             SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
         }
