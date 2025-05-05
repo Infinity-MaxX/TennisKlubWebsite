@@ -9,7 +9,7 @@ namespace TennisLibrary.Models
     public class Booking
     {
         #region Instance Fields
-        private int _ID;
+        private int _bookingID;
 
         #endregion
 

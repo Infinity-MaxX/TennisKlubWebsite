@@ -17,10 +17,12 @@ namespace TennisLibrary.Interfaces
 
         Task<List<Booking>> GetBookingsByUserAsync(string Username);
 
-        Task<bool> DeleteBooking(Booking booking);
+        Task<bool> DeleteBooking(int ID);
 
-        Task<Booking> UpdateBooking(int ID, User Player2);
+        Task<bool> UpdateBooking(int ID, User Player2);
 
-        Task<Booking> UpdateBooking(int ID, DateTime Start);
+        Task<bool> UpdateBooking(int ID, DateTime Start);
+
+        Task<bool> UpdateBookingAdmin(int ID, DateTime Start, DateTime End);
     }
 }
