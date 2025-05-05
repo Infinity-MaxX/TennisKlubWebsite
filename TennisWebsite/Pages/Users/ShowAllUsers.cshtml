@@ -1,0 +1,63 @@
+﻿@page
+@using TennisLibrary.Models;
+@model TennisWebsite.Pages.Users.ShowAllUsersModel
+@{
+    ViewData["Title"] = "UsersAdminView";
+}
+
+
+<btn>
+    <a asp-asp-page="RegisterNewUser">Register</a>
+</btn>
+
+<table  class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Navn</th>
+            <th>Køn</th>
+            <th>Telefonnummer</th>
+            <th>Email</th>
+            <th>Addresse</th>
+            <th>Hjemmekommune</th>
+            <th>Fødselsdato</th>
+            <th>Profilbillede</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(User user in Model.Users)
+        {
+            <tr>
+                <td>
+                    @user.Username
+                </td>
+                <td>
+                    @user.Name
+                </td>
+                <td>
+                    @user.Gender
+                </td>
+                <td>
+                    @user.Phone
+                </td>
+                <td>
+                    @user.Email
+                </td>
+                <td>
+                    @user.Address
+                </td>
+                <td>
+                    @user.HomeMunicipality
+                </td>
+                <td>
+                    @user.BirthDate
+                </td>
+                <td>
+                    @user.ImagePath
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

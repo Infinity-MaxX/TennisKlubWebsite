@@ -7,8 +7,5 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TennisLibrary\TennisLibrary.csproj" />
-  </ItemGroup>
 
 </Project>

@@ -153,7 +153,7 @@ namespace TennisLibrary.Services
                     {
                         string imagePath = reader.GetString("ImagePath");
                         string name = reader.GetString("Name");
-                        char gender = reader.GetChar("Gender");
+                        char gender = reader.GetString("Gender").ToCharArray()[0];
                         string username = reader.GetString("Username");
                         string phone = reader.GetString("Phone");
                         string email = reader.GetString("Email");
