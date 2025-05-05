@@ -18,7 +18,7 @@ namespace TennisWebsite.Pages.Blogs
         #endregion
 
         #region Constructor
-        public ShowBlogPostsModel(IBlogService blogRepo)
+        public ShowBlogPostsModel()
         {
             _blogPostService = new BlogService();
         }
@@ -31,7 +31,7 @@ namespace TennisWebsite.Pages.Blogs
         }
 
         /// <summary>
-        /// A delete function as one does not need an extra page to delete a hotel.
+        /// A delete function as one does not need an extra page to delete a post.
         /// </summary>
         public async Task<IActionResult> OnGetDelete(int DeleteNo)
         {
