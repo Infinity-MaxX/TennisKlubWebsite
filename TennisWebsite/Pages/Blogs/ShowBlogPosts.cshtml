@@ -1,4 +1,36 @@
 ﻿@page
+@using TennisLibrary.Models;
 @model TennisWebsite.Pages.Blogs.ShowBlogPostsModel
 @{
+    ViewData["Title"] = "Posts";
 }
+
+<btn>
+    <a asp-asp-page="AddNewPost">Post</a>
+</btn>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Author</th>
+            <th>Title</th>
+            <th>Body</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Blog post in Model.BlogPosts) 
+        {
+            <tr>
+                <td>@post.ID</td>
+                <td>@post.Author</td>
+                <td>@post.Title</td>
+                <td>@post.Body</td>
+                <td>@post.Date</td>
+                <td><a asp-page="EditPost" asp-route-id="@post.ID">Edit</a></td>
+                <td><a asp-page-handler="Delete" asp-route-DeleteNo="@post.ID">Delete</a></td>
+            </tr>
+        }
+        <</tbody>
+</table>
