@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,8 +14,9 @@ namespace TennisLibrary.Services
     {
         private string insertQuery = "INSERT into TennisBooking Values(@Player1, @Player2, @Start, @End, @CourtName)";
         private string deleteSQL = "DELETE from TennisBooking where BookingID = @BookingID";
-        private string updateSQLTime = "Update TennisBooking set LastMaintenance = @LastMaintenance where Name = @Name";
-        private string updateSQLPlayer = "Update TennisCourt set LastMaintenance = @LastMaintenance where Name = @Name";
+        private string updateSQLTime = "Update TennisBooking set Start = @start and End = @end where BookingID = @ID";
+        private string updateSQLPlayer = "Update TennisBooking set Player2 = @Player2 where BookingID = @ID";
+        private string getSQLBookings = "";
 
         async public Task<bool> AddBookingAdminAsync(Booking newBooking)
         {
@@ -88,14 +90,105 @@ namespace TennisLibrary.Services
             }
         }
 
-        public Task<List<Booking>> GetAllBookingsAsync()
+        public async Task<List<Booking>> GetAllBookingsAsync()
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                        User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                        Court Court = await tempCourtService.GetCourtAsync(reader.GetString("Court"));
+                        bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("Start"), reader.GetDateTime("End")));
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+            }
         }
 
-        public Task<List<Booking>> GetBookingsByUserAsync(string Username)
+        public async Task<List<Booking>> GetBookingsByDatesAsync(DateTime Start, DateTime End)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        DateTime tempStart = reader.GetDateTime("Start");
+                        DateTime tempEnd = reader.GetDateTime("End");
+                        if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd < End))
+                        {
+                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("Court"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("Start"), reader.GetDateTime("End")));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByUserAsync(string Username)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                        if (Player1.Username == Username)
+                        {
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("Court"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("Start"), reader.GetDateTime("End")));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+            }
         }
 
         async public Task<bool> UpdateBooking(int ID, User Player2)
@@ -108,6 +201,7 @@ namespace TennisLibrary.Services
 
                     SqlCommand command = new SqlCommand(updateSQLPlayer, connection);
                     command.Parameters.AddWithValue("@Player2", Player2);
+                    command.Parameters.AddWithValue("@ID", ID);
                     int noOfRows = await command.ExecuteNonQueryAsync();
 
                     return noOfRows == 1;
@@ -124,14 +218,60 @@ namespace TennisLibrary.Services
             }
         }
 
-        public Task<bool> UpdateBooking(int ID, DateTime Start)
+        async public Task<bool> UpdateBooking(int ID, DateTime Start)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(updateSQLTime, connection);
+                    command.Parameters.AddWithValue("@Start", Start);
+                    command.Parameters.AddWithValue("@end", Start.AddHours(1));
+                    command.Parameters.AddWithValue("@ID", ID);
+                    int noOfRows = await command.ExecuteNonQueryAsync();
+
+                    return noOfRows == 1;
+                }
+                catch (SqlException sqlx)
+                {
+                    Console.WriteLine(sqlx.Message);
+                    return false;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
         }
 
-        public Task<bool> UpdateBookingAdmin(int ID, DateTime Start, DateTime End)
+        async public Task<bool> UpdateBookingAdmin(int ID, DateTime Start, DateTime End)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(updateSQLPlayer, connection);
+                    command.Parameters.AddWithValue("@Start", Start);
+                    command.Parameters.AddWithValue("@end", End);
+                    command.Parameters.AddWithValue("@ID", ID);
+                    int noOfRows = await command.ExecuteNonQueryAsync();
+
+                    return noOfRows == 1;
+                }
+                catch (SqlException sqlx)
+                {
+                    Console.WriteLine(sqlx.Message);
+                    return false;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
         }
     }
 }
