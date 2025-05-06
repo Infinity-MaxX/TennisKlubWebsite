@@ -15,6 +15,7 @@ namespace TennisLibrary.Services
         private string insertQuery = "INSERT into TennisBooking Values(@Player1, @Player2, @Start, @End, @CourtName)";
         private string deleteSQL = "DELETE from TennisBooking where BookingID = @BookingID";
         private string updateSQLTime = "Update TennisBooking set Start = @start and End = @end where BookingID = @ID";
+        private string updateSQLTimeAndPlayer = "Update TennisBooking set Player2 = @Player2 and set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLPlayer = "Update TennisBooking set Player2 = @Player2 where BookingID = @ID";
         private string getSQLBookings = "";
 
@@ -38,6 +39,10 @@ namespace TennisLibrary.Services
                 {
                     throw sqlExp;
                 }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
             }
         }
 
@@ -59,6 +64,10 @@ namespace TennisLibrary.Services
                 catch (SqlException sqlExp)
                 {
                     throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
                 }
             }
         }
@@ -118,6 +127,10 @@ namespace TennisLibrary.Services
                 {
                     throw sqlExp;
                 }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
             }
         }
 
@@ -154,6 +167,10 @@ namespace TennisLibrary.Services
                 {
                     throw sqlExp;
                 }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
             }
         }
 
@@ -188,10 +205,14 @@ namespace TennisLibrary.Services
                 {
                     throw sqlExp;
                 }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
             }
         }
 
-        async public Task<bool> UpdateBooking(int ID, User Player2)
+        async public Task<bool> UpdateBookingPlayer2(int ID, User Player2)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -218,7 +239,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<bool> UpdateBooking(int ID, DateTime Start)
+        async public Task<bool> UpdateBookingStart(int ID, DateTime Start)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -246,7 +267,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<bool> UpdateBookingAdmin(int ID, DateTime Start, DateTime End)
+        async public Task<bool> UpdateBookingTimeAdmin(int ID, DateTime Start, DateTime End)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -254,10 +275,68 @@ namespace TennisLibrary.Services
                 {
                     await connection.OpenAsync();
 
-                    SqlCommand command = new SqlCommand(updateSQLPlayer, connection);
+                    SqlCommand command = new SqlCommand(updateSQLTime, connection);
                     command.Parameters.AddWithValue("@Start", Start);
                     command.Parameters.AddWithValue("@end", End);
                     command.Parameters.AddWithValue("@ID", ID);
+                    int noOfRows = await command.ExecuteNonQueryAsync();
+
+                    return noOfRows == 1;
+                }
+                catch (SqlException sqlx)
+                {
+                    Console.WriteLine(sqlx.Message);
+                    return false;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<bool> UpdateBookingStartPlayer2(int ID, DateTime Start, User Player2)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(updateSQLTimeAndPlayer, connection);
+                    command.Parameters.AddWithValue("@Start", Start);
+                    command.Parameters.AddWithValue("@end", Start.AddHours(1));
+                    command.Parameters.AddWithValue("@ID", ID);
+                    command.Parameters.AddWithValue("@Player2", Player2);
+                    int noOfRows = await command.ExecuteNonQueryAsync();
+
+                    return noOfRows == 1;
+                }
+                catch (SqlException sqlx)
+                {
+                    Console.WriteLine(sqlx.Message);
+                    return false;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<bool> UpdateBookingTimeAndPlayer2Admin(int ID, User Player2, DateTime Start, DateTime End)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(updateSQLTimeAndPlayer, connection);
+                    command.Parameters.AddWithValue("@Start", Start);
+                    command.Parameters.AddWithValue("@end", End);
+                    command.Parameters.AddWithValue("@ID", ID);
+                    command.Parameters.AddWithValue("@Player2", Player2);
                     int noOfRows = await command.ExecuteNonQueryAsync();
 
                     return noOfRows == 1;
