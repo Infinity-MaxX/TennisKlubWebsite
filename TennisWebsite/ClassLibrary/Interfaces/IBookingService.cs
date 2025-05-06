@@ -28,7 +28,6 @@ namespace TennisLibrary.Interfaces
         Task<bool> UpdateBookingStartPlayer2(int ID, DateTime Start, User Player2);
 
         Task<bool> UpdateBookingTimeAdmin(int ID, DateTime Start, DateTime End);
-
         
         Task<bool> UpdateBookingTimeAndPlayer2Admin(int ID, User Player2, DateTime Start, DateTime End);
     }
