@@ -10,6 +10,7 @@ namespace TennisWebsite.Pages.Users
     public class RegisterNewUserModel : PageModel
     {
         private IWebHostEnvironment _webHostEnvironment;
+        private IUserService _userService;
 
         #region Userdata
         [BindProperty]
@@ -55,9 +56,10 @@ namespace TennisWebsite.Pages.Users
         public (char, string)[] Genders = new[] { ('M', "Mand"), ('K', "Kvinde"), ('A', "Andet") };
         #endregion
 
-        public RegisterNewUserModel(IWebHostEnvironment webHostEnvironment)
+        public RegisterNewUserModel(IWebHostEnvironment webHostEnvironment, IUserService userService)
         {
             _webHostEnvironment = webHostEnvironment;
+            _userService = userService;
         }
 
         public void OnGet()
@@ -69,13 +71,12 @@ namespace TennisWebsite.Pages.Users
 
         public async Task<IActionResult> OnPost()
         {
-            IUserService tempUserService = new UserService();
             string imagePath = "DefaultUser.jpg";
             if(Image != null) imagePath = SaveImageFile(Image);
 
             User newUser = new User(imagePath, Name, Gender, Username, Phone, Email, Address, HomeMunicipality, BirthDate);
 
-            await tempUserService.AddUserAsync(newUser, Password);
+            await _userService.AddUserAsync(newUser, Password);
             return Page();
         }
 
