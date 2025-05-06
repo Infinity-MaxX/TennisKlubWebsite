@@ -19,7 +19,7 @@ namespace TennisLibrary.Services
         private string filterByAuthorSql = "SELECT * FROM TennisBlog WHERE Author = @Author";
         private string filterByDateSql = "SELECT * FROM TennisBlog WHERE PostDate = @Date";
         private string filterByIdSql = "SELECT * FROM TennisBlog WHERE BlogPostID = @ID";
-        private string insertSql = "INSERT INTO TennisBlog Values(@ID, @Author, @Title, @Body, @Date)";
+        private string insertSql = "INSERT INTO TennisBlog Values(@Author, @Title, @Body, @Date)";
         private string deleteSql = "DELETE FROM TennisBlog WHERE BlogPostID = @ID";
         private string updateSql = "UPDATE TennisBlog SET Author = @Author, Title = @Title, Body = @Body WHERE BlogPostID = @ID";
         //private string connectionString = ConnectionManager.ConnectionString; // static, call when needed
@@ -33,14 +33,13 @@ namespace TennisLibrary.Services
         #endregion
 
         #region Methods
-        async public Task<bool> CreatePostAsync(Blog post)
+        public async Task<bool> CreatePostAsync(Blog post)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
                 {
                     SqlCommand command = new SqlCommand(insertSql, connection);
-                    command.Parameters.AddWithValue("@ID", post.ID);
                     command.Parameters.AddWithValue("@Author", post.Author);
                     command.Parameters.AddWithValue("@Title", post.Title);
                     command.Parameters.AddWithValue("@Body", post.Body);
@@ -68,7 +67,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<bool> DeletePostAsync(int id)
+        public async Task<bool> DeletePostAsync(int id)
         {
             Blog toDelete = await GetByIdAsync(id);
             if (toDelete == null) { return false; }
@@ -101,7 +100,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<List<Blog>> GetAllPostsAsync()
+        public async Task<List<Blog>> GetAllPostsAsync()
         {
             List<Blog> posts = new List<Blog>();
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
@@ -136,7 +135,7 @@ namespace TennisLibrary.Services
             }
             return posts;
         }
-        async public Task<List<Blog>> GetByAuthorAsync(string author)
+        public async Task<List<Blog>> GetByAuthorAsync(string author)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -174,7 +173,7 @@ namespace TennisLibrary.Services
                 return posts;
             }
         }
-        async public Task<List<Blog>> GetByDateAsync(DateOnly date)
+        public async Task<List<Blog>> GetByDateAsync(DateOnly date)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -212,7 +211,7 @@ namespace TennisLibrary.Services
                 return posts;
             }
         }
-        async public Task<Blog> GetByIdAsync(int id)
+        public async Task<Blog> GetByIdAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -250,7 +249,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<bool> UpdatePostAsync(string author, string? title, string body)
+        public async Task<bool> UpdatePostAsync(string author, string? title, string body)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
