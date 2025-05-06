@@ -33,7 +33,7 @@ namespace TennisLibrary.Services
         #endregion
 
         #region Methods
-        async public Task<bool> CreatePostAsync(Blog post)
+        public async Task<bool> CreatePostAsync(Blog post)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -68,7 +68,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<bool> DeletePostAsync(int id)
+        public async Task<bool> DeletePostAsync(int id)
         {
             Blog toDelete = await GetByIdAsync(id);
             if (toDelete == null) { return false; }
@@ -101,7 +101,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<List<Blog>> GetAllPostsAsync()
+        public async Task<List<Blog>> GetAllPostsAsync()
         {
             List<Blog> posts = new List<Blog>();
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
@@ -136,7 +136,7 @@ namespace TennisLibrary.Services
             }
             return posts;
         }
-        async public Task<List<Blog>> GetByAuthorAsync(string author)
+        public async Task<List<Blog>> GetByAuthorAsync(string author)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -174,7 +174,7 @@ namespace TennisLibrary.Services
                 return posts;
             }
         }
-        async public Task<List<Blog>> GetByDateAsync(DateOnly date)
+        public async Task<List<Blog>> GetByDateAsync(DateOnly date)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -212,7 +212,7 @@ namespace TennisLibrary.Services
                 return posts;
             }
         }
-        async public Task<Blog> GetByIdAsync(int id)
+        public async Task<Blog> GetByIdAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -250,7 +250,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        async public Task<bool> UpdatePostAsync(string author, string? title, string body)
+        public async Task<bool> UpdatePostAsync(string author, string? title, string body)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
