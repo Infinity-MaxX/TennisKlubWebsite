@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TennisLibrary\TennisLibrary.csproj" />
+    <ProjectReference Include="..\TennisWebsite\TennisWebsite.csproj" />
   </ItemGroup>
 
 </Project>
