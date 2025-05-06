@@ -15,13 +15,13 @@ namespace TennisLibrary.Services
     {
         #region Instances
         public List<Blog> _blogPosts;
-        private string queryString = "SELECT * FROM Blog";
-        private string filterByAuthorSql = "SELECT * FROM Blog WHERE Author = @Author";
-        private string filterByDateSql = "SELECT * FROM Blog WHERE Date = @Date";
-        private string filterByIdSql = "SELECT * FROM Blog WHERE BlogPostID = @ID";
-        private string insertSql = "INSERT INTO Blog Values(@ID, @Author, @Title, @Body, @Date)";
-        private string deleteSql = "DELETE FROM Blog WHERE BlogPostID = @ID";
-        private string updateSql = "UPDATE Blog SET Author = @Author, Title = @Title, Body = @Body WHERE BlogPostID = @ID";
+        private string queryString = "SELECT * FROM TennisBlog";
+        private string filterByAuthorSql = "SELECT * FROM TennisBlog WHERE Author = @Author";
+        private string filterByDateSql = "SELECT * FROM TennisBlog WHERE PostDate = @Date";
+        private string filterByIdSql = "SELECT * FROM TennisBlog WHERE BlogPostID = @ID";
+        private string insertSql = "INSERT INTO TennisBlog Values(@ID, @Author, @Title, @Body, @Date)";
+        private string deleteSql = "DELETE FROM TennisBlog WHERE BlogPostID = @ID";
+        private string updateSql = "UPDATE TennisBlog SET Author = @Author, Title = @Title, Body = @Body WHERE BlogPostID = @ID";
         //private string connectionString = ConnectionManager.ConnectionString; // static, call when needed
         #endregion
 

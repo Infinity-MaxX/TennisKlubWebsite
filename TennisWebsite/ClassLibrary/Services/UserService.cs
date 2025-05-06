@@ -22,7 +22,7 @@ namespace TennisLibrary.Services
 
             insertQuery = "INSERT into TennisUser Values(@username, @gender, @name, @phone, @email, @address, @homeMunicipality, @birthdate, @accessLevel, @imagePath, @hashPass)",
             searchByIdentQuery = "SELECT * From TennisUser Where Username = @username",
-            searchLoginQuery = "SELECT * From TennisUser Where Username = @username AND @password",
+            searchLoginQuery = "SELECT * From TennisUser Where Username = @username AND HashPass = @password",
             searchAllQuery = "SELECT * From TennisUser",
             editQuery = "Update TennisUser Set Gender = @gender, Name = @name, Phone = @phone, Email = @email, Address = @address, HomeMunicipality = @homeMunicipality, Birthdate = @birthdate, ImagePath = @imagePath Where Username = @queryUsername",
             deleteQuery = "Delete From TennisUser Where Username = @username"
@@ -76,7 +76,7 @@ namespace TennisLibrary.Services
                     {
                         string imagePath = reader.GetString("ImagePath");
                         string name = reader.GetString("Name");
-                        char gender = reader.GetChar("Gender");
+                        char gender = reader.GetString("Gender")[0];
                         string username = reader.GetString("Username");
                         string phone = reader.GetString("Phone");
                         string email = reader.GetString("Email");
@@ -105,7 +105,7 @@ namespace TennisLibrary.Services
                     await connection.OpenAsync();
                     SqlCommand searchCommand = new SqlCommand(searchLoginQuery, connection);
                     searchCommand.Parameters.AddWithValue("@username", queryUsername);
-                    searchCommand.Parameters.AddWithValue("@password", password);
+                    searchCommand.Parameters.AddWithValue("@password", Hasher.CreateHashString(password));
 
                     SqlDataReader reader = await searchCommand.ExecuteReaderAsync();
 
@@ -115,7 +115,7 @@ namespace TennisLibrary.Services
                     {
                         string imagePath = reader.GetString("ImagePath");
                         string name = reader.GetString("Name");
-                        char gender = reader.GetChar("Gender");
+                        char gender = reader.GetString("Gender")[0];
                         string username = reader.GetString("Username");
                         string phone = reader.GetString("Phone");
                         string email = reader.GetString("Email");
@@ -153,7 +153,7 @@ namespace TennisLibrary.Services
                     {
                         string imagePath = reader.GetString("ImagePath");
                         string name = reader.GetString("Name");
-                        char gender = reader.GetChar("Gender");
+                        char gender = reader.GetString("Gender")[0];
                         string username = reader.GetString("Username");
                         string phone = reader.GetString("Phone");
                         string email = reader.GetString("Email");

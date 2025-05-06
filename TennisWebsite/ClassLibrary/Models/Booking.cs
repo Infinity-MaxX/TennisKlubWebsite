@@ -9,17 +9,26 @@ namespace TennisLibrary.Models
     public class Booking
     {
         #region Instance Fields
+        private int _bookingID;
 
         #endregion
 
         #region Constructors
+        public Booking(User player1, User player2, Court courtName, DateTime start)
+        {
+            Player1 = player1;
+            Player2 = player2;
+            CourtName = courtName;
+            Start = start;
+            End = start.AddHours(1);
+        }
         public Booking(User player1, User player2, Court courtName, DateTime start, DateTime end)
         {
-            player1 = Player1;
-            player2 = Player2;
-            courtName = CourtName;
-            start = Start;
-            end = End;
+            Player1 = player1;
+            Player2 = player2;
+            CourtName = courtName;
+            Start = start;
+            End = end;
         }
         #endregion
 
@@ -33,6 +42,8 @@ namespace TennisLibrary.Models
         public DateTime Start { get; set; }
 
         public DateTime End { get; set; }
+
+        public int ID { get; }
 
         #endregion
 
