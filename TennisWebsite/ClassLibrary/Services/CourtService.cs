@@ -92,7 +92,7 @@ namespace TennisLibrary.Services
                     SqlDataReader reader = await command.ExecuteReaderAsync();
                     while (reader.Read())
                     {
-                        courts.Add(new Court(reader.GetString("Name"), reader.GetString("Type")));
+                        courts.Add(new Court(reader.GetString("CourtName"), reader.GetString("Type")));
                     }
 
                     return courts;
