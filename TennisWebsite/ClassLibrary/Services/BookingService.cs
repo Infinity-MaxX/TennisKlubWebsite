@@ -351,5 +351,6 @@ namespace TennisLibrary.Services
                     await connection.CloseAsync();
                 }
             }
+        }
     }
 }
