@@ -36,7 +36,7 @@ namespace TennisWebsite.Pages.Blogs
         public async Task<IActionResult> OnGetDelete(int DeleteNo)
         {
             await _blogPostService.DeletePostAsync(DeleteNo);
-            return RedirectToPage("ShowPosts");
+            return RedirectToPage("ShowBlogPosts");
         }
         #endregion
     }

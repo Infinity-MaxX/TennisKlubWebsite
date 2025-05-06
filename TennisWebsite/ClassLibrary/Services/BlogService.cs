@@ -19,7 +19,7 @@ namespace TennisLibrary.Services
         private string filterByAuthorSql = "SELECT * FROM TennisBlog WHERE Author = @Author";
         private string filterByDateSql = "SELECT * FROM TennisBlog WHERE PostDate = @Date";
         private string filterByIdSql = "SELECT * FROM TennisBlog WHERE BlogPostID = @ID";
-        private string insertSql = "INSERT INTO TennisBlog Values(@ID, @Author, @Title, @Body, @Date)";
+        private string insertSql = "INSERT INTO TennisBlog Values(@Author, @Title, @Body, @Date)";
         private string deleteSql = "DELETE FROM TennisBlog WHERE BlogPostID = @ID";
         private string updateSql = "UPDATE TennisBlog SET Author = @Author, Title = @Title, Body = @Body WHERE BlogPostID = @ID";
         //private string connectionString = ConnectionManager.ConnectionString; // static, call when needed
@@ -40,7 +40,6 @@ namespace TennisLibrary.Services
                 try
                 {
                     SqlCommand command = new SqlCommand(insertSql, connection);
-                    command.Parameters.AddWithValue("@ID", post.ID);
                     command.Parameters.AddWithValue("@Author", post.Author);
                     command.Parameters.AddWithValue("@Title", post.Title);
                     command.Parameters.AddWithValue("@Body", post.Body);
