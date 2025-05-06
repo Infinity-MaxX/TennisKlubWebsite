@@ -1,3 +1,6 @@
+using TennisLibrary.Interfaces;
+using TennisLibrary.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +8,11 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ICourtService, CourtService>();
+builder.Services.AddTransient<IBlogService, BlogService>();
+builder.Services.AddTransient<IBookingService, BookingService>();
 
 var app = builder.Build();
 
