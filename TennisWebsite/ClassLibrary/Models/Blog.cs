@@ -38,7 +38,7 @@ namespace TennisLibrary.Models
             _date = DateTime.Now;
         }
 
-        public Blog(string author, string? title, string body, int id)
+        public Blog(int id, string author, string? title, string body)
         {
             _blogPostId = id;
             Author = author;

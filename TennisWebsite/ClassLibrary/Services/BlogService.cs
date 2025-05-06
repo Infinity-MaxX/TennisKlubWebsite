@@ -112,11 +112,11 @@ namespace TennisLibrary.Services
                     SqlDataReader reader = await command.ExecuteReaderAsync();
                     while (await reader.ReadAsync())
                     {
+                        int postID = reader.GetInt32("BlogID");
                         string postAuthor = reader.GetString("Author");
                         string? postTitle = reader.GetString("Title");
                         string postBody = reader.GetString("Body");
-                        int postID = reader.GetInt32("BlogID");
-                        Blog post = new Blog(postAuthor, postTitle, postBody, postID);
+                        Blog post = new Blog(postID, postAuthor, postTitle, postBody);
                         posts.Add(post);
                     }
                     await reader.CloseAsync();
@@ -230,7 +230,7 @@ namespace TennisLibrary.Services
                         string postAuthor = reader.GetString("Author");
                         string? postTitle = reader.GetString("Title");
                         string postBody = reader.GetString("Body");
-                        post = new Blog(postAuthor, postTitle, postBody, id);
+                        post = new Blog(id, postAuthor, postTitle, postBody);
                     }
                     await reader.CloseAsync();
                 }
