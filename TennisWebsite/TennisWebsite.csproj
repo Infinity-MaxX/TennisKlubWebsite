@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\MemberImages\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="ClassLibrary\tennis.troglodyte.dk\Tennis\TennisLibrary.deps.json" />
   </ItemGroup>
 

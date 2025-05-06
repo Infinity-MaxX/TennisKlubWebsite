@@ -1,4 +1,33 @@
 ﻿@page
+@using TennisLibrary.Models;
 @model TennisWebsite.Pages.Blogs.AddBlogPostsModel
 @{
+    ViewData["Title"] = "AddBlogPosts";
 }
+
+<h1>New Post</h1>
+
+<form method="post">
+    <div class="form-group" enctype="multipart/form-data">
+        <label asp-for="@Model.ID" class="control-label"></label>
+        <input asp-for="@Model.ID" class="form-control" readonly="true" />
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Author" class="control-label"></label>
+        <input asp-for="@Model.Author" class="form-control" required="true"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Title" class="control-label"></label>
+        <input asp-for="@Model.Title" class="form-control" required="false"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Body" class="control-label"></label>
+        <input asp-for="@Model.Body" class="form-control" required="true"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Date" class="control-label"></label>
+        <input asp-for="@Model.Date" class="form-control" readonly="true"/>
+    </div>
+
+    <input type="submit" value="Gem" class="btn btn-primary" />
+</form>

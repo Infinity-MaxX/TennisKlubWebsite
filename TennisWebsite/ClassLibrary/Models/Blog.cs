@@ -19,12 +19,19 @@ namespace TennisLibrary.Models
         public string? Title { get; set; }
         public string Body { get; set; }
         public DateTime Date { get { return _date; } }
+        public User isAdmin { get; set; }
         #endregion
 
         #region Constructor
+        //default constructor
+        public Blog()
+        {
+
+        }
+        //parameterised constructor
         public Blog(string author, string? title, string body)
         {
-            //_blogPostId++;
+            _blogPostId++;
             Author = author;
             Title = title;
             Body = body;

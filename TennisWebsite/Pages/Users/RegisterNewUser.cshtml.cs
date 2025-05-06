@@ -9,6 +9,8 @@ namespace TennisWebsite.Pages.Users
 {
     public class RegisterNewUserModel : PageModel
     {
+        private IWebHostEnvironment _webHostEnvironment;
+
         #region Userdata
         [BindProperty]
         public string Name { get; set; }
@@ -53,7 +55,10 @@ namespace TennisWebsite.Pages.Users
         public (char, string)[] Genders = new[] { ('M', "Mand"), ('K', "Kvinde"), ('A', "Andet") };
         #endregion
 
-
+        public RegisterNewUserModel(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+        }
 
         public void OnGet()
         {
@@ -65,12 +70,27 @@ namespace TennisWebsite.Pages.Users
         public async Task<IActionResult> OnPost()
         {
             IUserService tempUserService = new UserService();
-            User newUser = new User("", Name, Gender, Username, Phone, Email, Address, HomeMunicipality, BirthDate);
+            string imagePath = "DefaultUser.jpg";
+            if(Image != null) imagePath = SaveImageFile(Image);
+
+            User newUser = new User(imagePath, Name, Gender, Username, Phone, Email, Address, HomeMunicipality, BirthDate);
 
             await tempUserService.AddUserAsync(newUser, Password);
             return Page();
         }
 
+        private string SaveImageFile(IFormFile file)
+        {
+            if (file == null) throw new NullReferenceException("No file to save");
+            string destinationfolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/memberimages");
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + Image.FileName;
+            string filePath = Path.Combine(destinationfolder, uniqueFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                Image.CopyTo(fileStream);
+            }
+            return uniqueFileName;
+        }
 
     }
 }

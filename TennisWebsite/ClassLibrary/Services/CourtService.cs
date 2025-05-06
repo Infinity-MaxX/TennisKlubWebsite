@@ -14,7 +14,7 @@ namespace TennisLibrary.Services
     public class CourtService : ICourtService
     {
 
-        private string insertSql = "Insert INTO TennisCourt Values(@Name, @Type)";
+        private string insertSql = "Insert INTO TennisCourt (CourtName, Type) Values(@Name, @Type)";
         private string deleteSQL = "Delete from TennisCourt where Name = @Name";
         private string getSQL = "Select * from TennisCourt";
         private string updateSQL = "Update TennisCourt set LastMaintenance = @LastMaintenance where Name = @Name";
