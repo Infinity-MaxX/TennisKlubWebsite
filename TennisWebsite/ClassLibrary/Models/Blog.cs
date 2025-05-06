@@ -31,7 +31,16 @@ namespace TennisLibrary.Models
         //parameterised constructor
         public Blog(string author, string? title, string body)
         {
-            _blogPostId++;
+            //_blogPostId++;
+            Author = author;
+            Title = title;
+            Body = body;
+            _date = DateTime.Now;
+        }
+
+        public Blog(string author, string? title, string body, int id)
+        {
+            _blogPostId = id;
             Author = author;
             Title = title;
             Body = body;

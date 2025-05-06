@@ -115,7 +115,8 @@ namespace TennisLibrary.Services
                         string postAuthor = reader.GetString("Author");
                         string? postTitle = reader.GetString("Title");
                         string postBody = reader.GetString("Body");
-                        Blog post = new Blog(postAuthor, postTitle, postBody);
+                        int postID = reader.GetInt32("BlogID");
+                        Blog post = new Blog(postAuthor, postTitle, postBody, postID);
                         posts.Add(post);
                     }
                     await reader.CloseAsync();
@@ -229,7 +230,7 @@ namespace TennisLibrary.Services
                         string postAuthor = reader.GetString("Author");
                         string? postTitle = reader.GetString("Title");
                         string postBody = reader.GetString("Body");
-                        post = new Blog(postAuthor, postTitle, postBody);
+                        post = new Blog(postAuthor, postTitle, postBody, id);
                     }
                     await reader.CloseAsync();
                 }
