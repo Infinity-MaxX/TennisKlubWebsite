@@ -28,11 +28,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/CourtPages/ShowCourts">Baner</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Blogs/ShowBlogPosts">Blog</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Bookings/ShowBookings">Mine bookinger</a>
+                        </li>
                     </ul>
-                    <ul class="offcanvas-end" style="width:auto"> 
+                    <ul class="navbar" style="width:10%; overflow:hidden; 
+                            right:5%">
                         @if (!string.IsNullOrEmpty(Context.Session.GetString("Username")))
                         {
-                            @Context.Session.GetString("Username")
+                            <a asp-page="users/userProfile" class="btn btn-primary text-decoration-none">
+                                @Context.Session.GetString("Username")</a>
                         }
                         else
                         {

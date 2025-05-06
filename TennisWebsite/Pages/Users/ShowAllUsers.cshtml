@@ -54,9 +54,15 @@
                     @user.BirthDate
                 </td>
                 <td>
-                    <img src="~/Images/MemberImages/@(user.ImagePath)" width="140" height="140px">
+                    <img src="~/Images/MemberImages/@(user.ImagePath)" width="140px" height="140px">
                 </td>
                 <td>
+                    <form asp-page-handler="Delete" asp-route-Username="@user.Username">
+                        <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
+                    </form>
+                    <a asp-page="EditUser" asp-route-Username="@user.Username">
+                        <img src="~/Images/pencil-square.svg" alt="Edit">
+                    </a>
                     <form asp-page-handler="Delete" asp-route-Username="@user.Username">
                         <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
                     </form>
