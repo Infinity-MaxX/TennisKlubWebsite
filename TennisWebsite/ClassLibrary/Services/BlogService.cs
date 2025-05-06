@@ -18,10 +18,10 @@ namespace TennisLibrary.Services
         private string queryString = "SELECT * FROM TennisBlog";
         private string filterByAuthorSql = "SELECT * FROM TennisBlog WHERE Author = @Author";
         private string filterByDateSql = "SELECT * FROM TennisBlog WHERE PostDate = @Date";
-        private string filterByIdSql = "SELECT * FROM TennisBlog WHERE BlogPostID = @ID";
+        private string filterByIdSql = "SELECT * FROM TennisBlog WHERE BlogID = @ID";
         private string insertSql = "INSERT INTO TennisBlog Values(@Author, @Title, @Body, @Date)";
-        private string deleteSql = "DELETE FROM TennisBlog WHERE BlogPostID = @ID";
-        private string updateSql = "UPDATE TennisBlog SET Author = @Author, Title = @Title, Body = @Body WHERE BlogPostID = @ID";
+        private string deleteSql = "DELETE FROM TennisBlog WHERE BlogID = @ID";
+        private string updateSql = "UPDATE TennisBlog SET Author = @Author, Title = @Title, Body = @Body WHERE BlogID = @ID";
         //private string connectionString = ConnectionManager.ConnectionString; // static, call when needed
         #endregion
 
@@ -69,8 +69,8 @@ namespace TennisLibrary.Services
 
         public async Task<bool> DeletePostAsync(int id)
         {
-            Blog toDelete = await GetByIdAsync(id);
-            if (toDelete == null) { return false; }
+            //Blog toDelete = await GetByIdAsync(id);
+            //if (toDelete == null) { return false; }
 
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
