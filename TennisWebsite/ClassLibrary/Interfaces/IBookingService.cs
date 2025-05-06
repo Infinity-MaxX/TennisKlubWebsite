@@ -21,10 +21,15 @@ namespace TennisLibrary.Interfaces
 
         Task<bool> DeleteBooking(int ID);
 
-        Task<bool> UpdateBooking(int ID, User Player2);
+        Task<bool> UpdateBookingPlayer2(int ID, User Player2);
 
-        Task<bool> UpdateBooking(int ID, DateTime Start);
+        Task<bool> UpdateBookingStart(int ID, DateTime Start);
 
-        Task<bool> UpdateBookingAdmin(int ID, DateTime Start, DateTime End);
+        Task<bool> UpdateBookingStartPlayer2(int ID, DateTime Start, User Player2);
+
+        Task<bool> UpdateBookingTimeAdmin(int ID, DateTime Start, DateTime End);
+
+        
+        Task<bool> UpdateBookingTimeAndPlayer2Admin(int ID, User Player2, DateTime Start, DateTime End);
     }
 }
