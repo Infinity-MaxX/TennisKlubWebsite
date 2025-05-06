@@ -8,6 +8,7 @@ namespace TennisWebsite.Pages.Users
 {
     public class LoginModel : PageModel
     {
+        IUserService _userService;
 
         [BindProperty]
         public string LoginUsername { get; set; }
@@ -16,6 +17,11 @@ namespace TennisWebsite.Pages.Users
 
         public string LoginStatus { get; set; }
 
+        public LoginModel(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         public void OnGet()
         {
 
@@ -23,8 +29,7 @@ namespace TennisWebsite.Pages.Users
 
         public async Task<IActionResult> OnPostAsync()
         {
-            IUserService tempService = new UserService();
-            User loginUser = await tempService.GetUserLoginAsync(LoginUsername, LoginPass);
+            User loginUser = await _userService.GetUserLoginAsync(LoginUsername, LoginPass);
             if (loginUser == null)
             {
                 LoginStatus = "login failed";

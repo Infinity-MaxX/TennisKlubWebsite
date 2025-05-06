@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Hosting;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
+using TennisLibrary.Services;
 
 namespace TennisWebsite.Pages.Blogs
 {
@@ -20,7 +21,7 @@ namespace TennisWebsite.Pages.Blogs
         #region Constructor
         public EditBlogPostsModel()
         {
-
+            _blogPostService = new BlogService();
         }
         #endregion
 
