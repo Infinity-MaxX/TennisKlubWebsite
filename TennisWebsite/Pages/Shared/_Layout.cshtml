@@ -29,10 +29,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/CourtPages/ShowCourts">Baner</a>
                         </li>
                     </ul>
-                    <ul class="offcanvas-end" style="width:auto"> 
+                    <ul class="offcanvas-end" style="width:10%; overflow:hidden; offset:right 10%"> 
                         @if (!string.IsNullOrEmpty(Context.Session.GetString("Username")))
                         {
-                            @Context.Session.GetString("Username")
+                                @Context.Session.GetString("Username")
                         }
                         else
                         {
