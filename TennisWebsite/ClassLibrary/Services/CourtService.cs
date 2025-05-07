@@ -119,12 +119,12 @@ namespace TennisLibrary.Services
                     Court court = new Court();
                     await connection.OpenAsync();
 
-                    SqlCommand command = new SqlCommand(getSQL + "Where Name = @Name", connection);
+                    SqlCommand command = new SqlCommand(getSQL + " Where CourtName = @Name", connection);
                     command.Parameters.AddWithValue("@Name", name);
                     SqlDataReader reader = await command.ExecuteReaderAsync();
                     if(reader.Read())
                     {
-                        court.Name = reader.GetString("Name");
+                        court.Name = reader.GetString("CourtName");
                         court.Type = reader.GetString("Type");
                     } 
 
