@@ -22,7 +22,7 @@ namespace TennisLibrary.Models
         public User isAdmin { get; set; }
         #endregion
 
-        #region Constructor
+        #region Constructors
         //default constructor
         public Blog()
         {
