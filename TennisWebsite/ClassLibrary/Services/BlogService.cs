@@ -66,7 +66,6 @@ namespace TennisLibrary.Services
                 }
             }
         }
-
         public async Task<bool> DeletePostAsync(int id)
         {
             //Blog toDelete = await GetByIdAsync(id);
@@ -99,7 +98,6 @@ namespace TennisLibrary.Services
                 return false;
             }
         }
-
         public async Task<List<Blog>> GetAllPostsAsync()
         {
             List<Blog> posts = new List<Blog>();
@@ -249,7 +247,6 @@ namespace TennisLibrary.Services
                 return post;
             }
         }
-
         public async Task<bool> UpdatePostAsync(string author, string? title, string body)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
