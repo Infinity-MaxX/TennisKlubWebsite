@@ -21,9 +21,9 @@ namespace TennisWebsite.Pages.BookingPages
             us = new UserService();
         }
 
-        public async Task OnGetAsync(DateTime time, string courtName)
+        public async Task OnGetAsync(DateTime time, string court)
         {
-            booking.Court = await cs.GetCourtAsync(courtName);
+            booking.Court = await cs.GetCourtAsync(court);
             booking.Start = time;
             booking.End = time.AddHours(1);
         }
