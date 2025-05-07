@@ -17,7 +17,7 @@ namespace TennisLibrary.Services
         private string updateSQLTime = "Update TennisBooking set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLTimeAndPlayer = "Update TennisBooking set Player2 = @Player2 and set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLPlayer = "Update TennisBooking set Player2 = @Player2 where BookingID = @ID";
-        private string getSQLBookings = "";
+        private string getSQLBookings = "SELECT * from TennisBooking";
 
         async public Task<bool> AddBookingAdminAsync(Booking newBooking)
         {
