@@ -3,9 +3,15 @@
 @using TennisLibrary.Models
 @model TennisWebsite.Pages.CourtPages.ShowCourtsModel
 @{
+    ViewData["Title"] = "Baner";
 }
 <body>
-    <div class="container p-4" style="background-color:rgb(230,230,230">
+    <div class="container p-4" style="background-color:rgb(230,230,230)">
+
+        <form method="post">
+            <input type="date" asp-for="date" onchange="this.form.submit()"/>
+        </form>
+
         @foreach (Court c in Model.courts)
         {
             <div class="card mb-3">
@@ -18,21 +24,21 @@
                         <div class="btn-group" role="group">
                             @for (int i = 8; i < 18; i++)
                             {
-                                if (true == false@* Model.bookedCourtTimes.Contains(c.Name + i) *@)
+                                if (Model.bookedCourtTimes.Contains(c.Name + i))
                                 {
                                     <a class="btn btn-secondary" disabled>@i:00</a>
                                 }
                                 else
                                 {
-                                    <a asp-page="/bookings/makebooking" asp-route-time="@i" asp-route-court="@c.Name"
-                                       class="btn btn-primary">@i:00</a>
+                                    <a asp-page="/BookingPages/CreateBooking" asp-route-time="@(new DateTime(Model.date, new TimeOnly(i,0,0)).ToString())" 
+                                    asp-route-court="@c.Name" class="btn btn-primary">@i:00</a>
                                 }
                             }
                         </div>
                         @if (HttpContext.Session.GetInt32("AccesLevel") >= (int) AccessLevel.Admin)
                         {
                             <div class="btn-group ms-auto">
-                                <button class="btn btn-info me-1">Rediger</button>
+                                <a asp-page="editcourt" asp-route-courtName="@c.Name" class="btn btn-info me-1">Rediger</a>
                                 <button class="btn btn-danger">Slet</button>
                             </div>
                         }
@@ -40,6 +46,37 @@
                 </div>
             </div>
         }
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-light">
+                test
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">test</h5>
+                <div class="btn-toolbar">
+                    <div class="btn-group" role="group">
+                        @for (int i = 8; i < 18; i++)
+                        {
+                            if (i == 12)
+                            {
+                                <a class="btn btn-secondary" disabled>@i:00</a>
+                            }
+                            else
+                            {
+                                <a asp-page="/BookingPages/CreateBooking" asp-route-time="@(new DateTime(Model.date, new TimeOnly(i,0,0)).ToString())"
+                                   asp-route-court="test" class="btn btn-primary">@i:00</a>
+                            }
+                        }
+                    </div>
+                    @if (HttpContext.Session.GetInt32("AccesLevel") >= (int)AccessLevel.Admin)
+                    {
+                        <div class="btn-group ms-auto">
+                            <a asp-page="editcourt" asp-route-courtName="temp" class="btn btn-info me-1">Rediger</a>
+                            <button class="btn btn-danger">Slet</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
