@@ -21,11 +21,12 @@ namespace TennisWebsite.Pages.BookingPages
             us = new UserService();
         }
 
-        public async Task OnGetAsync(DateTime time, string court)
+        public async Task OnGetAsync(string time, string court)
         {
+            DateTime tempTime = DateTime.Parse(time);
             booking.Court = await cs.GetCourtAsync(court);
-            booking.Start = time;
-            booking.End = time.AddHours(1);
+            booking.Start = tempTime;
+            booking.End = tempTime.AddHours(1);
         }
     }
 }
