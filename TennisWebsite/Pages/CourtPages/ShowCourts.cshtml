@@ -6,7 +6,7 @@
     ViewData["Title"] = "Baner";
 }
 <body>
-    <div class="container p-4" style="background-color:rgb(230,230,230">
+    <div class="container p-4" style="background-color:rgb(230,230,230)">
 
         <form method="post">
             <input type="date" asp-for="date" onchange="this.form.submit()"/>
@@ -30,7 +30,7 @@
                                 }
                                 else
                                 {
-                                    <a asp-page="/bookings/createbooking" asp-route-time="@{new DateTime(Model.date, new TimeOnly(i,0,0));}" 
+                                    <a asp-page="/BookingPages/CreateBooking" asp-route-time="@(new DateTime(Model.date, new TimeOnly(i,0,0)))" 
                                     asp-route-court="@c.Name" class="btn btn-primary">@i:00</a>
                                 }
                             }

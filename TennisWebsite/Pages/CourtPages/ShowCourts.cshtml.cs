@@ -36,7 +36,7 @@ namespace TennisWebsite.Pages.CourtPages
             date = DateOnly.FromDateTime(DateTime.Now);
             foreach (Booking b in bookings)
             {
-                bookedCourtTimes.Add(b.CourtName.Name + b.Start.TimeOfDay.Hours);
+                bookedCourtTimes.Add(b.Court.Name + b.Start.TimeOfDay.Hours);
             }
         }
 
@@ -46,7 +46,7 @@ namespace TennisWebsite.Pages.CourtPages
             bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()));
             foreach (Booking b in bookings)
             {
-                bookedCourtTimes.Add(b.CourtName.Name + b.Start.TimeOfDay.Hours);
+                bookedCourtTimes.Add(b.Court.Name + b.Start.TimeOfDay.Hours);
             }
             return Page();
         }
