@@ -23,6 +23,7 @@ namespace TennisWebsite.Pages.CourtPages
         public ShowCourtsModel()
         {
             courts = new List<Court>();
+            bookedCourtTimes = new List<string>();
             bs = new BookingService();
             cs = new CourtService();
             date = new DateOnly();
@@ -31,11 +32,23 @@ namespace TennisWebsite.Pages.CourtPages
         public async Task OnGetAsync()
         {
             courts = await cs.GetAllCourts();
-            //bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()));
-            //foreach(Booking b in bookings)
-            //{
-            //    bookedCourtTimes.Add(b.CourtName.Name + b.Start.TimeOfDay.Hours);
-            //}
+            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()));
+            date = DateOnly.FromDateTime(DateTime.Now);
+            foreach (Booking b in bookings)
+            {
+                bookedCourtTimes.Add(b.CourtName.Name + b.Start.TimeOfDay.Hours);
+            }
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            courts = await cs.GetAllCourts();
+            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()));
+            foreach (Booking b in bookings)
+            {
+                bookedCourtTimes.Add(b.CourtName.Name + b.Start.TimeOfDay.Hours);
+            }
+            return Page();
         }
     }
 }
