@@ -32,7 +32,7 @@ namespace TennisLibrary.Services
                     insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2);
                     insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
                     insertCommand.Parameters.AddWithValue("@End", newBooking.End);
-                    insertCommand.Parameters.AddWithValue("@CourtName", newBooking.CourtName);
+                    insertCommand.Parameters.AddWithValue("@CourtName", newBooking.Court);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)
@@ -58,7 +58,7 @@ namespace TennisLibrary.Services
                     insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1);
                     insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2);
                     insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
-                    insertCommand.Parameters.AddWithValue("@CourtName", newBooking.CourtName);
+                    insertCommand.Parameters.AddWithValue("@CourtName", newBooking.Court);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)

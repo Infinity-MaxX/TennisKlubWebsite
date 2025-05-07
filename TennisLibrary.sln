@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TennisWebsite", "TennisWebsite\TennisWebsite.csproj", "{A28A14B5-6192-498F-BD2A-1CE5EAE7F7C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TennisWebsite", "TennisWebsite\TennisWebsite.csproj", "{A28A14B5-6192-498F-BD2A-1CE5EAE7F7C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugConsole", "DebugConsole\DebugConsole.csproj", "{CB8D4287-66CD-48C0-819C-B9AF646FF532}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebugConsole", "DebugConsole\DebugConsole.csproj", "{CB8D4287-66CD-48C0-819C-B9AF646FF532}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
