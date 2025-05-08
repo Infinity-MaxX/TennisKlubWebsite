@@ -6,10 +6,10 @@
     ViewData["Title"] = "Baner";
 }
 <body>
-    <div class="container p-4" style="background-color:rgb(230,230,230)">
+    <div class="container p-4 Container-Background">
 
         <form method="post">
-            <input type="date" asp-for="date" onchange="this.form.submit()"/>
+            <input class="btn btn-primary mb-5 mt-2" type="date" asp-for="date" onclick="this.showPicker();"  onchange="this.form.submit()"/>
         </form>
 
         @foreach (Court c in Model.courts)
@@ -22,7 +22,7 @@
                     <h5 class="card-title">@c.Name</h5>
                     <div class="btn-toolbar">
                         <div class="btn-group" role="group">
-                            @for (int i = 8; i < 18; i++)
+                            @for (int i = 8; i < 21; i++)
                             {
                                 if (Model.bookedCourtTimes.Contains(c.Name + i))
                                 {
@@ -31,7 +31,7 @@
                                 else
                                 {
                                     <a asp-page="/BookingPages/CreateBooking" asp-route-time="@(new DateTime(Model.date, new TimeOnly(i,0,0)).ToString())" 
-                                    asp-route-court="@c.Name" class="btn btn-primary">@i:00</a>
+                                    asp-route-court="@c.Name" class="btn btn-primary border-dark">@i:00</a>
                                 }
                             }
                         </div>
@@ -67,7 +67,7 @@
                             }
                         }
                     </div>
-                    @if (HttpContext.Session.GetInt32("AccesLevel") >= (int)AccessLevel.Admin)
+                    @if (true == true@* HttpContext.Session.GetInt32("AccesLevel") >= (int)AccessLevel.Admin *@)
                     {
                         <div class="btn-group ms-auto">
                             <a asp-page="editcourt" asp-route-courtName="temp" class="btn btn-info me-1">Rediger</a>
