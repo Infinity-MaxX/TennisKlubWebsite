@@ -55,7 +55,6 @@ namespace TennisWebsite.Pages.Users
 
         public async Task<IActionResult> OnGetAsync(string Username)
         {
-            KeepImage = true;
             User tempUser = await _userService.GetUserAsAdminAsync(Username);
             if(tempUser != null)
             {
@@ -69,11 +68,12 @@ namespace TennisWebsite.Pages.Users
                 BirthDate = tempUser.BirthDate;
 
                 OldImageName = tempUser.ImageName;
+                if (OldImageName != Defaults.DefaultImage) KeepImage = true;
                 return Page();
             }
             return RedirectToPage("Login");
         }
-        public async Task<IActionResult> OnPostAsync(string OldUserName, string OldImageName)
+        public async Task<IActionResult> OnPostAsync(string OldUserName, string OldImageName, bool KeepImage)
         {
             if (OldImageName == null || !KeepImage) OldImageName = Defaults.DefaultImage;
             string destinationFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/memberimages");
