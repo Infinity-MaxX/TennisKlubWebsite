@@ -17,11 +17,11 @@ namespace TennisWebsite.Services
     {
         #region Instances
         List<Event> _events;
-        //List<User> _participants;
         #endregion
 
         #region Properties
         public int EventCount { get { return _events.Count; } }
+
         #endregion
 
         #region Constructors
@@ -29,7 +29,46 @@ namespace TennisWebsite.Services
         #endregion
 
         #region Methods
+        public Task<bool> CreateEventAsync(Event evnt)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task<bool> DeleteEventAsync(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Event>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<User>> GetAllParticipantsForEventAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Event> GetEvent(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Event> GetEventByType(string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> GetUserByEvent(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateEvent(User organiser, string name, string description, 
+            string start, string end, int maxParticipants, int minParticipants)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
