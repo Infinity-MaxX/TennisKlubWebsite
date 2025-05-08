@@ -5,70 +5,71 @@
     ViewData["Title"] = "UsersAdminView";
 }
 
+<div class="container p-4 Container-Background">
+    <btn>
+        <a asp-page="RegisterNewUser">Register</a>
+    </btn>
 
-<btn>
-    <a asp-asp-page="RegisterNewUser">Register</a>
-</btn>
-
-<table  class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Navn</th>
-            <th>Køn</th>
-            <th>Telefonnummer</th>
-            <th>Email</th>
-            <th>Addresse</th>
-            <th>Hjemmekommune</th>
-            <th>Fødselsdato</th>
-            <th>Profilbillede</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach(User user in Model.Users)
-        {
+    <table  class="table">
+        <thead>
             <tr>
-                <td>
-                    @user.Username
-                </td>
-                <td>
-                    @user.Name
-                </td>
-                <td>
-                    @user.Gender
-                </td>
-                <td>
-                    @user.Phone
-                </td>
-                <td>
-                    @user.Email
-                </td>
-                <td>
-                    @user.Address
-                </td>
-                <td>
-                    @user.HomeMunicipality
-                </td>
-                <td>
-                    @user.BirthDate
-                </td>
-                <td>
-                    <img src="~/Images/MemberImages/@(user.ImagePath)" width="140px" height="140px">
-                </td>
-                <td>
-                    <form asp-page-handler="Delete" asp-route-Username="@user.Username">
-                        <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
-                    </form>
-                    <a asp-page="EditUser" asp-route-Username="@user.Username">
-                        <img src="~/Images/pencil-square.svg" alt="Edit">
-                    </a>
-                    <form asp-page-handler="Delete" asp-route-Username="@user.Username">
-                        <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
-                    </form>
-                </td>
+                <th>Username</th>
+                <th>Navn</th>
+                <th>Køn</th>
+                <th>Telefonnummer</th>
+                <th>Email</th>
+                <th>Addresse</th>
+                <th>Hjemmekommune</th>
+                <th>Fødselsdato</th>
+                <th>Profilbillede</th>
             </tr>
-        }
-    </tbody>
+        </thead>
 
-</table>
+        <tbody>
+            @foreach(User user in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @user.Username
+                    </td>
+                    <td>
+                        @user.Name
+                    </td>
+                    <td>
+                        @user.Gender
+                    </td>
+                    <td>
+                        @user.Phone
+                    </td>
+                    <td>
+                        @user.Email
+                    </td>
+                    <td>
+                        @user.Address
+                    </td>
+                    <td>
+                        @user.HomeMunicipality
+                    </td>
+                    <td>
+                        @user.BirthDate
+                    </td>
+                    <td>
+                        <img src="~/Images/MemberImages/@(user.ImageName)" width="140px" height="140px">
+                    </td>
+                    <td>
+                        <form asp-page-handler="Delete" asp-route-Username="@user.Username">
+                            <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
+                        </form>
+                        <a asp-page="EditUser" asp-route-Username="@user.Username">
+                            <img src="~/Images/pencil-square.svg" alt="Edit">
+                        </a>
+                        <form asp-page-handler="Delete" asp-route-Username="@user.Username">
+                            <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>

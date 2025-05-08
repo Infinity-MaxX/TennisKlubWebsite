@@ -37,7 +37,7 @@ namespace TennisLibrary.Services
                     await connection.OpenAsync();
                     SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
 
-                    insertCommand.Parameters.AddWithValue("@imagePath", newUser.ImagePath);
+                    insertCommand.Parameters.AddWithValue("@imagePath", newUser.ImageName);
                     insertCommand.Parameters.AddWithValue("@username", newUser.Username);
                     insertCommand.Parameters.AddWithValue("@gender", newUser.Gender);
                     insertCommand.Parameters.AddWithValue("@name", newUser.Name);
@@ -192,7 +192,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        public async Task<bool> EditUserAsync(string queryUsername, string newImagePath, string newName, string newGender, string newPhone, string newEmail, string newAddress, string newHomeMunicipality, DateOnly newBirthDate)
+        public async Task<bool> EditUserAsync(string queryUsername, string newImagePath, string newName, char newGender, string newPhone, string newEmail, string newAddress, string newHomeMunicipality, DateOnly newBirthDate)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -200,6 +200,8 @@ namespace TennisLibrary.Services
                 {
                     await connection.OpenAsync();
                     SqlCommand insertCommand = new SqlCommand(editQuery, connection);
+
+                    insertCommand.Parameters.AddWithValue("@queryUsername", queryUsername);
 
                     insertCommand.Parameters.AddWithValue("@imagePath", newImagePath);
                     insertCommand.Parameters.AddWithValue("@gender", newGender);
