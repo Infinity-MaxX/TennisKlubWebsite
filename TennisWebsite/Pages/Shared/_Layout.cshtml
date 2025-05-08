@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TennisWebsite.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body style="background-color:rgb(200,200,200)">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -28,15 +28,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/CourtPages/ShowCourts">Baner</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Blogs/ShowBlogPosts">Blog</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Bookings/ShowBookings">Mine bookinger</a>
+                        </li>
                     </ul>
-                    <ul class="offcanvas-end" style="width:10%; overflow:hidden; offset:right 10%"> 
+                    <ul class="navbar-nav me-auto">
                         @if (!string.IsNullOrEmpty(Context.Session.GetString("Username")))
                         {
-                                @Context.Session.GetString("Username")
+                            <a asp-page="users/userProfile" class="btn btn-primary text-decoration-none">
+                                @Context.Session.GetString("Username")</a>
                         }
                         else
                         {
-                            <a asp-page="users/login" class="btn btn-primary text-decoration-none">Log In</a>
+                            <a asp-page="/users/login" class="btn btn-primary text-decoration-none">Log In</a>
                         }
                     </ul>
                 </div>
@@ -49,7 +57,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-light">
         <div class="container">
             &copy; 2025 - TennisWebsite - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>

@@ -12,12 +12,12 @@ namespace TennisLibrary.Services
 {
     public class BookingService : IBookingService
     {
-        private string insertQuery = "INSERT into TennisBooking Values(@Player1, @Player2, @Start, @End, @CourtName)";
+        private string insertQuery = "INSERT into TennisBooking Values(@Player1, @Player2, @Start, @End, @Court)";
         private string deleteSQL = "DELETE from TennisBooking where BookingID = @BookingID";
         private string updateSQLTime = "Update TennisBooking set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLTimeAndPlayer = "Update TennisBooking set Player2 = @Player2 and set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLPlayer = "Update TennisBooking set Player2 = @Player2 where BookingID = @ID";
-        private string getSQLBookings = "";
+        private string getSQLBookings = "SELECT * from TennisBooking";
 
         async public Task<bool> AddBookingAdminAsync(Booking newBooking)
         {
@@ -32,7 +32,7 @@ namespace TennisLibrary.Services
                     insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2);
                     insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
                     insertCommand.Parameters.AddWithValue("@End", newBooking.End);
-                    insertCommand.Parameters.AddWithValue("@CourtName", newBooking.CourtName);
+                    insertCommand.Parameters.AddWithValue("@Court", newBooking.Court);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)
@@ -58,7 +58,7 @@ namespace TennisLibrary.Services
                     insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1);
                     insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2);
                     insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
-                    insertCommand.Parameters.AddWithValue("@CourtName", newBooking.CourtName);
+                    insertCommand.Parameters.AddWithValue("@Court", newBooking.Court);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)
