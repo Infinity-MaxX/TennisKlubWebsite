@@ -19,7 +19,7 @@ namespace TennisLibrary.Models
         /// <summary>
         /// The constructor for the user object, a variant also exists without Accesslevel.
         /// </summary>
-        /// <param name="imagePath">The path to the user's portrait as stored in the system</param>
+        /// <param name="imageName">The name of the file uploaded as the users portrait</param>
         /// <param name="name">The displayname of the user</param>
         /// <param name="gender">The gender identity of the user, expressed as a single character</param>
         /// <param name="username">The username and unique identifier of the user</param>
@@ -30,7 +30,7 @@ namespace TennisLibrary.Models
         /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
         /// <param name="accessLevel">The accesslevel of the user</param>
         public User(
-            string imagePath,
+            string imageName,
             string name,
             char gender,
             string username,
@@ -41,7 +41,7 @@ namespace TennisLibrary.Models
             DateOnly birthDate,
             AccessLevel accessLevel)
         {
-            ImagePath = imagePath;
+            ImageName = imageName;
 
             Name = name;
             Gender = gender;
@@ -66,9 +66,9 @@ namespace TennisLibrary.Models
         /// <param name="address">The address (postalnumber, road, house-number) of the user</param>
         /// <param name="homeMunicipality">The municipality that the user lives in</param>
         /// <param name="birthDate">The birthdate, DD/MM/YYYY of the user.</param>
-        /// /// <param name="imagePath">The path to the user's portrait as stored in the system</param>
+        /// <param name="imageName">The name of the file uploaded as the users portrait</param>
         public User(
-            string imagePath,
+            string imageName,
             string name,
             char gender,
             string username,
@@ -78,7 +78,7 @@ namespace TennisLibrary.Models
             string homeMunicipality,
             DateOnly birthDate)
         {
-            ImagePath = imagePath;
+            ImageName = imageName;
 
             Name = name;
             Gender = gender;
@@ -98,7 +98,7 @@ namespace TennisLibrary.Models
         /// <param name="user"></param>
         public User(User user)
         {
-            ImagePath = user.ImagePath;
+            ImageName = user.ImageName;
 
             Name = user.Name;
             Gender = user.Gender;
@@ -133,7 +133,7 @@ namespace TennisLibrary.Models
 
         public AccessLevel AccessLevel { get; private set; }
 
-        public string? ImagePath { get; set; }
+        public string? ImageName { get; set; }
         #endregion
 
 
