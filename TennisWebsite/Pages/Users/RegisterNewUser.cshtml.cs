@@ -4,6 +4,7 @@ using TennisLibrary.Helpers;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
 using TennisLibrary.Services;
+using TennisWebsite.ClassLibrary.Helpers;
 
 namespace TennisWebsite.Pages.Users
 {
@@ -71,26 +72,13 @@ namespace TennisWebsite.Pages.Users
 
         public async Task<IActionResult> OnPost()
         {
-            string imagePath = "DefaultUser.jpg";
-            if(Image != null) imagePath = SaveImageFile(Image);
+            string imagePath = Defaults.DefaultImage;
+            if(Image != null) imagePath = FileManager.SaveImageFile(Image, _webHostEnvironment);
 
             User newUser = new User(imagePath, Name, Gender, Username, Phone, Email, Address, HomeMunicipality, BirthDate);
 
             await _userService.AddUserAsync(newUser, Password);
             return Page();
-        }
-
-        private string SaveImageFile(IFormFile file)
-        {
-            if (file == null) throw new NullReferenceException("No file to save");
-            string destinationfolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/memberimages");
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + Image.FileName;
-            string filePath = Path.Combine(destinationfolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                Image.CopyTo(fileStream);
-            }
-            return uniqueFileName;
         }
 
     }
