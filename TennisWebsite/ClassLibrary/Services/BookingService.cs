@@ -153,14 +153,14 @@ namespace TennisLibrary.Services
 
                     while (reader.Read())
                     {
-                        DateTime tempStart = reader.GetDateTime("Start");
-                        DateTime tempEnd = reader.GetDateTime("End");
+                        DateTime tempStart = reader.GetDateTime("StartDate");
+                        DateTime tempEnd = reader.GetDateTime("EndDate");
                         if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd < End))
                         {
                             User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
-                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("Court"));
-                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("Start"), reader.GetDateTime("End")));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
                         }
                     }
                     return bookings;
@@ -197,8 +197,8 @@ namespace TennisLibrary.Services
                         if (Player1.Username == Username)
                         {
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
-                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("Court"));
-                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("Start"), reader.GetDateTime("End")));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
                         }
                     }
                     return bookings;
