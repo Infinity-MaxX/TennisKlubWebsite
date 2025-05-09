@@ -155,7 +155,7 @@ namespace TennisLibrary.Services
                     {
                         DateTime tempStart = reader.GetDateTime("StartDate");
                         DateTime tempEnd = reader.GetDateTime("EndDate");
-                        if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd < End))
+                        if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End))
                         {
                             User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
