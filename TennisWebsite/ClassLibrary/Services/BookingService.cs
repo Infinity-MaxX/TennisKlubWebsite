@@ -12,7 +12,7 @@ namespace TennisLibrary.Services
 {
     public class BookingService : IBookingService
     {
-        private string insertQuery = "INSERT into TennisBooking Values(@Player1, @Player2, @Start, @End, @Court)";
+        private string insertQuery = "INSERT into TennisBooking Values(@Court, @Player1, @Player2, @Start, @End)";
         private string deleteSQL = "DELETE from TennisBooking where BookingID = @BookingID";
         private string updateSQLTime = "Update TennisBooking set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLTimeAndPlayer = "Update TennisBooking set Player2 = @Player2 and set Start = @start and End = @end where BookingID = @ID";
@@ -55,17 +55,17 @@ namespace TennisLibrary.Services
                     await connection.OpenAsync();
                     SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
 
-                    insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1.Name);
-                    insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2.Name);
-                    insertCommand.Parameters.AddWithValue("@Start", newBooking.Start.ToString("yyyy-MM-dd HH:mm:ss"));
-                    insertCommand.Parameters.AddWithValue("@End", newBooking.End.ToString("yyyy-MM-dd HH:mm:ss"));
-                    Console.WriteLine(newBooking.Start.ToString("yyyy-MM-dd HH:mm:ss"));
+                    insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1.Username);
+                    insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2.Username);
+                    insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
+                    insertCommand.Parameters.AddWithValue("@End", newBooking.End);
                     insertCommand.Parameters.AddWithValue("@Court", newBooking.Court.Name);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)
                 {
-                    throw sqlExp;
+                    Console.WriteLine("Database error" + sqlExp.Message);
+                    return false;
                 }
                 finally
                 {
@@ -120,8 +120,8 @@ namespace TennisLibrary.Services
                     {
                         User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                         User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
-                        Court Court = await tempCourtService.GetCourtAsync(reader.GetString("Court"));
-                        bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("Start"), reader.GetDateTime("End")));
+                        Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                        bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
                     }
                     return bookings;
                 }
