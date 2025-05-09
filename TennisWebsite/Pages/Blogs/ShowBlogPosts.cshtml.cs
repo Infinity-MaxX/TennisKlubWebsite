@@ -31,7 +31,7 @@ namespace TennisWebsite.Pages.Blogs
         public async Task OnGetAsync()
         {
             int? SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
-            IsAdmin = (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement);
+            IsAdmin = (SessionAccessLevel != null && SessionAccessLevel >= _siteAccessRequirement);
             BlogPosts = await _blogPostService.GetAllPostsAsync();
         }
 
