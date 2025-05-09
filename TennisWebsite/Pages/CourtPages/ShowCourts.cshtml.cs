@@ -32,8 +32,8 @@ namespace TennisWebsite.Pages.CourtPages
         public async Task OnGetAsync()
         {
             courts = await cs.GetAllCourts();
-            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()));
             date = DateOnly.FromDateTime(DateTime.Now);
+            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
             foreach (Booking b in bookings)
             {
                 bookedCourtTimes.Add(b.Court.Name + b.Start.TimeOfDay.Hours);
@@ -43,7 +43,7 @@ namespace TennisWebsite.Pages.CourtPages
         public async Task<IActionResult> OnPostAsync()
         {
             courts = await cs.GetAllCourts();
-            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()));
+            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
             foreach (Booking b in bookings)
             {
                 bookedCourtTimes.Add(b.Court.Name + b.Start.TimeOfDay.Hours);
