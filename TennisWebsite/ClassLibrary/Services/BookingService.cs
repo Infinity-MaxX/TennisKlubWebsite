@@ -55,10 +55,12 @@ namespace TennisLibrary.Services
                     await connection.OpenAsync();
                     SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
 
-                    insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1);
-                    insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2);
-                    insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
-                    insertCommand.Parameters.AddWithValue("@Court", newBooking.Court);
+                    insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1.Name);
+                    insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2.Name);
+                    insertCommand.Parameters.AddWithValue("@Start", newBooking.Start.ToString("yyyy-MM-dd HH:mm:ss"));
+                    insertCommand.Parameters.AddWithValue("@End", newBooking.End.ToString("yyyy-MM-dd HH:mm:ss"));
+                    Console.WriteLine(newBooking.Start.ToString("yyyy-MM-dd HH:mm:ss"));
+                    insertCommand.Parameters.AddWithValue("@Court", newBooking.Court.Name);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)
