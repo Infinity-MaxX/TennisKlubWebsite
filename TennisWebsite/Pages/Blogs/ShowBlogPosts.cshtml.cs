@@ -12,11 +12,12 @@ namespace TennisWebsite.Pages.Blogs
     {
         #region Instances
         private IBlogService _blogPostService;
-        private const int _siteAccessRequirement = (int)AccessLevel.Guest;
+        private const int _siteAccessRequirement = (int)AccessLevel.Admin;
         #endregion
 
         #region Properties
         public List<Blog> BlogPosts { get; set; }
+        public bool IsAdmin { get; private set; }
         #endregion
 
         #region Constructor
@@ -27,28 +28,29 @@ namespace TennisWebsite.Pages.Blogs
         #endregion
 
         #region Methods
-        public async Task<IActionResult> OnGetAsync()
+        public async Task OnGetAsync()
         {
             int? SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
-
-            if (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement)
-            {
-                BlogPosts = await _blogPostService.GetAllPostsAsync();
-                return Page();
-            }
-            else
-            {
-                return RedirectToPage("/Index");
-            }
+            IsAdmin = (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement);
+            BlogPosts = await _blogPostService.GetAllPostsAsync();
         }
 
         /// <summary>
         /// A delete function as one does not need an extra page to delete a post.
         /// </summary>
-        public async Task<IActionResult> OnGetDelete(int DeleteNo)
+        public async Task<IActionResult> OnGetDeleteAsync(int DeleteNo)
         {
-            await _blogPostService.DeletePostAsync(DeleteNo);
-            return RedirectToPage("ShowBlogPosts");
+            int? SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
+
+            if (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement)
+            {
+                await _blogPostService.DeletePostAsync(DeleteNo);
+                return RedirectToPage("ShowBlogPosts");
+            }
+            else
+            {
+                return RedirectToPage("/Index");
+            }
         }
         #endregion
     }

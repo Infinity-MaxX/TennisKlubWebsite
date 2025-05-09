@@ -26,8 +26,11 @@
                 <td>@post.Title</td>
                 <td>@post.Body</td>
                 <td>@post.Date</td>
-                <td><a asp-page="EditBlogPosts" asp-route-id="@post.ID">Edit</a></td>
-                <td><a asp-page-handler="Delete" asp-route-DeleteNo="@post.ID">Delete</a></td>
+                @if (Model.IsAdmin)
+                {
+                    <td><a asp-page="EditBlogPosts" asp-route-id="@post.ID">Edit</a></td>
+                    <td><a asp-page-handler="Delete" asp-route-DeleteNo="@post.ID">Delete</a></td>
+                }
             </tr>
         }
         <</tbody>
