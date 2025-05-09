@@ -37,7 +37,6 @@ namespace TennisLibrary.Models
             Body = body;
             _date = DateTime.Now;
         }
-
         public Blog(int id, string author, string? title, string body)
         {
             _blogPostId = id;
@@ -45,6 +44,14 @@ namespace TennisLibrary.Models
             Title = title;
             Body = body;
             _date = DateTime.Now;
+        }
+        public Blog(int id, string author, string? title, string body, DateTime date)
+        {
+            _blogPostId = id;
+            Author = author;
+            Title = title;
+            Body = body;
+            _date = date;
         }
         #endregion
 
