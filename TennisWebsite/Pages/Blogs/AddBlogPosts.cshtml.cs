@@ -12,11 +12,12 @@ namespace TennisWebsite.Pages.Blogs
     {
         #region Instances
         private IBlogService _blogPostService;
+        private const int _siteAccessRequirement = (int)AccessLevel.Admin;
         #endregion
 
         #region Properties
         [BindProperty]
-        public Blog BlogPost { get; set; }
+        public Blog BlogPosts { get; set; }
 
         [BindProperty]
         public int ID { get; private set; }
@@ -32,11 +33,6 @@ namespace TennisWebsite.Pages.Blogs
 
         [BindProperty]
         public DateTime Date {  get; set; }
-
-        [BindProperty]
-        public AccessLevel AccessLevel { get; set; }
-
-        public int? SessionAccessLevel { get; private set; }
         #endregion
 
         #region Constructor
@@ -47,13 +43,22 @@ namespace TennisWebsite.Pages.Blogs
         #endregion
 
         #region Methods
-        public async Task OnGetAsync()
+        public IActionResult OnGet()
         {
-            //SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
+            int? SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
+
+            if (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement)
+            {
+                return Page();
+            }
+            else
+            {
+                return RedirectToPage("/Index");
+            }
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            await _blogPostService.CreatePostAsync(new Blog(BlogPost.Author, BlogPost.Title, BlogPost.Body));
+            await _blogPostService.CreatePostAsync(new Blog(Author, Title, Body));
             return RedirectToPage("ShowBlogPosts");
         }
         #endregion

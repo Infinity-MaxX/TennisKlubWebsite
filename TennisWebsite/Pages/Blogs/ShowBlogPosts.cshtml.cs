@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Hosting;
+using TennisLibrary.Helpers;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
 using TennisLibrary.Services;
@@ -11,6 +12,7 @@ namespace TennisWebsite.Pages.Blogs
     {
         #region Instances
         private IBlogService _blogPostService;
+        private const int _siteAccessRequirement = (int)AccessLevel.Guest;
         #endregion
 
         #region Properties
@@ -25,9 +27,19 @@ namespace TennisWebsite.Pages.Blogs
         #endregion
 
         #region Methods
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            BlogPosts = await _blogPostService.GetAllPostsAsync();
+            int? SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
+
+            if (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement)
+            {
+                BlogPosts = await _blogPostService.GetAllPostsAsync();
+                return Page();
+            }
+            else
+            {
+                return RedirectToPage("/Index");
+            }
         }
 
         /// <summary>
