@@ -43,7 +43,7 @@ namespace TennisLibrary.Services
                     command.Parameters.AddWithValue("@Author", post.Author);
                     command.Parameters.AddWithValue("@Title", post.Title);
                     command.Parameters.AddWithValue("@Body", post.Body);
-                    command.Parameters.AddWithValue("@Date", post.Date);
+                    command.Parameters.AddWithValue("@Date", DateTime.Now);
                     await connection.OpenAsync();
 
                     int numberOfRows = await command.ExecuteNonQueryAsync();
@@ -52,7 +52,7 @@ namespace TennisLibrary.Services
                 }
                 catch (SqlException sqlExp)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine("Database error: " + sqlExp.Message);
                     return false;
                 }
                 catch (Exception ex)
@@ -85,7 +85,7 @@ namespace TennisLibrary.Services
                 }
                 catch (SqlException sqlExp)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine("Database error: " + sqlExp.Message);
                 }
                 catch (Exception ex)
                 {
@@ -114,14 +114,15 @@ namespace TennisLibrary.Services
                         string postAuthor = reader.GetString("Author");
                         string? postTitle = reader.GetString("Title");
                         string postBody = reader.GetString("Body");
-                        Blog post = new Blog(postID, postAuthor, postTitle, postBody);
+                        DateTime postDate = reader.GetDateTime("PostDate");
+                        Blog post = new Blog(postID, postAuthor, postTitle, postBody, postDate);
                         posts.Add(post);
                     }
                     await reader.CloseAsync();
                 }
                 catch (SqlException sqlExp)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine("Database error: " + sqlExp.Message);
                 }
                 catch (Exception ex)
                 {
@@ -159,7 +160,7 @@ namespace TennisLibrary.Services
                 }
                 catch (SqlException sqlExp)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine("Database error: " + sqlExp.Message);
                 }
                 catch (Exception ex)
                 {
@@ -197,7 +198,7 @@ namespace TennisLibrary.Services
                 }
                 catch (SqlException sqlExp)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine("Database error: " + sqlExp.Message);
                 }
                 catch (Exception ex)
                 {
@@ -228,13 +229,14 @@ namespace TennisLibrary.Services
                         string postAuthor = reader.GetString("Author");
                         string? postTitle = reader.GetString("Title");
                         string postBody = reader.GetString("Body");
-                        post = new Blog(id, postAuthor, postTitle, postBody);
+                        DateTime postDate = reader.GetDateTime("PostDate");
+                        post = new Blog(id, postAuthor, postTitle, postBody, postDate);
                     }
                     await reader.CloseAsync();
                 }
                 catch (SqlException sqlExp)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine("Database error: " + sqlExp.Message);
                 }
                 catch (Exception ex)
                 {
@@ -265,7 +267,7 @@ namespace TennisLibrary.Services
                 }
                 catch (SqlException sqlExp)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine("Database error: " + sqlExp.Message);
                     return false;
                 }
                 catch (Exception ex)
