@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TennisLibrary.Helpers;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
 using TennisLibrary.Services;
@@ -17,17 +18,19 @@ namespace TennisWebsite.Pages.Users
 
         public string LoginStatus { get; set; }
 
+        public string OriginalDestination { get; private set; }
+
         public LoginModel(IUserService userService)
         {
             _userService = userService;
         }
 
-        public void OnGet()
+        public void OnGet(string OriginalDestination)
         {
-
+            this.OriginalDestination = OriginalDestination;
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string OriginalDestination)
         {
             User loginUser = await _userService.GetUserLoginAsync(LoginUsername, LoginPass);
             if (loginUser == null)
@@ -38,9 +41,10 @@ namespace TennisWebsite.Pages.Users
 
             HttpContext.Session.SetString("Username", loginUser.Username);
             HttpContext.Session.SetString("Displayname", loginUser.Name);
-            HttpContext.Session.SetInt32("AccesLevel", (int)loginUser.AccessLevel);
+            HttpContext.Session.SetInt32("AccessLevel", (int)loginUser.AccessLevel);
 
-            return RedirectToPage("/index");
+            if(String.IsNullOrEmpty(OriginalDestination)) return RedirectToPage("/index");
+            return RedirectToPage(OriginalDestination);
         }
     }
 }

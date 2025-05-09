@@ -20,7 +20,7 @@
             <input asp-for="@Model.LoginPass" class="form-control" />
         </div>
 
-        <input type="submit" value="Login" class="btn btn-primary" />
+        <input type="submit" value="Login" class="btn btn-primary" asp-route-OriginalDestination="@Model.OriginalDestination"/>
         <a asp-page="/Users/RegisterNewUser" class="btn btn-primary">Register</a>
     </form>
 </div>

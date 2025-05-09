@@ -1,5 +1,6 @@
 ﻿@page
 @using TennisLibrary.Models;
+@using TennisLibrary.Helpers;
 @model TennisWebsite.Pages.Users.ShowAllUsersModel
 @{
     ViewData["Title"] = "UsersAdminView";
@@ -21,6 +22,7 @@
                 <th>Addresse</th>
                 <th>Hjemmekommune</th>
                 <th>Fødselsdato</th>
+                <th>Autoritettsniveau</th>
                 <th>Profilbillede</th>
             </tr>
         </thead>
@@ -52,6 +54,9 @@
                     </td>
                     <td>
                         @user.BirthDate
+                    </td>
+                    <td>
+                        @((AccessLevel)user.AccessLevel)
                     </td>
                     <td>
                         <img src="~/Images/MemberImages/@(user.ImageName)" width="140px" height="140px">

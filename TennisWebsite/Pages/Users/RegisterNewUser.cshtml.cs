@@ -65,7 +65,6 @@ namespace TennisWebsite.Pages.Users
 
         public void OnGet()
         {
-            SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
 
 
         }
@@ -78,7 +77,7 @@ namespace TennisWebsite.Pages.Users
             User newUser = new User(imagePath, Name, Gender, Username, Phone, Email, Address, HomeMunicipality, BirthDate);
 
             await _userService.AddUserAsync(newUser, Password);
-            return Page();
+            return RedirectToPage("/Index");
         }
 
     }
