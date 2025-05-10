@@ -25,7 +25,15 @@ namespace TennisWebsite.Pages.CourtPages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            await cs.CreateCourtAsync(newCourt);
+            try
+            {
+                await cs.CreateCourtAsync(newCourt);
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("NewCourt.Name", ex.Message);
+                return Page();
+            }
             return RedirectToPage("ShowCourts");
         }
     }

@@ -1,14 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
-using TennisWebsite.ClassLibrary.Exceptions;
 
 namespace TennisLibrary.Services
 {
@@ -44,10 +38,7 @@ namespace TennisLibrary.Services
                 catch (SqlException sqlx)
                 {
                     Console.WriteLine(sqlx.Number);
-                    if (sqlx.Number == 2627)
-                    {
-                        throw new CourtExistsException("En bane med det givne navn eksisterer allerede");
-                    }
+                    if (sqlx.Number == 2627) throw new Exception("En bane med det givne navn findes allerede");
                     return false;
                 }
                 finally
