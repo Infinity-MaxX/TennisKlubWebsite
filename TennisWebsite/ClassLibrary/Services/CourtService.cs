@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
+using TennisWebsite.ClassLibrary.Exceptions;
 
 namespace TennisLibrary.Services
 {
@@ -42,7 +43,11 @@ namespace TennisLibrary.Services
 
                 catch (SqlException sqlx)
                 {
-                    Console.WriteLine(sqlx.Message);
+                    Console.WriteLine(sqlx.Number);
+                    if (sqlx.Number == 2627)
+                    {
+                        throw new CourtExistsException("En bane med det givne navn eksisterer allerede");
+                    }
                     return false;
                 }
                 finally
