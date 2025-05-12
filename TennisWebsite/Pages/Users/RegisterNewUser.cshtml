@@ -3,66 +3,68 @@
 @{
     ViewData["Title"] = "Register";
 }
+<div>
 
-<div class="container p-4 Container-Background">
-    <form method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <label asp-for="@Model.Username" class="control-label"></label>
-            <input asp-for="@Model.Username" class="form-control" />
-        </div>
-
-
-        <div class="form-group">
-            <label asp-for="@Model.Password" class="control-label"></label>
-            <input asp-for="@Model.Password" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="@Model.Name" class="control-label"></label>
-            <input asp-for="@Model.Name" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label class="custom-control-label">Køn</label>
-            @foreach(var gender in Model.Genders)
-            {
-                <input type="radio" asp-for="Gender" value="@gender.Item1" /> @gender.Item2
-            }
-        </div>
-
-        <div class="form-group">
-            <label asp-for="@Model.Phone" class="control-label"></label>
-            <input asp-for="@Model.Phone" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="@Model.Email" class="control-label"></label>
-            <input asp-for="@Model.Email" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="@Model.Address" class="control-label"></label>
-            <input asp-for="@Model.Address" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="@Model.HomeMunicipality" class="control-label"></label>
-            <input asp-for="@Model.HomeMunicipality" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="@Model.BirthDate" class="control-label"></label>
-            <input asp-for="@Model.BirthDate" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="@Model.Image" class="control-label">Add image</label>
-            <div class="custom-file">
-                <input asp-for="@Model.Image" class="custom-file-input form-control" />
+    <div class="container p-4 Container-Background">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="@Model.Username" class="control-label"></label>
+                <input asp-for="@Model.Username" class="form-control" />
             </div>
-        </div>
 
 
-        <input type="submit" value="Gem" class="btn btn-primary" />
-    </form>
+            <div class="form-group">
+                <label asp-for="@Model.Password" class="control-label"></label>
+                <input asp-for="@Model.Password" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Name" class="control-label"></label>
+                <input asp-for="@Model.Name" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="custom-control-label">Køn</label>
+                @foreach(var gender in Model.Genders)
+                {
+                    <input type="radio" asp-for="Gender" value="@gender.Item1" /> @gender.Item2
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Phone" class="control-label"></label>
+                <input asp-for="@Model.Phone" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Email" class="control-label"></label>
+                <input asp-for="@Model.Email" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Address" class="control-label"></label>
+                <input asp-for="@Model.Address" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.HomeMunicipality" class="control-label"></label>
+                <input asp-for="@Model.HomeMunicipality" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.BirthDate" class="control-label"></label>
+                <input asp-for="@Model.BirthDate" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.Image" class="control-label">Add image</label>
+                <div class="custom-file">
+                    <input asp-for="@Model.Image" class="custom-file-input form-control" />
+                </div>
+            </div>
+
+
+            <input type="submit" value="Gem" class="btn btn-primary" />
+        </form>
+    </div>
 </div>
