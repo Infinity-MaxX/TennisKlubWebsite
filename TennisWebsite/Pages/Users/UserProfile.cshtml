@@ -3,3 +3,49 @@
 @{
     ViewData["Title"] = "MyProfile";
 }
+
+<div class="container p-4 Container-Background">
+
+    @* https://getbootstrap.com/docs/4.0/layout/grid/ *@
+    <div>
+        <div class="row">
+            <div class="col-sm col-3">
+
+                <b>Navn:</b> @Model.Name
+                <br />
+                <b>Køn:</b> @Model.Gender
+                <br />
+                <b>Fødselsdati:</b> @Model.BirthDate
+
+            </div>
+            <div class="col-sm">
+                <img src="~/Images/MemberImages/@(Model.ImageName)" width="140px" height="140px">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm col-3">
+
+                <b>Tlf:</b> @Model.Phone
+                <br />
+                <b>Emailadresse:</b> @Model.Email
+
+            </div>
+            <div class="col-sm col-3">
+
+                <b>Adgangsniveau:</b> @Model.AccessName
+                <br />
+                <b>Brugernavn:</b> @Model.Username
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm col-3">
+                <b>Adresse:</b> @Model.Address
+            </div>
+            <div class="col-sm">
+                <b>Hjemmekommune:</b> @Model.HomeMunicipality
+            </div>
+        </div>
+    </div>
+</div>
