@@ -5,9 +5,9 @@
     ViewData["Title"] = "Edit user";
 }
 
-<div>
+<div class="container p-4 Container-Background">
 
-    <div class="container p-4 Container-Background">
+    <div>
         <form method="post" enctype="multipart/form-data">
 
             <div class="form-group">
@@ -53,8 +53,7 @@
             <img src="~/Images/MemberImages/@(Model.OldImageName)" width="140px" height="140px">
             @if(Model.OldImageName != Defaults.DefaultImage)
             {
-                <input type="checkbox" asp-for="KeepImage"/>
-                <label asp-for="KeepImage" class="form-check-label">Behold billede</label>
+                <a asp-route-Username="@Model.OldUserName" asp-route-KeepImage="@false">Reset Image</a>
             }
 
             <div class="form-group">
@@ -65,7 +64,7 @@
             </div>
 
 
-            <input type="submit" value="Gem" class="btn btn-primary" asp-route-OldUserName="@Model.OldUserName" asp-Route-OldImageName="@Model.OldImageName" asp-Route-KeepImage="@Model.KeepImage" />
+            <input type="submit" value="Gem" class="btn btn-primary" asp-route-OldUserName="@Model.OldUserName" asp-Route-OldImageName="@Model.OldImageName"/>
         </form>
     </div>
 </div>
