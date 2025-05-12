@@ -60,6 +60,7 @@ namespace TennisLibrary.Services
         }
         public async Task<User> GetUserAsAdminAsync(string queryUsername)
         {
+            if (queryUsername == null) return null;
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
