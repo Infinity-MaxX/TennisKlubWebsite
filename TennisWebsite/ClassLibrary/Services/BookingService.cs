@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,16 +29,17 @@ namespace TennisLibrary.Services
                     await connection.OpenAsync();
                     SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
 
-                    insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1);
-                    insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2);
+                    insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1.Username);
+                    insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2.Username);
                     insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
                     insertCommand.Parameters.AddWithValue("@End", newBooking.End);
-                    insertCommand.Parameters.AddWithValue("@Court", newBooking.Court);
+                    insertCommand.Parameters.AddWithValue("@Court", newBooking.Court.Name);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlx)
                 {
-                    throw sqlExp;
+                    if (sqlx.Number == 547) ; throw new Exception("bob");
+
                 }
                 finally
                 {
@@ -62,9 +64,10 @@ namespace TennisLibrary.Services
                     insertCommand.Parameters.AddWithValue("@Court", newBooking.Court.Name);
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
-                catch (SqlException sqlExp)
+                catch (SqlException sqlx)
                 {
-                    Console.WriteLine("Database error" + sqlExp.Message);
+                    Console.WriteLine(sqlx.Number);
+                    Console.WriteLine(sqlx.Message);
                     return false;
                 }
                 finally
