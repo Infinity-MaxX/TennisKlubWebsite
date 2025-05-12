@@ -44,7 +44,8 @@
                         {
                             <br />
                             <div class="btn-group mt-2" role="group">
-                                <button class="btn btn-primary">Admin booking</button>
+                                <a asp-page="/BookingPages/CreateBooking" asp-route-time="@("")"
+                                   asp-route-court="@c.Name" class="btn btn-success border-dark">Admin booking</a>
                                 <a asp-page="editcourt" asp-route-courtName="@c.Name" class="btn btn-info ">Rediger</a>
                                 <button class="btn btn-danger" asp-page-handler="Delete" asp-route-courtName="@c.Name">Slet</button>
                             </div>
