@@ -5,33 +5,94 @@
     ViewData["Title"] = "ShowBlogPosts";
 }
 
-<a href="AddBlogPosts">Post</a>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Author</th>
-            <th>Title</th>
-            <th>Body</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (@Blog post in @Model.BlogPosts) 
-        {
-            <tr>
-                <td>@post.ID</td>
-                <td>@post.Author</td>
-                <td>@post.Title</td>
-                <td>@post.Body</td>
-                <td>@post.Date</td>
+<body>
+    <div class="container Container-Background">
+        <div>
+            <form method="post">
                 @if (Model.IsAdmin)
                 {
-                    <td><a asp-page="EditBlogPosts" asp-route-id="@post.ID">Edit</a></td>
-                    <td><a asp-page-handler="Delete" asp-route-DeleteNo="@post.ID">Delete</a></td>
+                    <a class="btn btn-primary" href="AddBlogPosts" role="button">Post</a>
                 }
-            </tr>
+            </form>
+        </div>
+        @foreach (@Blog post in @Model.BlogPosts)
+        {
+            <div class="card-deck">
+                <div class="card">
+                    @* <img class="card-img-top" src=".../100px180/" alt="Card image cap"> *@
+                    <div class="card-header">Author: @post.Author</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@post.Title</h5>
+                        <p class="card-text">@post.Body</p>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Posted: @post.Date</small>
+                    </div>
+                    @if (Model.IsAdmin)
+                    {
+                        <div class="card-footer">
+                            <small class="text-muted">
+                                <a asp-page="EditBlogPosts" asp-route-id="@post.ID">Rediger</a>
+                                <a asp-page-handler="Delete" asp-route-DeleteNo="@post.ID">Slet</a>
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
         }
-        <</tbody>
-</table>
+    </div>
+</body>
+@* <body>
+    <div class="container Container-Background">
+        <div>
+            <form method="post">
+                <input class="btn btn-primary mb-4" type="date" asp-for="@Model.date" onclick="this.showPicker();" onchange="this.form.submit()" />
+            </form>
+
+            @if (HttpContext.Session.GetInt32("AccessLevel") >= (int)AccessLevel.Admin)
+            {
+                <a asp-page="AddCourt" class="btn btn-info me-1">Rediger</a>
+            }
+
+            @foreach (Court c in Model.courts)
+            {
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-light">
+                        @c.Type
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@c.Name</h5>
+                        <div class="btn-toolbar">
+                            <div class="btn-group" role="group">
+
+                                @for (int i = 8; i < 22; i++)
+                                {
+                                    if (Model.bookedCourtTimes.Contains(c.Name + i) || new DateTime(Model.date, new TimeOnly(i, 0, 0)) < DateTime.Now)
+                                    {
+                                        <a class="btn btn-secondary border-dark" disabled>@i:00</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-page="/BookingPages/CreateBooking" asp-route-time="@(new DateTime(Model.date, new TimeOnly(i,0,0)).ToString())"
+                                           asp-route-court="@c.Name" class="btn btn-success border-dark">@i:00</a>
+                                    }
+                                }
+                            </div>
+                            @if (HttpContext.Session.GetInt32("AccessLevel") >= (int)AccessLevel.Admin)
+                            {
+                                <div class="btn-group ms-auto">
+                                    <button class="btn btn-primary">Admin booking</button>
+                                    <a asp-page="editcourt" asp-route-courtName="@c.Name" class="btn btn-info me-1">Rediger</a>
+                                    <form asp-page-handler="Delete">
+                                        <button class="btn btn-danger">Slet</button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</body> *@
+
