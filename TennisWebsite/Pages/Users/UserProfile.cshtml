@@ -4,11 +4,11 @@
     ViewData["Title"] = "MyProfile";
 }
 
-<div class="container p-4 Container-Background">
+<div class="container Container-Background p-4" style="justify-content:normal !important; align-items:start !important">
 
     @* https://getbootstrap.com/docs/4.0/layout/grid/ *@
-    <div>
-        <div class="row">
+    <div class="container container-fluid">
+        <div class="row align-items-start">
             <div class="col-sm col-3">
 
                 <b>Navn:</b> @Model.Name
@@ -19,11 +19,11 @@
 
             </div>
             <div class="col-sm">
-                <img src="~/Images/MemberImages/@(Model.ImageName)" width="140px" height="140px">
+                <img src="~/Images/MemberImages/@(Model.ImageName)" width="300px" height="300px">
             </div>
         </div>
 
-        <div class="row">
+        <div class="row align-items-start">
             <div class="col-sm col-3">
 
                 <b>Tlf:</b> @Model.Phone
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row align-items-start">
             <div class="col-sm col-3">
                 <b>Adresse:</b> @Model.Address
             </div>
