@@ -8,6 +8,7 @@ namespace TennisWebsite.Pages.BookingPages
     public class GetBookingsModel : PageModel
     {
         private BookingService bs;
+        private UserService us;
         public List<Booking> bookings;
         public GetBookingsModel()
         {
@@ -15,7 +16,7 @@ namespace TennisWebsite.Pages.BookingPages
         }
         public async Task OnGetAsync()
         {
-            bookings = await bs.GetAllBookingsAsync();
+            bookings = await bs.GetBookingsByUserAsync(HttpContext.Session.GetString("Username"));
         }
     }
 }
