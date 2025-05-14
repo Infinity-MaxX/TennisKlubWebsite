@@ -62,7 +62,6 @@ namespace TennisWebsite.Pages.BookingPages
                     else
                     {
                         Error = 1;
-                        Console.WriteLine("error1");
                     }
                 }
 
@@ -80,7 +79,6 @@ namespace TennisWebsite.Pages.BookingPages
             else
             {
                 Error = 2;
-                Console.WriteLine("error2");
             }
         }
 
@@ -92,6 +90,10 @@ namespace TennisWebsite.Pages.BookingPages
                 string player1UN = player1.Split('(')[1];
                 User Player1 = await us.GetUserAsAdminAsync(player1UN.Split(')')[0]);
                 User Player2 = await us.GetUserAsAdminAsync(player2);
+                if (Player1.Username == Player2.Username)
+                {
+                    return Page();
+                }
                 Booking newBooking = new Booking(Player1, Player2, booking.Court, booking.Start, booking.End);
                 try
                 {
