@@ -4,6 +4,7 @@ using TennisLibrary.Models;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Services;
 using TennisLibrary.Helpers;
+using TennisWebsite.ClassLibrary.Helpers;
 
 namespace TennisWebsite.Pages.Users
 {
@@ -11,6 +12,9 @@ namespace TennisWebsite.Pages.Users
     {
         private IUserService _userService;
         private const int _siteAccesLevel = (int)AccessLevel.Admin;
+
+        [BindProperty]
+        public string SelectedUsername { get; set; }
 
         public List<User> Users { get; set; }
 
@@ -30,6 +34,14 @@ namespace TennisWebsite.Pages.Users
 
             }
             return RedirectToPage("/Index");
+        }
+
+        public async Task<IActionResult> OnGetUpdateAsync(string query)
+        {
+            Users = await _userService.GetAllUsersAsync();
+            if (String.IsNullOrEmpty(query)) return new JsonResult(DLStringComparer<User>.ConvertIfNoQuery(Users, x => x.Name));
+
+            return new JsonResult(DLStringComparer<User>.Matches(Users, x => x.Name, query));
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(string Username)
