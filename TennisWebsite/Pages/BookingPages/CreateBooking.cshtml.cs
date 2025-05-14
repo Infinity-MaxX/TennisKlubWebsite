@@ -21,6 +21,7 @@ namespace TennisWebsite.Pages.BookingPages
         private User Player1;
 
         public bool Admin = false;
+        public int Error = 0;
         
 
 
@@ -36,13 +37,15 @@ namespace TennisWebsite.Pages.BookingPages
             us = new UserService();
         }
 
-        public async Task<IActionResult> OnGetAsync(string time, string court)
+        public async Task OnGetAsync(string time, string court)
         {
             bs= new BookingService();
             cs = new CourtService();
             booking= new Booking();
             us =new UserService();
             User Player1 = await us.GetUserAsAdminAsync(HttpContext.Session.GetString("Username"));
+            Admin = false;
+            Error = 0;
 
             if (Player1 != null)
             {
@@ -55,12 +58,10 @@ namespace TennisWebsite.Pages.BookingPages
                         booking.End = booking.Start.AddHours(1);
                         booking.Court = await cs.GetCourtAsync(court);
                         Admin = true;
-                        return Page();
                     }
                     else
                     {
-                        Console.WriteLine("Return 2");
-                        return RedirectToPage("/index");
+                        Error = 1;
                     }
                 }
 
@@ -70,17 +71,14 @@ namespace TennisWebsite.Pages.BookingPages
                     booking.Court = await cs.GetCourtAsync(court);
                     booking.Start = tempTime;
                     booking.End = tempTime.AddHours(1);
-
                     player1 = Player1.Name + " (" + Player1.Username + ")";
                     Admin = false;
-                    return Page();
+                    Page();
                 }
             }
             else
             {
-                Console.WriteLine("Return4");
-                Console.WriteLine("null");
-                return RedirectToPage("/index");
+                Error = 2;
             }
         }
 
@@ -92,6 +90,10 @@ namespace TennisWebsite.Pages.BookingPages
                 string player1UN = player1.Split('(')[1];
                 User Player1 = await us.GetUserAsAdminAsync(player1UN.Split(')')[0]);
                 User Player2 = await us.GetUserAsAdminAsync(player2);
+                if (Player1.Username == Player2.Username)
+                {
+                    return Page();
+                }
                 Booking newBooking = new Booking(Player1, Player2, booking.Court, booking.Start, booking.End);
                 try
                 {
