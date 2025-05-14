@@ -33,6 +33,7 @@ namespace TennisWebsite.Pages.Blogs
             int? SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
             IsAdmin = (SessionAccessLevel != null && SessionAccessLevel >= _siteAccessRequirement);
             BlogPosts = await _blogPostService.GetAllPostsAsync();
+            BlogPosts = BlogPosts.OrderByDescending(b => b.Date).ToList();
         }
 
         /// <summary>
