@@ -20,6 +20,9 @@ namespace TennisWebsite.Pages.BookingPages
 
         private User Player1;
 
+        public bool Admin = false;
+        
+
 
         private BookingService bs;
         private CourtService cs;
@@ -33,7 +36,7 @@ namespace TennisWebsite.Pages.BookingPages
             us = new UserService();
         }
 
-        public async Task OnGetAsync(string time, string court)
+        public async Task<IActionResult> OnGetAsync(string time, string court)
         {
             bs= new BookingService();
             cs = new CourtService();
@@ -41,28 +44,44 @@ namespace TennisWebsite.Pages.BookingPages
             us =new UserService();
             User Player1 = await us.GetUserAsAdminAsync(HttpContext.Session.GetString("Username"));
 
-            if (time.IsNullOrEmpty())
+            if (Player1 != null)
             {
-                if (Player1.AccessLevel >= AccessLevel.Admin)
+                Console.WriteLine("not null");
+                if (time.IsNullOrEmpty())
                 {
-                    Console.WriteLine("Is null!");
+                    if (Player1.AccessLevel >= AccessLevel.Admin)
+                    {
+                        booking.Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, 0, 0);
+                        booking.End = booking.Start.AddHours(1);
+                        booking.Court = await cs.GetCourtAsync(court);
+                        Admin = true;
+                        return Page();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Return 2");
+                        return RedirectToPage("/index");
+                    }
                 }
+
                 else
                 {
-                    RedirectToPage("/index");
+                    DateTime tempTime = DateTime.Parse(time);
+                    booking.Court = await cs.GetCourtAsync(court);
+                    booking.Start = tempTime;
+                    booking.End = tempTime.AddHours(1);
+
+                    player1 = Player1.Name + " (" + Player1.Username + ")";
+                    Admin = false;
+                    return Page();
                 }
             }
-
             else
             {
-                DateTime tempTime = DateTime.Parse(time);
-                booking.Court = await cs.GetCourtAsync(court);
-                booking.Start = tempTime;
-                booking.End = tempTime.AddHours(1);
-                
-                player1 = Player1.Name + " (" + Player1.Username + ")";
+                Console.WriteLine("Return4");
+                Console.WriteLine("null");
+                return RedirectToPage("/index");
             }
-            
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
