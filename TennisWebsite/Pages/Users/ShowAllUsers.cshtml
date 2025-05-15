@@ -6,49 +6,6 @@
     ViewData["Title"] = "UsersAdminView";
 }
 
-<style>
-    /* https://www.w3schools.com/HOWTO/howto_js_dropdown.asp */
-
-    /* The container <div> - needed to position the dropdown content */
-    .dldropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    /* Dropdown Content (Hidden by Default) */
-    .dldropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f1f1f1;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-
-        /* Links inside the dropdown */
-        .dldropdown-content div {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-            /* Change color of dropdown links on hover */
-            .dldropdown-content div:hover {
-                background-color: #ddd;
-            }
-
-    /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-    .dlshow {
-        display: block;
-    }
-
-    .dlinput {
-
-    }
-
-</style>
-
 <div class="container p-4 Container-Background">
     <div>
         <btn>
@@ -56,7 +13,7 @@
         </btn>
 
         <div class="dldropdown">
-            <input class="dlinput" id="queryField" type="text" oninput="searchFunc(queryField.value)" />
+            <input class="dlinput" id="queryField" type="text" oninput="searchFunc(queryField.value, 'testDropDown', 'queryField', 'usernameField')" />
             <input type="hidden" id="usernameField" asp-for="@Model.SelectedUsername" />
 
             <div id="testDropDown" class="dldropdown-content">
@@ -137,21 +94,21 @@
 @section scripts
 {
     <script>
-        async function searchFunc(query) {
+        async function searchFunc(query, dropDownID, displayFieldID, inputFieldID) {
             document.getElementById("testDropDown").classList.add("dlshow");
             const response = await fetch(`?handler=Update&query=${query}`); //Apparently this is a lot of data, not just my data.
             const valuePairs = await response.json(); //This is my data, as transferred? Returned? with return JsonResult([my list of things here])
-            updateTable(valuePairs);
+            updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID);
         }
 
-        function updateTable(valuePairs) {
-            const dropdown = document.getElementById('testDropDown'); //Refer to the table in the actual html
+        function updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID) {
+            const dropdown = document.getElementById(dropDownID); //Refer to the table in the actual html
             dropdown.innerHTML = ''; // Clear existing rows in the table
 
             valuePairs.forEach(item => {
                 const option = document.createElement('div');
                 option.onclick = function() {
-                    selectItem(item)
+                    selectItem(item, dropDownID, displayFieldID, inputFieldID)
                 }
                 option.innerHTML = `
                     ${item.dlString}
@@ -163,10 +120,10 @@
             });
         }
 
-        function selectItem(item) {
-            document.getElementById('queryField').value = item.dlString;
-            document.getElementById('usernameField').value = item.username;
-            openDropdown.classList.remove('dlshow');
+        function selectItem(item, dropDownID, displayFieldID, inputFieldID) {
+            document.getElementById(displayFieldID).value = item.dlString;
+            document.getElementById(inputFieldID).value = item.username;
+            openDropdown.classList.remove(dropDownID);
         }
 
         window.onclick = function(event) {

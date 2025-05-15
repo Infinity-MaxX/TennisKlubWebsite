@@ -85,21 +85,21 @@
 @section scripts
 {
     <script>
-        async function searchFunc(query) {
+        async function searchFunc(query, dropDownID, displayFieldID, inputFieldID) {
             document.getElementById("testDropDown").classList.add("dlshow");
             const response = await fetch(`?handler=Update&query=${query}`); //Apparently this is a lot of data, not just my data.
             const valuePairs = await response.json(); //This is my data, as transferred? Returned? with return JsonResult([my list of things here])
-            updateTable(valuePairs);
+            updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID);
         }
 
-        function updateTable(valuePairs) {
-            const dropdown = document.getElementById('testDropDown'); //Refer to the table in the actual html
+        function updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID) {
+            const dropdown = document.getElementById(dropDownID); //Refer to the table in the actual html
             dropdown.innerHTML = ''; // Clear existing rows in the table
 
             valuePairs.forEach(item => {
                 const option = document.createElement('div');
                 option.onclick = function() {
-                    selectItem(item)
+                    selectItem(item, dropDownID, displayFieldID, inputFieldID)
                 }
                 option.innerHTML = `
                     ${item.dlString}
@@ -111,10 +111,10 @@
             });
         }
 
-        function selectItem(item) {
-            document.getElementById('queryField').value = item.dlString;
-            document.getElementById('usernameField').value = item.username;
-            openDropdown.classList.remove('dlshow');
+        function selectItem(item, dropDownID, displayFieldID, inputFieldID) {
+            document.getElementById(displayFieldID).value = item.dlString;
+            document.getElementById(inputFieldID).value = item.username;
+            openDropdown.classList.remove(dropDownID);
         }
 
         window.onclick = function(event) {
