@@ -49,6 +49,7 @@ namespace TennisWebsite.Pages.Blogs
 
             if (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement)
             {
+                Author = HttpContext.Session.GetString("Displayname");
                 return Page();
             }
             else

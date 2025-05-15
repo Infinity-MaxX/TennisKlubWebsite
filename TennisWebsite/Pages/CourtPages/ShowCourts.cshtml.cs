@@ -29,10 +29,17 @@ namespace TennisWebsite.Pages.CourtPages
             date = new DateOnly();
         }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(DateOnly? datePot)
         {
+            if (datePot != null)
+            {
+                date = (DateOnly) datePot;
+            }
+            else
+            {
+                date = DateOnly.FromDateTime(DateTime.Now);
+            }
             courts = await cs.GetAllCourts();
-            date = DateOnly.FromDateTime(DateTime.Now);
             bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
             foreach (Booking b in bookings)
             {
@@ -49,6 +56,36 @@ namespace TennisWebsite.Pages.CourtPages
                 bookedCourtTimes.Add(b.Court.Name + b.Start.TimeOfDay.Hours);
             }
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostPreviousDayAsync()
+        {
+            date = date.AddDays(-1);
+            courts = await cs.GetAllCourts();
+            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
+            foreach (Booking b in bookings)
+            {
+                bookedCourtTimes.Add(b.Court.Name + b.Start.TimeOfDay.Hours);
+            }
+            return RedirectToPage("/CourtPages/ShowCourts", new { datePot = date });
+        }
+
+        public async Task<IActionResult> OnPostNextDayAsync()
+        {
+            date = date.AddDays(1);
+            courts = await cs.GetAllCourts();
+            bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
+            foreach (Booking b in bookings)
+            {
+                bookedCourtTimes.Add(b.Court.Name + b.Start.TimeOfDay.Hours);
+            }
+            return RedirectToPage("/CourtPages/ShowCourts", new {datePot = date});
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(string Name)
+        {
+            await cs.DeleteCourtAsync(Name);
+            return RedirectToPage();
         }
     }
 }

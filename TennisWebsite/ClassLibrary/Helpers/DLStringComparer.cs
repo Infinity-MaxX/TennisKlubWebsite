@@ -1,4 +1,6 @@
-﻿namespace TennisWebsite.ClassLibrary.Helpers
+﻿using System.Collections.Generic;
+
+namespace TennisWebsite.ClassLibrary.Helpers
 {
     public class DLStringComparer<T>
     {
@@ -114,6 +116,17 @@
             return Matches(matchables, selector, query, true);
         }
 
+
+        public static List<DLStringScoreObject<T>> ConvertIfNoQuery(List<T> matchables, Func<T, string> selector)
+        //Example selector x => x.Username, if it is a user
+        {
+            List<DLStringScoreObject<T>> results = new List<DLStringScoreObject<T>>();
+            foreach (T m in matchables)
+            {
+                results.Add(new DLStringScoreObject<T>(m, 0, selector(m)));
+            }
+            return results;
+        }
 
     }
 }
