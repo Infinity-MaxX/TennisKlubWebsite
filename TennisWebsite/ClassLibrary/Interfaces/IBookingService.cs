@@ -11,11 +11,11 @@ namespace TennisLibrary.Interfaces
     {
         Task<bool> AddBookingUserAsync(Booking newBooking);
 
-        Task<bool> AddBookingAdminAsync(Booking newBooking);
-
         Task<List<Booking>> GetAllBookingsAsync();
 
         Task<List<Booking>> GetBookingsByUserAsync(string Username);
+
+        Task<List<Booking>> GetBookingsByPlayer2Async(string Username);
 
         Task<List<Booking>> GetBookingsByDatesAsync(DateTime Start, DateTime End);
 

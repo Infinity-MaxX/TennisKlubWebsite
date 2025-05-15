@@ -6,6 +6,7 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
 
@@ -19,34 +20,6 @@ namespace TennisLibrary.Services
         private string updateSQLTimeAndPlayer = "Update TennisBooking set Player2 = @Player2 and set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLPlayer = "Update TennisBooking set Player2 = @Player2 where BookingID = @ID";
         private string getSQLBookings = "SELECT * from TennisBooking";
-
-        async public Task<bool> AddBookingAdminAsync(Booking newBooking)
-        {
-            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
-            {
-                try
-                {
-                    await connection.OpenAsync();
-                    SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-
-                    insertCommand.Parameters.AddWithValue("@Player1", newBooking.Player1.Username);
-                    insertCommand.Parameters.AddWithValue("@Player2", newBooking.Player2.Username);
-                    insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
-                    insertCommand.Parameters.AddWithValue("@End", newBooking.End);
-                    insertCommand.Parameters.AddWithValue("@Court", newBooking.Court.Name);
-                    return 0 < await insertCommand.ExecuteNonQueryAsync();
-                }
-                catch (SqlException sqlx)
-                {
-                    if (sqlx.Number == 547) ; throw new Exception("bob");
-
-                }
-                finally
-                {
-                    await connection.CloseAsync();
-                }
-            }
-        }
 
         async public Task<bool> AddBookingUserAsync(Booking newBooking)
         {
@@ -200,6 +173,44 @@ namespace TennisLibrary.Services
                         if (Player1.Username == Username)
                         {
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByPlayer2Async(string Username)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                        if (Player2.Username == Username)
+                        {
+                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                             Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
                             bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
                         }
