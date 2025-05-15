@@ -1,11 +1,24 @@
 ﻿@page
 @model TennisWebsite.Pages.BookingPages.GetBookingsModel
+@using TennisLibrary.Models
 @{
     ViewData["Title"] = "Show Bookings";
 }
 
 <div class="container p-4 Container-Background">
     <H1>
-         @Model.bookings.Count();
+        @foreach (Booking booking in Model.bookings)
+        {
+            <div class = "card mb-3">
+                <div class="card-header bg-dark text-light fs-4">
+                    Booking lavet af @booking.Player1.Name
+                </div>
+                <div class="card-body fs-6">
+                    Spiller 2: @booking.Player2.Name
+                    <p>Bane: @booking.Court.Name</p>
+                    Tid: fra @booking.Start til @booking.End
+                </div>
+            </div>
+        }
     </H1>
 </div>

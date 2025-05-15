@@ -16,7 +16,7 @@
 
                 <div class="mb-3">
                     <label asp-for="@Model.player2" class="control-label"> Spiller 2 </label>
-                    <input asp-for="@Model.player2" class="form-control" , placeholder="Indtast venligst brugernavnet på din medspiller." required />
+                    <input asp-for="@Model.player2" class="form-control" , placeholder="Indtast venligst brugernavnet på din medspiller." required autofocus />
                 </div>
 
                 <div class="mb-3">
@@ -64,6 +64,57 @@
             }
 
             <button type="submit" class="btn btn-info">Opret booking</button>
+
+
+            <div class="modal show" id="ModalError1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal show" id="ModalError2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>
+
+<script>
+    if (@Model.Error == 1)
+    {
+        document.addEventListener("DOMContentLoaded", function () {
+            var myModal = new bootstrap.Modal(document.getElementById("ModalError1"));
+            myModal.show();
+        });
+    }
+
+    if (@Model.Error == 2)
+    {
+        document.addEventListener("DOMContentLoaded", function () {
+            var myModal = new bootstrap.Modal(document.getElementById("ModalError2"));
+            myModal.show();
+        });
+    }
+</script>
