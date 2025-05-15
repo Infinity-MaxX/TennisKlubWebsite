@@ -9,14 +9,15 @@ namespace TennisWebsite.Pages.BookingPages
     {
         private BookingService bs;
         private UserService us;
-        public List<Booking> bookings;
+        public List<Booking> bookingsP1, bookingsP2;
         public GetBookingsModel()
         {
             bs = new BookingService();
         }
         public async Task OnGetAsync()
         {
-            bookings = await bs.GetBookingsByUserAsync(HttpContext.Session.GetString("Username"));
+            bookingsP1 = await bs.GetBookingsByUserAsync(HttpContext.Session.GetString("Username"));
+            bookingsP2 = await bs.GetBookingsByPlayer2Async(HttpContext.Session.GetString("Username"));
         }
     }
 }

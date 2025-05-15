@@ -7,7 +7,22 @@
 
 <div class="container p-4 Container-Background">
     <H1>
-        @foreach (Booking booking in Model.bookings)
+        @foreach (Booking booking in Model.bookingsP1)
+        {
+            <div class = "card mb-3">
+                <div class="card-header bg-dark text-light fs-4">
+                    Booking lavet af @booking.Player1.Name
+                </div>
+                <div class="card-body fs-6">
+                    Spiller 2: @booking.Player2.Name
+                    <p>Bane: @booking.Court.Name</p>
+                    Tid: fra @booking.Start til @booking.End
+                </div>
+            </div>
+        }
+
+
+        @foreach (Booking booking in Model.bookingsP2)
         {
             <div class = "card mb-3">
                 <div class="card-header bg-dark text-light fs-4">
