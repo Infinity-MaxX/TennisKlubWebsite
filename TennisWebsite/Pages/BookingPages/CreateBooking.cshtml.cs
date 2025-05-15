@@ -90,10 +90,15 @@ namespace TennisWebsite.Pages.BookingPages
                 string player1UN = player1.Split('(')[1];
                 User Player1 = await us.GetUserAsAdminAsync(player1UN.Split(')')[0]);
                 User Player2 = await us.GetUserAsAdminAsync(player2);
+                if (Player1 == null || Player2 == null)
+                {
+                    return Page();
+                }
                 if (Player1.Username == Player2.Username)
                 {
                     return Page();
                 }
+                
                 Booking newBooking = new Booking(Player1, Player2, booking.Court, booking.Start, booking.End);
                 try
                 {
@@ -103,7 +108,6 @@ namespace TennisWebsite.Pages.BookingPages
                 {
                     return RedirectToPage("CreateBooking", new { time = booking.Start.ToString(), court = booking.Court.Name });
                 }
-                await bs.AddBookingUserAsync(newBooking);
                 return RedirectToPage("/index");
             }
             return RedirectToPage("CreateBooking", new { time = booking.Start.ToString(), court = booking.Court.Name });

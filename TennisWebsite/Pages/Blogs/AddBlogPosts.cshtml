@@ -8,13 +8,9 @@
 <h1>New Post</h1>
 
 <form method="post">
-    <div class="form-group" enctype="multipart/form-data">
-        <label asp-for="@Model.ID" class="control-label"></label>
-        <input asp-for="@Model.ID" class="form-control" readonly="true" />
-    </div>
     <div class="form-group">
         <label asp-for="@Model.Author" class="control-label"></label>
-        <input asp-for="@Model.Author" class="form-control" required="true"/>
+        <input asp-for="@Model.Author" class="form-control" required="true" readonly="true"/>
     </div>
     <div class="form-group">
         <label asp-for="@Model.Title" class="control-label"></label>
@@ -29,5 +25,5 @@
         <input asp-for="@Model.Date" class="form-control" readonly="true"/>
     </div>
 
-    <input type="submit" value="Gem" class="btn btn-primary" />
+    <input type="submit" value="Post" class="btn btn-primary" />
 </form>

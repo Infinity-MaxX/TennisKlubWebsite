@@ -8,14 +8,29 @@
 <body>
     <div class="container Container-Background">
         <div>
-            <form method="post">
-                <input class="btn btn-primary mt-4 mb-2" type="date" asp-for="@Model.date" onclick="this.showPicker();" onchange="this.form.submit()" />
-            </form>
+            <div class="d-flex align-items-center mt-4 mb-2">
+                <form method="post">
+                    <button class="btn" type="submit" asp-page-handler="PreviousDay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16" style="transform: translateY(-3px)">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+                        </svg>
+                    </button>
 
-            @if (HttpContext.Session.GetInt32("AccessLevel") >= (int)AccessLevel.Admin)
-            {
-                <a asp-page="AddCourt" class="btn btn-info mb-3">Opret bane</a>
-            }
+                    <input id="datePicker" class="btn btn-primary" type="date" asp-for="@Model.date" onclick="this.showPicker();" onchange="this.form.submit()"/>
+
+                    <button class="btn" type="submit" asp-page-handler="NextDay">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16" style="transform: translateY(-3px)">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                        </svg>
+                    </button>
+                </form>
+
+                @if (HttpContext.Session.GetInt32("AccessLevel") >= (int)AccessLevel.Admin)
+                {
+                    <a asp-page="AddCourt" class="btn btn-info ms-5">Opret bane</a>
+                }
+
+            </div>
 
             @foreach (Court c in Model.courts)
             {
@@ -47,7 +62,7 @@
                                 <a asp-page="/BookingPages/CreateBooking" asp-route-time="@("")"
                                    asp-route-court="@c.Name" class="btn btn-success border-dark">Admin booking</a>
                                 <a asp-page="editcourt" asp-route-courtName="@c.Name" class="btn btn-info ">Rediger</a>
-                                <button class="btn btn-danger" asp-page-handler="Delete" asp-route-courtName="@c.Name">Slet</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-DeleteTarget="@c.Name">Slet bane</button>
                             </div>
                         }
                     </div>
@@ -55,6 +70,47 @@
             }
         </div>
     </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nej</button>
+                    <form method="post">
+                        <input type="hidden" id="DeleteTargetInput" name="Name"/>
+                        <button type="submit" asp-page-handler="Delete" class="btn btn-danger" id="DeleteButton">Slet bane</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 
+<script>
+    var exampleModal = document.getElementById('exampleModal')
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        var button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        var DeleteTarget = button.getAttribute('data-bs-DeleteTarget')
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        var modalTitle = exampleModal.querySelector('.modal-title')
+        var modalBodyLabel = exampleModal.querySelector('.modal-body label')
 
+        modalTitle.textContent = 'Vil du slette ' + DeleteTarget + '?'
+
+        var hiddenInput = document.getElementById('DeleteTargetInput')
+        hiddenInput.value = DeleteTarget
+    })
+</script>
