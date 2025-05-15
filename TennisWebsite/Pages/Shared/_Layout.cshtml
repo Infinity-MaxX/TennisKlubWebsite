@@ -34,7 +34,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Bookings/ShowBookings">Mine bookinger</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Bookings/GetBookings">Mine bookinger</a>
                         </li>
                         @if(Context.Session.GetInt32("AccessLevel") >= (int)AccessLevel.Admin)
                         {
