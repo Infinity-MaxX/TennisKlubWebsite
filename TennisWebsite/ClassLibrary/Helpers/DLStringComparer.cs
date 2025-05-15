@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace TennisWebsite.ClassLibrary.Helpers
 {
@@ -78,29 +79,47 @@ namespace TennisWebsite.ClassLibrary.Helpers
                 string[] splitToCompare =toCompare.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 string[] splitQuery = query.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-                bool[] perfectlyMatchedCompare = new bool[toCompare.Length];
-                bool[] perfectlyMatchedQuery = new bool[splitQuery.Length];
+                int[] bestScoreForWord = new int[splitToCompare.Length];
+                for(int i = 0; i < bestScoreForWord.Length; i++)
+                {
+                    bestScoreForWord[i] = int.MaxValue;
+                }
+
+                int penalty = 0;
+
+                //penalty += (splitQuery[0].ToLower()[0] == splitToCompare[0].ToLower()[0])? 0 : 4;
+
+                if (splitQuery[0].Length < 5)
+                {
+                    for (int i = 0; i < (Math.Min(splitQuery[0].Length, splitToCompare[0].Length)); i++)
+                    {
+                        penalty += (splitQuery[0].ToLower()[i] == splitToCompare[0].ToLower()[i]) ? 0 : 5 - i;
+                    }
+
+                }
 
                 int totalScore = 0;
-
-                selector(matchable).Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
 
                 foreach(string queryPart in splitQuery)
                 {
-                    int bestScoreForQueryPart = int.MaxValue;
-                    foreach(string part in splitToCompare)
+                    int bestScoreValue = int.MaxValue;
+
+                    for(int i = 0; i < splitToCompare.Length; i++)
                     {
-                        int score = Compare(part, queryPart);
-                        bestScoreForQueryPart = Math.Min(bestScoreForQueryPart, score);
+                        int score = Compare(splitToCompare[i], queryPart);
+                        if (bestScoreForWord[i] > score) bestScoreForWord[i] = score;
+                        else score += bestScoreForWord[i] - score;
+
+                        if (bestScoreValue > score) bestScoreValue = score;
                     }
-                    totalScore += bestScoreForQueryPart;
+                    totalScore += bestScoreValue;
                 }
 
                 int avgScore = totalScore / splitQuery.Length;
-                int penalty = (splitQuery.Length == splitToCompare.Length) ? 0 : 1;
+                penalty += (splitQuery.Length == splitToCompare.Length) ? 0 : 1;
 
-                results.Add(new DLStringScoreObject<T>(matchable, avgScore+penalty, toCompare));
+                results.Add(new DLStringScoreObject<T>(matchable, totalScore + penalty, toCompare));
             }
 
             if (ascending) results.Sort((first, second) => first.Score.CompareTo(second.Score));
