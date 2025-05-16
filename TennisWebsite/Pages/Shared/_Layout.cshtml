@@ -86,7 +86,7 @@
 {
     <script>
         async function searchFunc(query, dropDownID, displayFieldID, inputFieldID) {
-            document.getElementById("testDropDown").classList.add("dlshow");
+            document.getElementById(dropDownID).classList.add("dlshow");
             const response = await fetch(`?handler=Update&query=${query}`); //Apparently this is a lot of data, not just my data.
             const valuePairs = await response.json(); //This is my data, as transferred? Returned? with return JsonResult([my list of things here])
             updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID);
