@@ -12,7 +12,7 @@ namespace TennisLibrary.Services
         private string insertSql = "Insert INTO TennisCourt (CourtName, Type) Values(@Name, @Type)";
         private string deleteSQL = "Delete from TennisCourt where CourtName = @Name";
         private string getSQL = "Select * from TennisCourt";
-        private string updateSQL = "Update TennisCourt set";
+        private string updateSQL = "Update TennisCourt set CourtName = @Name, Type = @Type, LastMaintenance = @LastMaintenance where CourtName = @OldName";
 
         public CourtService()
         {
@@ -171,30 +171,22 @@ namespace TennisLibrary.Services
             }
         }
 
-        public async Task<bool> UpdateCourtAsync(string oldName, string? name, DateOnly? maintenance)
+        public async Task<bool> UpdateCourtAsync(string oldName, Court newCourt)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
                 {
-                    if (maintenance == null && string.IsNullOrEmpty(name)) 
-                        throw new Exception("Intet input givet til navn eller veligeholdese");
                     await connection.OpenAsync();
                     string sqlString = updateSQL;
 
-                    if (!string.IsNullOrEmpty(name)) sqlString += " CourtName = @Name";
-
-                    if (maintenance != null && sqlString.Contains("CourtName")) 
-                        sqlString += ", LastMaintenance = @LastMaintenance";
-
-                    if (maintenance != null && !sqlString.Contains("CourtName"))
-                        sqlString += " LastMaintenance = @LastMaintenance";
                     sqlString += " Where CourtName = @CourtName";
-                    SqlCommand command = new SqlCommand(sqlString, connection);
-                    command.Parameters.AddWithValue("@CourtName", oldName);
+                    SqlCommand command = new SqlCommand(updateSQL, connection);
+                    command.Parameters.AddWithValue("@OldName", oldName);
 
-                    if (!string.IsNullOrEmpty(name)) command.Parameters.AddWithValue("@Name", name);
-                    if (maintenance != null) command.Parameters.AddWithValue("@LastMaintenance", maintenance);
+                    command.Parameters.AddWithValue("@Name", newCourt.Name);
+                    command.Parameters.AddWithValue("@LastMaintenance", newCourt.LastMaintenance);
+                    command.Parameters.AddWithValue("@Type", newCourt.Type);
 
                     int noOfRows = await command.ExecuteNonQueryAsync();
 
