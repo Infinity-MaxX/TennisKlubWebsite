@@ -107,7 +107,7 @@ namespace TennisWebsite.ClassLibrary.Helpers
 
                     for(int j = 0; j < splitToCompare.Length; j++)
                     {
-                        int score = Compare(splitToCompare[j], splitQuery[i]) + Math.Max(0, (int)Math.Pow(Math.Abs(splitToCompare[j].Length - splitQuery[i].Length), 1.4));
+                        int score = Compare(splitToCompare[j], splitQuery[i]) + Math.Max(0, (int)Math.Pow(Math.Abs(splitToCompare[j].Length - splitQuery[i].Length), 1.5));
                         if (bestScoreForWord[j] > score)
                         {
                             bestScoreForWord[j] = score;
@@ -122,7 +122,7 @@ namespace TennisWebsite.ClassLibrary.Helpers
 
                 int avgScore = totalScore / splitQuery.Length;
                 //penalty += (splitQuery.Length == splitToCompare.Length) ? 0 : 1;
-                penalty += (int)Math.Pow(Math.Abs(splitQuery.Length - splitToCompare.Length), 1.4);
+                penalty += 3*Math.Abs(splitQuery.Length - splitToCompare.Length);
 
 
                 results.Add(new DLStringScoreObject<T>(matchable, avgScore + penalty, toCompare));
