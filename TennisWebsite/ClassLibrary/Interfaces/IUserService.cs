@@ -17,6 +17,8 @@ namespace TennisLibrary.Interfaces
         Task<User> GetUserLoginAsync(string username, string password);
         Task<List<User>> GetAllUsersAsync();
 
+        Task<List<User>> GetAllUsersFilteredAsync(char[] genders, double? minAge, double? maxAge);
+
         Task<bool> EditUserAsync(string queryUsername, string newImagePath, string newName, char newGender, string newPhone, string newEmail, string newAddress, string newHomeMunicipality, DateOnly newBirthDate);
 
         Task<bool> DeleteUserAsync(string queryUsernameIdent);
