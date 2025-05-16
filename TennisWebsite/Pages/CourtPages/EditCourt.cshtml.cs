@@ -38,7 +38,7 @@ namespace TennisWebsite.Pages.CourtPages
         {
             try
             {
-                await cs.UpdateCourtAsync(OldCourt, newCourt.Name, newCourt.LastMaintenance);
+                await cs.UpdateCourtAsync(OldCourt, newCourt);
             }
             catch (Exception ex)
             {
