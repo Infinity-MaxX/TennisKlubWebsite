@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
 using TennisLibrary.Helpers;
+using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
 using TennisLibrary.Services;
+using TennisWebsite.ClassLibrary.Helpers;
 
 namespace TennisWebsite.Pages.BookingPages
 {
@@ -23,26 +25,40 @@ namespace TennisWebsite.Pages.BookingPages
         public bool Admin = false;
         public int Error = 0;
         
+        public List<User> Users = new List<User>();
+        public List<Court> Courts = new List<Court>();
 
+        private IBookingService bs;
+        private ICourtService cs;
+        private IUserService us;
 
-        private BookingService bs;
-        private CourtService cs;
-        private UserService us;
+        
 
-        public CreateBookingModel()
+        public CreateBookingModel(IBookingService bookingService, ICourtService courtService, IUserService userService)
         {
             booking = new Booking();
-            bs = new BookingService();
-            cs = new CourtService();
-            us = new UserService();
+            bs = bookingService;
+            cs = courtService;
+            us = userService;
+        }
+
+        public async Task<IActionResult> OnGetUpdateAsync(string query)
+        {
+            Console.WriteLine("BLABALBLABLALALBA");
+            Users = await us.GetAllUsersAsync();
+            if (String.IsNullOrEmpty(query)) return new JsonResult(DLStringComparer<User>.ConvertIfNoQuery(Users, x => x.Name));
+
+            return new JsonResult(DLStringComparer<User>.Matches(Users, x => x.Name, query));
         }
 
         public async Task OnGetAsync(string time, string court)
         {
+            
             bs= new BookingService();
             cs = new CourtService();
             booking= new Booking();
             us =new UserService();
+            Courts = await cs.GetAllCourts();
             User Player1 = await us.GetUserAsAdminAsync(HttpContext.Session.GetString("Username"));
             Admin = false;
             Error = 0;
@@ -98,7 +114,22 @@ namespace TennisWebsite.Pages.BookingPages
                 {
                     return Page();
                 }
-                
+
+                List<Booking> bookingsP1 = await bs.GetBookingsByDatesAndUserAsync(Player1.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1));
+                List<Booking> bookingsP2 = await bs.GetBookingsByDatesAndUser2Async(Player2.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1));
+                Console.WriteLine("P1 bookings: " + bookingsP1.Count);
+                Console.WriteLine("P2 bookings: " + bookingsP2.Count);
+                if (bookingsP1.Count >= 4)
+                {
+                    Console.WriteLine("P1 too many bookings");
+                    return Page();
+                }
+                else if (bookingsP2.Count >= 4)
+                {
+                    Console.WriteLine("P2 too many bookings");
+                    return Page();
+                }
+
                 Booking newBooking = new Booking(Player1, Player2, booking.Court, booking.Start, booking.End);
                 try
                 {
