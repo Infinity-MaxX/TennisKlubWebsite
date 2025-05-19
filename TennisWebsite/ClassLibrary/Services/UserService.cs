@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Data;
 using System.IO;
 using TennisLibrary.Helpers;
+using Microsoft.IdentityModel.Tokens;
 
 namespace TennisLibrary.Services
 {
@@ -149,6 +150,82 @@ namespace TennisLibrary.Services
                     SqlDataReader reader = await searchCommand.ExecuteReaderAsync();
 
 
+
+                    while (reader.Read())
+                    {
+                        string imagePath = reader.GetString("ImagePath");
+                        string name = reader.GetString("Name");
+                        char gender = reader.GetString("Gender")[0];
+                        string username = reader.GetString("Username");
+                        string phone = reader.GetString("Phone");
+                        string email = reader.GetString("Email");
+                        string address = reader.GetString("Address");
+                        string homeMunicipality = reader.GetString("HomeMunicipality");
+                        DateOnly birthDate = DateOnly.FromDateTime(reader.GetDateTime("Birthdate"));
+                        AccessLevel accessLevel = (AccessLevel)reader.GetInt32("AccessLevel");
+                        results.Add(new User(imagePath, name, gender, username, phone, email, address, homeMunicipality, birthDate, accessLevel));
+                    }
+                    await connection.CloseAsync();
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+            }
+            return results;
+        }
+
+        public async Task<List<User>> GetAllUsersFilteredAsync(char[] genders, double? minAge, double? maxAge)
+        {
+            if (genders.IsNullOrEmpty() && minAge == null && maxAge == null) return await GetAllUsersAsync();
+            string queryForFilter = "Select * From TennisUser Where ";
+            if(minAge != null && maxAge != null)
+            {
+                if(minAge>maxAge)
+                {
+                    minAge = null;
+                    maxAge = null;
+                }
+
+                queryForFilter += " @oldestAcceptedBirthday < Birthdate AND @newestAcceptedBirthday > Birthdate";
+
+            } else if(minAge != null) queryForFilter += "@newestAcceptedBirthday > Birthdate";
+            else if(maxAge != null) queryForFilter += "@oldestAcceptedBirthday < Birthdate";
+
+
+            if(!genders.IsNullOrEmpty())
+            {
+                if (minAge != null || maxAge != null)
+                {
+                    queryForFilter += " AND";
+                }
+                for(int i = 0; i<genders.Length; i++)
+                {
+                    queryForFilter += " @gender" + i + " = Gender";
+                    if (i + 1 != genders.Length) queryForFilter += " AND";
+                }
+            }
+
+            List<User> results = new List<User>();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    SqlCommand searchCommand = new SqlCommand(queryForFilter, connection);
+
+
+                    if (minAge != null) searchCommand.Parameters.AddWithValue("@newestAcceptedBirthday", DateTime.Now.AddDays(-(int)(minAge * 365.25)));
+                    if (maxAge != null) searchCommand.Parameters.AddWithValue("@oldestAcceptedBirthday", DateTime.Now.AddDays(-(int)(maxAge * 365.25)));
+                    if (!genders.IsNullOrEmpty())
+                    {
+                        for (int i = 0; i < genders.Length; i++)
+                        {
+                            searchCommand.Parameters.AddWithValue("@gender" + i, genders[i]);
+                        }
+                    }
+
+                    SqlDataReader reader = await searchCommand.ExecuteReaderAsync();
 
                     while (reader.Read())
                     {

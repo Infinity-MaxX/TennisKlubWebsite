@@ -87,13 +87,13 @@ namespace TennisWebsite.ClassLibrary.Helpers
 
                 int penalty = 0;
 
-                //penalty += (splitQuery[0].ToLower()[0] == splitToCompare[0].ToLower()[0])? 0 : 4;
+                penalty += (splitQuery[0].ToLower()[0] == splitToCompare[0].ToLower()[0]) ? 0 : 4;
 
-                if (splitQuery[0].Length < 5)
+                if (splitQuery[0].Length < 3)
                 {
                     for (int i = 0; i < (Math.Min(splitQuery[0].Length, splitToCompare[0].Length)); i++)
                     {
-                        penalty += (splitQuery[0].ToLower()[i] == splitToCompare[0].ToLower()[i]) ? 0 : 5 - i;
+                        penalty += (splitQuery[0].ToLower()[i] == splitToCompare[0].ToLower()[i]) ? 0 : 4 - i;
                     }
 
                 }
@@ -101,25 +101,31 @@ namespace TennisWebsite.ClassLibrary.Helpers
                 int totalScore = 0;
 
 
-                foreach(string queryPart in splitQuery)
+                for(int i = 0; i < splitQuery.Length; i++)
                 {
                     int bestScoreValue = int.MaxValue;
 
-                    for(int i = 0; i < splitToCompare.Length; i++)
+                    for(int j = 0; j < splitToCompare.Length; j++)
                     {
-                        int score = Compare(splitToCompare[i], queryPart);
-                        if (bestScoreForWord[i] > score) bestScoreForWord[i] = score;
-                        else score += bestScoreForWord[i] - score;
+                        int score = Compare(splitToCompare[j], splitQuery[i]) + Math.Max(0, (int)Math.Pow(Math.Abs(splitToCompare[j].Length - splitQuery[i].Length), 1.5));
+                        if (bestScoreForWord[j] > score)
+                        {
+                            bestScoreForWord[j] = score;
+                        }
+                        else score += bestScoreForWord[j] + 1 - score;
 
                         if (bestScoreValue > score) bestScoreValue = score;
                     }
                     totalScore += bestScoreValue;
                 }
 
-                int avgScore = totalScore / splitQuery.Length;
-                penalty += (splitQuery.Length == splitToCompare.Length) ? 0 : 1;
 
-                results.Add(new DLStringScoreObject<T>(matchable, totalScore + penalty, toCompare));
+                int avgScore = totalScore / splitQuery.Length;
+                //penalty += (splitQuery.Length == splitToCompare.Length) ? 0 : 1;
+                penalty += 3*Math.Abs(splitQuery.Length - splitToCompare.Length);
+
+
+                results.Add(new DLStringScoreObject<T>(matchable, avgScore + penalty, toCompare));
             }
 
             if (ascending) results.Sort((first, second) => first.Score.CompareTo(second.Score));
