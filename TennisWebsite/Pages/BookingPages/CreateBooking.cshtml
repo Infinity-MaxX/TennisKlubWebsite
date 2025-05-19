@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="dldropdown">
-                    <input class="dlinput" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" />
+                    <input class="dlinput form-control" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" />
                     <input type="hidden" id="player2UsernameField" asp-for="@Model.player2" />
 
                     <div id="player2DropDown" class="dldropdown-content">
@@ -42,25 +42,19 @@
             
             @if (@Model.Admin)
             {
-                @* <div class="mb-3">
-                    <label asp-for="@Model.player1" class="control-label"> Spiller 1 </label>
-                    <input asp-for="@Model.player1" class="form-control", placeholder = "Indtast venligst brugernavnet på spiller nummer 1" required />
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="@Model.player2" class="control-label"> Spiller 2 </label>
-                    <input asp-for="@Model.player2" class="form-control" , placeholder="Indtast venligst brugernavnet på spiller nummer 2." required />
-                </div> *@
-
                 <div class="dldropdown">
+                    <label asp-for="@Model.booking.Player1" class="control-label"> Spiller 1</label>
+                    <br />
                     <input class="dlinput" id="player1QueryField" type="text" oninput="searchFunc(player1QueryField.value, 'player1DropDown', 'player1QueryField', 'player1UsernameField')" />
                     <input type="hidden" id="player1UsernameField" asp-for="@Model.player1" />
 
                     <div id="player1DropDown" class="dldropdown-content">
                     </div>
                 </div>
-
+                <br />
                 <div class="dldropdown">
+                    <label asp-for="@Model.booking.Player2" class="control-label"> Spiller 2</label>
+                    <br />
                     <input class="dlinput" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" />
                     <input type="hidden" id="player2UsernameField" asp-for="@Model.player2" />
 
@@ -68,21 +62,20 @@
                     </div>
                 </div>
 
-                @* <div class="mb-3">
-                    <label asp-for="@Model.booking.Court.Name" class="control-label"> Bane </label>
-                    <input asp-for="@Model.booking.Court.Name" class="form-control" required />
-                </div> *@
-
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="@Model.booking.Court.Name" data-bs-toggle="dropdown" aria-expanded="false">
-                        @Model.booking.Court.Name
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        @foreach (Court c in Model.Courts)
+                <div class="mb-3">
+                    <label asp-for="@Model.booking.Court.Name" class="control-label"> Bane</label>
+                    <select class="form-select" aria-label="Default select example" asp-for="@Model.booking.Court.Name">
+                        @foreach (Court court in Model.Courts)
                         {
-                            
+                            if (court == Model.booking.Court) {
+                                <option selected>@court.Name</option>
+                            }
+                            else 
+                            {
+                                <option>@court.Name</option>
+                            }
                         }
-                    </ul>
+                    </select>
                 </div>
 
                 <div class="mb-3">
