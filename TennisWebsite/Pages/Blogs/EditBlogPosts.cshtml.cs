@@ -44,7 +44,7 @@ namespace TennisWebsite.Pages.Blogs
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            await _blogPostService.UpdatePostAsync(Post.Author, Post.Title, Post.Body);
+            await _blogPostService.UpdatePostAsync(Post.ID, Post.Author, Post.Title, Post.Body);
             return Redirect("ShowBlogPosts");
         }
         #endregion

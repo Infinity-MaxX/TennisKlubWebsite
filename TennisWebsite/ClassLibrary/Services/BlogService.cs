@@ -249,16 +249,18 @@ namespace TennisLibrary.Services
                 return post;
             }
         }
-        public async Task<bool> UpdatePostAsync(string author, string? title, string body)
+        public async Task<bool> UpdatePostAsync(int id, string author, string? title, string body)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
                 {
                     SqlCommand command = new SqlCommand(updateSql, connection);
+                    command.Parameters.AddWithValue("@ID", id);
                     command.Parameters.AddWithValue("@Author", author);
                     command.Parameters.AddWithValue("@Title", title);
                     command.Parameters.AddWithValue("@Body", body);
+                    //command.Parameters.AddWithValue("@Date", DateTime.Now);
                     await connection.OpenAsync();
 
                     int numberOfRows = await command.ExecuteNonQueryAsync();

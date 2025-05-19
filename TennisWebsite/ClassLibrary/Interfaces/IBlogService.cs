@@ -15,6 +15,6 @@ namespace TennisLibrary.Interfaces
         Task<List<Blog>> GetByAuthorAsync(string author);
         Task<List<Blog>> GetByDateAsync(DateOnly date);
         Task<Blog> GetByIdAsync(int id);
-        Task<bool> UpdatePostAsync(string author, string? title, string body);
+        Task<bool> UpdatePostAsync(int id, string author, string? title, string body);
     }
 }
