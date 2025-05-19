@@ -9,26 +9,28 @@
 
 <form method="post">
     <div class="container p-4 Container-Background">
-        <div>
+        <div style="width: 30vw">
             <div class="form-group">
-                <label asp-for="@Model.Author" class="control-label"></label>
+                <label for="exampleFormControlTextarea1">Forfatter</label>
                 <input asp-for="@Model.Author" class="form-control" required="true" readonly="true" />
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Title" class="control-label"></label>
+                <label for="exampleFormControlTextarea1">Titel</label>
                 <input asp-for="@Model.Title" class="form-control" required="false" />
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Body" class="control-label"></label>
-                <input asp-for="@Model.Body" class="form-control" required="true" />
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Indhold</label>
+                    <textarea asp-for="@Model.Body" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Date" class="control-label"></label>
+                <label for="exampleFormControlTextarea1">Dato</label>
                 <input asp-for="@Model.Date" class="form-control" readonly="true" />
             </div>
-
-            <input type="submit" value="Post" class="btn btn-primary" />
-
+            <div class="formgroup">
+                <input type="submit" value="Post" class="btn btn-primary mt-2" />
+            </div>
         </div>
     </div>
 </form>
