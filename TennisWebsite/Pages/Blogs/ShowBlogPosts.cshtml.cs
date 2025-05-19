@@ -53,6 +53,21 @@ namespace TennisWebsite.Pages.Blogs
                 return RedirectToPage("/Index");
             }
         }
+
+        //public async Task<IActionResult> OnGetEditAsync(string author, string title, string body)
+        //{
+        //    int? SessionAccessLevel = HttpContext.Session.GetInt32("AccessLevel");
+
+        //    if (SessionAccessLevel != null && SessionAccessLevel <= _siteAccessRequirement)
+        //    {
+        //        await _blogPostService.UpdatePostAsync(author, title, body);
+        //        return RedirectToPage("ShowBlogPosts");
+        //    }
+        //    else
+        //    {
+        //        return RedirectToPage("/Index");
+        //    }
+        //}
         #endregion
     }
 }

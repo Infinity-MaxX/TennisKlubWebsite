@@ -8,22 +8,27 @@
 <h1>New Post</h1>
 
 <form method="post">
-    <div class="form-group">
-        <label asp-for="@Model.Author" class="control-label"></label>
-        <input asp-for="@Model.Author" class="form-control" required="true" readonly="true"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="@Model.Title" class="control-label"></label>
-        <input asp-for="@Model.Title" class="form-control" required="false"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="@Model.Body" class="control-label"></label>
-        <input asp-for="@Model.Body" class="form-control" required="true"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="@Model.Date" class="control-label"></label>
-        <input asp-for="@Model.Date" class="form-control" readonly="true"/>
-    </div>
+    <div class="container p-4 Container-Background">
+        <div>
+            <div class="form-group">
+                <label asp-for="@Model.Author" class="control-label"></label>
+                <input asp-for="@Model.Author" class="form-control" required="true" readonly="true" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Title" class="control-label"></label>
+                <input asp-for="@Model.Title" class="form-control" required="false" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Body" class="control-label"></label>
+                <input asp-for="@Model.Body" class="form-control" required="true" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Date" class="control-label"></label>
+                <input asp-for="@Model.Date" class="form-control" readonly="true" />
+            </div>
 
-    <input type="submit" value="Post" class="btn btn-primary" />
+            <input type="submit" value="Post" class="btn btn-primary" />
+
+        </div>
+    </div>
 </form>
