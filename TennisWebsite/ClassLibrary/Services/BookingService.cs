@@ -368,5 +368,85 @@ namespace TennisLibrary.Services
                 }
             }
         }
+
+        public async Task<List<Booking>> GetBookingsByDatesAndUserAsync(string Username, DateTime Start, DateTime End)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        DateTime tempStart = reader.GetDateTime("StartDate");
+                        DateTime tempEnd = reader.GetDateTime("EndDate");
+                        User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                        if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End) && Player1.Name == Username)
+                        {
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByDatesAndUser2Async(string Username, DateTime Start, DateTime End)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        DateTime tempStart = reader.GetDateTime("StartDate");
+                        DateTime tempEnd = reader.GetDateTime("EndDate");
+                        User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                        if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End) && Player2.Name == Username)
+                        {
+                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
     }
 }
