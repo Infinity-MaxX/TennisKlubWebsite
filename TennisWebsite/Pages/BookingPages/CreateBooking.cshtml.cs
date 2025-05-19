@@ -44,7 +44,6 @@ namespace TennisWebsite.Pages.BookingPages
 
         public async Task<IActionResult> OnGetUpdateAsync(string query)
         {
-            Console.WriteLine("BLABALBLABLALALBA");
             Users = await us.GetAllUsersAsync();
             if (String.IsNullOrEmpty(query)) return new JsonResult(DLStringComparer<User>.ConvertIfNoQuery(Users, x => x.Name));
 
