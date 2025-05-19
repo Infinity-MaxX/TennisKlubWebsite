@@ -260,7 +260,6 @@ namespace TennisLibrary.Services
                     command.Parameters.AddWithValue("@Author", author);
                     command.Parameters.AddWithValue("@Title", title);
                     command.Parameters.AddWithValue("@Body", body);
-                    //command.Parameters.AddWithValue("@Date", DateTime.Now);
                     await connection.OpenAsync();
 
                     int numberOfRows = await command.ExecuteNonQueryAsync();

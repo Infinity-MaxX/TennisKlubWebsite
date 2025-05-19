@@ -14,7 +14,11 @@ namespace TennisLibrary.Models
         #endregion
 
         #region Properties
-        public int ID { get { return _blogPostId; } }
+        public int ID
+        {
+            get { return _blogPostId; } 
+            set {  _blogPostId = value; }
+        }
         public string Author { get; set; }
         public string? Title { get; set; }
         public string Body { get; set; }
