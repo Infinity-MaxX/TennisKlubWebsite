@@ -180,7 +180,7 @@
 
         function selectItem(item, dropDownID, displayFieldID, inputFieldID) {
             document.getElementById(displayFieldID).value = item.dlString;
-            document.getElementById(inputFieldID).value = item.username;
+            document.getElementById(inputFieldID).value = item.data.username;
             openDropdown.classList.remove(dropDownID);
         }
 
