@@ -36,7 +36,7 @@ namespace TennisLibrary.Models
         {
             //_blogPostId++;
             Author = author;
-            Title = title;
+            if (null != title) { Title = title; }
             Body = body;
             _date = DateTime.Now;
         }
@@ -44,7 +44,7 @@ namespace TennisLibrary.Models
         {
             _blogPostId = id;
             Author = author;
-            Title = title;
+            if (null != title) { Title = title; }
             Body = body;
             _date = date;
         }
