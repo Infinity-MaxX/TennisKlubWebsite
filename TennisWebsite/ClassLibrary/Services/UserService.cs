@@ -258,10 +258,17 @@ namespace TennisLibrary.Services
                 try
                 {
                     await connection.OpenAsync();
-                    SqlCommand insertCommand = new SqlCommand(deleteQuery, connection);
-                    insertCommand.Parameters.AddWithValue("@username", queryUsername);
 
-                    return 0 < await insertCommand.ExecuteNonQueryAsync();
+                    SqlCommand DeleteBookingCommand = new SqlCommand("Delete * From TennisBooking WHERE Player1 = @username " +
+                        "OR Player2 = @username", connection);
+                    DeleteBookingCommand.Parameters.AddWithValue("@username", queryUsername);
+
+                    SqlCommand DeleteCommand = new SqlCommand(deleteQuery, connection);
+                    DeleteCommand.Parameters.AddWithValue("@username", queryUsername);
+
+                    await DeleteBookingCommand.ExecuteNonQueryAsync();
+
+                    return 0 < await DeleteCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlExp)
                 {

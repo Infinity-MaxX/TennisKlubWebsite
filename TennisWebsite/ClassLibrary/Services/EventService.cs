@@ -22,6 +22,7 @@ namespace TennisWebsite.Services
             "(OrgUsername, StartDate, EndDate, EventType, Name, Description, MinAttendees, MaxAttendees)" +
             "VALUES (@OrgUsername, @StartDate, @EndDate, @EventType, @Name, @Description, @MinAttendees, @MaxAttendees)";
         private string deleteSql = "DELETE FROM TENNISEVENT WHERE EventID = @Id";
+        private string selectSql = "SELECT * "
         #endregion
 
         #region Constructors
@@ -78,6 +79,9 @@ namespace TennisWebsite.Services
 
                     SqlCommand command = new SqlCommand(deleteSql, connection);
                     command.Parameters.AddWithValue("@Id", id);
+                    SqlCommand DeleteAttendees = new SqlCommand("DELETE * FROM TennisAttendees Where EventID = @EventID", connection);
+                    DeleteAttendees.Parameters.AddWithValue("@EventID", id);
+                    await command.ExecuteNonQueryAsync();
                     int noOfRows = await command.ExecuteNonQueryAsync();
 
                     return noOfRows == 1;
