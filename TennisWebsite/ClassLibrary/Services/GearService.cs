@@ -22,42 +22,42 @@ namespace TennisWebsite.ClassLibrary.Services
         #endregion
 
         #region Methods
-        public Task<bool> AddGear(string name, string? description)
+        public async Task<bool> AddGear(string name, string? description)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> BookGear(int bookingID, int gearID)
+        public async Task<bool> BookGear(int bookingID, int gearID)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CheckStatus(int id)
+        public async Task<bool> CheckStatus(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteGear(int id)
+        public async Task<bool> DeleteGear(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Gear>> GetAll()
+        public async Task<List<Gear>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Gear> GetByIdAsync(int id)
+        public async Task<Gear> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Gear> GetByTypeAsync(string type)
+        public async Task<Gear> GetByTypeAsync(string type)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Gear> GetGear(int id)
+        public async Task<Gear> GetGear(int id)
         {
             throw new NotImplementedException();
         }
