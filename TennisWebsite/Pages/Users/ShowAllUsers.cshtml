@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "UsersAdminView";
 }
+@Html.AntiForgeryToken();
 
 <style>
     @{/*https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816 */}
@@ -118,15 +119,9 @@
         </fieldset>
     </div>
 
-        <div class="dldropdown">
-            <input class="dlinput" id="queryField" type="text" oninput="searchFunc(queryField.value, 'testDropDown', 'queryField', 'usernameField')" />
-            <input type="hidden" id="usernameField" asp-for="@Model.SelectedUsername" />
+        <input id="queryField" type="text") />
 
-            <div id="testDropDown" class="dldropdown-content">
-            </div>
-        </div>
-
-        <table  class="table">
+        <table class="table">
             <thead>
                 <tr>
                     <th>Username</th>
@@ -142,7 +137,7 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="userListTable">
                 @foreach(User user in Model.Users)
                 {
                     <tr>
@@ -183,9 +178,6 @@
                             <a asp-page="EditUser" asp-route-Username="@user.Username" asp-route-KeepImage="@true">
                                 <img src="~/Images/pencil-square.svg" alt="Edit">
                             </a>
-                            <form asp-page-handler="Delete" asp-route-Username="@user.Username">
-                                <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
-                            </form>
                         </td>
                     </tr>
                 }
@@ -200,49 +192,10 @@
 @section scripts
 {
     <script>
-        async function searchFunc(query, dropDownID, displayFieldID, inputFieldID) {
-            document.getElementById("testDropDown").classList.add("dlshow");
-            const response = await fetch(`?handler=Update&query=${query}`); //Apparently this is a lot of data, not just my data.
+        async function searchFunc(query, fromInput, toInput) {
+            const response = await fetch(`?handler=Update&query=${query}&minAge=${fromInput.value}&maxAge=${toInput.value}`); //Apparently this is a lot of data, not just my data.
             const valuePairs = await response.json(); //This is my data, as transferred? Returned? with return JsonResult([my list of things here])
-            updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID);
-        }
-
-        function updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID) {
-            const dropdown = document.getElementById(dropDownID); //Refer to the table in the actual html
-            dropdown.innerHTML = ''; // Clear existing rows in the table
-
-            valuePairs.forEach(item => {
-                const option = document.createElement('div');
-                option.onclick = function() {
-                    selectItem(item, dropDownID, displayFieldID, inputFieldID)
-                }
-                option.innerHTML = `
-                    ${item.dlString}
-                    <br />
-                    <i>#${item.data.username}</i>
-                    <br />
-                `;
-                dropdown.appendChild(option);
-            });
-        }
-
-        function selectItem(item, dropDownID, displayFieldID, inputFieldID) {
-            document.getElementById(displayFieldID).value = item.dlString;
-            document.getElementById(inputFieldID).value = item.data.username;
-            openDropdown.classList.remove(dropDownID);
-        }
-
-        window.onclick = function(event) {
-            if(!event.target.matches('dlinput')) {
-                var dropdowns = document.getElementsByClassName("dldropdown-content");
-                var i;
-                for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if(openDropdown.classList.contains('dlshow')) {
-                        openDropdown.classList.remove('dlshow');
-                    }
-                }
-            }
+            updateTable(valuePairs);
         }
 
         function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
@@ -325,6 +278,8 @@
         const toSlider = document.querySelector('#toSlider');
         const fromInput = document.querySelector('#fromInput');
         const toInput = document.querySelector('#toInput');
+        const searchField = document.querySelector('#queryField');
+
         fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
         setToggleAccessible(toSlider);
 
@@ -332,7 +287,76 @@
         toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
         fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
         toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+        searchField.oninput = () => searchFunc(searchField.value, fromInput, toInput);
 
+        const accessLevelNames = {
+            0: "Guest",
+            1: "Member",
+            2: "GuestTrainer",
+            3: "Trainer",
+            4: "Admin",
+            5: "Chairman"
+        };
+
+        function updateTable(valuePairs) {
+            //Updates the ENTIRE table when filtering and/or searching the stored users
+            const tableBody = document.getElementById('userListTable');
+            tableBody.innerHTML = '';
+
+            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+            const tokenValue = tokenElement ? tokenElement.value : null;
+
+            const keepImage = true;
+
+            valuePairs.forEach(item => {
+                const row = document.createElement('tr');
+
+                const accessName = accessLevelNames[item.data.accessLevel];
+
+                row.innerHTML = `
+                    <td>
+                        ${item.data.username}
+                    </td>
+                    <td>
+                        ${item.dlString}
+                    </td>
+                    <td>
+                        ${item.data.gender}
+                    </td>
+                    <td>
+                        ${item.data.phone}
+                    </td>
+                    <td>
+                        ${item.data.email}
+                    </td>
+                    <td>
+                        ${item.data.address}
+                    </td>
+                    <td>
+                        ${item.data.homeMunicipality}
+                    </td>
+                    <td>
+                        ${item.data.birthDate}
+                    </td>
+                    <td>
+                        ${accessName}
+                    </td>
+                    <td>
+                        <img src="/Images/MemberImages/${item.data.imageName}" width="140px" height="140px">
+                    </td>
+                    <td>
+                        <form method="post" action="?handler=Delete&Username=${item.data.username}" onsubmit="return confirm('Are you sure you want to delete the User ${item.data.username} (${item.data.name}) ?')">
+                            <input type="image" src="/Images/trash3.svg">
+                            <input name="__RequestVerificationToken" type="hidden" value="${tokenValue}" />
+                        </form>
+                        <a class="svg-link" href="/Users/EditUser?Username=${item.data.username}&KeepImage=${keepImage}">
+                            <img src="/Images/pencil-square.svg" alt="Edit">
+                        </a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
 
     </script>
 }
