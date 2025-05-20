@@ -14,7 +14,11 @@ namespace TennisLibrary.Models
         #endregion
 
         #region Properties
-        public int ID { get { return _blogPostId; } }
+        public int ID
+        {
+            get { return _blogPostId; } 
+            set {  _blogPostId = value; }
+        }
         public string Author { get; set; }
         public string? Title { get; set; }
         public string Body { get; set; }
@@ -32,7 +36,7 @@ namespace TennisLibrary.Models
         {
             //_blogPostId++;
             Author = author;
-            Title = title;
+            if (null != title) { Title = title; }
             Body = body;
             _date = DateTime.Now;
         }
@@ -40,7 +44,7 @@ namespace TennisLibrary.Models
         {
             _blogPostId = id;
             Author = author;
-            Title = title;
+            if (null != title) { Title = title; }
             Body = body;
             _date = date;
         }

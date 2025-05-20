@@ -17,9 +17,6 @@ namespace TennisWebsite.Pages.Blogs
 
         #region Properties
         [BindProperty]
-        public Blog BlogPosts { get; set; }
-
-        [BindProperty]
         public int ID { get; private set; }
 
         [BindProperty]
