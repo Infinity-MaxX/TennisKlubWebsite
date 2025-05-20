@@ -22,7 +22,7 @@ namespace TennisWebsite.Services
             "(OrgUsername, StartDate, EndDate, EventType, Name, Description, MinAttendees, MaxAttendees)" +
             "VALUES (@OrgUsername, @StartDate, @EndDate, @EventType, @Name, @Description, @MinAttendees, @MaxAttendees)";
         private string deleteSql = "DELETE FROM TENNISEVENT WHERE EventID = @Id";
-        private string selectSql = "SELECT * "
+        private string selectSql = "SELECT * ";
         #endregion
 
         #region Constructors
