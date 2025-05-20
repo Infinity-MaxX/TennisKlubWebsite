@@ -9,6 +9,7 @@
         #endregion
 
         #region Properties
+        public int Count { get { return _counter; } }
         public int ID { get { return _id; } }
         public string Name { get; set; }
         public string? Description { get; set; }

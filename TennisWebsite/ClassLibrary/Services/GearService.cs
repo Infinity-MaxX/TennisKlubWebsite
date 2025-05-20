@@ -17,38 +17,47 @@ namespace TennisWebsite.ClassLibrary.Services
         #region Constructor
         public GearService()
         {
-            _gearRepo = new List<Gear>();
+            
         }
         #endregion
 
         #region Methods
-
-        public void AddGear(string name, string? description)
+        public Task<bool> AddGear(string name, string? description)
         {
             throw new NotImplementedException();
         }
 
-        public void BookGear(int bookingID, int gearID)
+        public Task<bool> BookGear(int bookingID, int gearID)
         {
             throw new NotImplementedException();
         }
 
-        public void CheckStatus(int id)
+        public Task<bool> CheckStatus(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteGear(int id)
+        public Task<bool> DeleteGear(int id)
         {
             throw new NotImplementedException();
         }
 
-        public List<Gear> GetAll()
+        public Task<List<Gear>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Gear GetGear(int id)
+        public Task<Gear> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Gear> GetByTypeAsync(string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Gear> GetGear(int id)
         {
             throw new NotImplementedException();
         }
