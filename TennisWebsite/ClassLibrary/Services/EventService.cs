@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using TennisLibrary;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
+using TennisLibrary.Services;
 using TennisWebsite.Interfaces;
 using TennisWebsite.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -22,7 +23,8 @@ namespace TennisWebsite.Services
             "(OrgUsername, StartDate, EndDate, EventType, Name, Description, MinAttendees, MaxAttendees)" +
             "VALUES (@OrgUsername, @StartDate, @EndDate, @EventType, @Name, @Description, @MinAttendees, @MaxAttendees)";
         private string deleteSql = "DELETE FROM TENNISEVENT WHERE EventID = @Id";
-        private string selectSql = "SELECT * ";
+        private string selectSql = "SELECT * From TennisEvent";
+        private string selectAttendeeSql = "SELECT * FROM TennisEvent";
         #endregion
 
         #region Constructors
@@ -79,7 +81,7 @@ namespace TennisWebsite.Services
 
                     SqlCommand command = new SqlCommand(deleteSql, connection);
                     command.Parameters.AddWithValue("@Id", id);
-                    SqlCommand DeleteAttendees = new SqlCommand("DELETE * FROM TennisAttendees Where EventID = @EventID", connection);
+                    SqlCommand DeleteAttendees = new SqlCommand("DELETE FROM TennisAttendees Where EventID = @EventID", connection);
                     DeleteAttendees.Parameters.AddWithValue("@EventID", id);
                     await command.ExecuteNonQueryAsync();
                     int noOfRows = await command.ExecuteNonQueryAsync();
@@ -100,29 +102,170 @@ namespace TennisWebsite.Services
             }
         }
 
-        public Task<List<Event>> GetAllEventsAsync()
+        public async Task<List<Event>> GetAllEventsAsync()
         {
-            throw new NotImplementedException();
+            using(SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(selectSql, connection);
+
+                    List<Event> events = new List<Event>();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    while (reader.Read())
+                    {
+                        Event e = new Event(reader.GetInt32(0));
+                        e.Organiser = reader.GetString(1);
+                        e.Start = reader.GetDateTime(2);
+                        e.End = reader.GetDateTime(3);
+                        e.Type = reader.GetString(4);
+                        e.Name = reader.GetString(5);
+                        e.Description = reader.GetString(6);
+                        e.MinParticipants = reader.GetInt32(7);
+                        e.MaxParticipants = reader.GetInt32(8);
+                        events.Add(e);
+                    }
+
+                    return events;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
 
-        public Task<Event> GetEvent(int id)
+        public async Task<Event> GetEvent(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(selectSql + "Where EventID = @id", connection);
+                    command.Parameters.AddWithValue("@id", id);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    Event e = new Event(0);
+                    if (reader.Read())
+                    {
+                        e = new Event(reader.GetInt32(0));
+                        e.Organiser = reader.GetString(1);
+                        e.Start = reader.GetDateTime(2);
+                        e.End = reader.GetDateTime(3);
+                        e.Type = reader.GetString(4);
+                        e.Name = reader.GetString(5);
+                        e.Description = reader.GetString(6);
+                        e.MinParticipants = reader.GetInt32(7);
+                        e.MaxParticipants = reader.GetInt32(8);
+                    }
+
+                    return e;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
 
-        public Task<Event> GetEventByType(string type)
+        public async Task<List<Event>> GetEventsByType(string type)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(selectSql + "Where Type = @type", connection);
+                    command.Parameters.AddWithValue("@type", type);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    List<Event> events = new List<Event>();
+                    while (reader.Read())
+                    {
+                        Event e = new Event(reader.GetInt32(0));
+                        e.Organiser = reader.GetString(1);
+                        e.Start = reader.GetDateTime(2);
+                        e.End = reader.GetDateTime(3);
+                        e.Type = reader.GetString(4);
+                        e.Name = reader.GetString(5);
+                        e.Description = reader.GetString(6);
+                        e.MinParticipants = reader.GetInt32(7);
+                        e.MaxParticipants = reader.GetInt32(8);
+                        events.Add(e);
+                    }
+
+                    return events;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
 
-        public Task<Event> GetEventsByOrganiser(string orgName)
+        public async Task<List<Event>> GetEventsByOrganiser(string orgName)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    SqlCommand command = new SqlCommand(selectSql + "Where OrgUsername = @name", connection);
+                    command.Parameters.AddWithValue("@name", orgName);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    List<Event> events = new List<Event>();
+                    while (reader.Read())
+                    {
+                        Event e = new Event(reader.GetInt32(0));
+                        e.Organiser = reader.GetString(1);
+                        e.Start = reader.GetDateTime(2);
+                        e.End = reader.GetDateTime(3);
+                        e.Type = reader.GetString(4);
+                        e.Name = reader.GetString(5);
+                        e.Description = reader.GetString(6);
+                        e.MinParticipants = reader.GetInt32(7);
+                        e.MaxParticipants = reader.GetInt32(8);
+                        events.Add(e);
+                    }
+
+                    return events;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
 
-        public Task<List<User>> GetParticipantsByEventAsync(int eventID)
+        public async Task<List<User>> GetParticipantsByEventAsync(int eventID)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    UserService us = new UserService();
+                    SqlCommand command = new SqlCommand(selectAttendeeSql + "Where EventID = @id", connection);
+                    command.Parameters.AddWithValue("@id", eventID);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    List<User> users = new List<User>();
+                    while (reader.Read())
+                    {
+                        User u = await us.GetUserAsAdminAsync(reader.GetString(2));
+                        users.Add(u);
+                    }
+
+                    return users;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
         }
 
         public Task<bool> JoinEvent(int eventID, string userName)

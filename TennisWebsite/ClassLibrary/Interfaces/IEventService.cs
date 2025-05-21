@@ -15,8 +15,8 @@ namespace TennisWebsite.Interfaces
         Task<List<Event>> GetAllEventsAsync();
         Task<List<User>> GetParticipantsByEventAsync(int eventID);
         Task<Event> GetEvent(int id);
-        Task<Event> GetEventByType(string type);
-        Task<Event> GetEventsByOrganiser(string orgName);
+        Task<List<Event>> GetEventsByType(string type);
+        Task<List<Event>> GetEventsByOrganiser(string orgName);
         Task<bool> JoinEvent(int eventID, string userName);
         Task<bool> LeaveEvent(int eventID, string userName);
         Task<bool> UpdateEvent(string organiser, string name, string description, 

@@ -259,7 +259,7 @@ namespace TennisLibrary.Services
                 {
                     await connection.OpenAsync();
 
-                    SqlCommand DeleteBookingCommand = new SqlCommand("Delete * From TennisBooking WHERE Player1 = @username " +
+                    SqlCommand DeleteBookingCommand = new SqlCommand("Delete From TennisBooking WHERE Player1 = @username " +
                         "OR Player2 = @username", connection);
                     DeleteBookingCommand.Parameters.AddWithValue("@username", queryUsername);
 
