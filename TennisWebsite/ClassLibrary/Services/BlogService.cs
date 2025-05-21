@@ -14,7 +14,7 @@ namespace TennisLibrary.Services
     public class BlogService : IBlogService
     {
         #region Instances
-        public List<Blog> _blogPosts;
+        //public List<Blog> _blogPosts;
         private string queryString = "SELECT * FROM TennisBlog";
         private string filterByAuthorSql = "SELECT * FROM TennisBlog WHERE Author = @Author";
         private string filterByDateSql = "SELECT * FROM TennisBlog WHERE PostDate = @Date";

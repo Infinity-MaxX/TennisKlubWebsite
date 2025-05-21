@@ -8,16 +8,14 @@ using TennisWebsite.ClassLibrary.Models;
 namespace TennisWebsite.ClassLibrary.Interfaces;
 public interface IGearService
 {
-    int Count { get; }
     bool Status { get; set; }
-    Task<bool> AddGear(string name, string? description);
+    Task<bool> AddGear(Gear gear);
     Task<bool> BookGear(int bookingID, int gearID);
     //Task<bool> BorrowGear(int id);
     Task<bool> CheckStatus(int id);
     Task<bool> DeleteGear(int id);
-    Task<List<Gear>> GetAll();
-    Task<Gear> GetByIdAsync(int id);
-    Task<Gear> GetByTypeAsync(string type);
-    Task<Gear> GetGear(int id);
+    Task<List<Gear>> GetAllAsync();
+    Task<Gear> GetByTypeAsync(string name);
+    Task<Gear> GetGearAsync(int id);
     //Task<bool> ReturnGear(int id);
 }

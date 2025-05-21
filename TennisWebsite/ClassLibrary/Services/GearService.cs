@@ -1,4 +1,9 @@
-﻿using TennisWebsite.ClassLibrary.Interfaces;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Hosting;
+using TennisLibrary;
+using TennisLibrary.Models;
+using TennisWebsite.ClassLibrary.Interfaces;
 using TennisWebsite.ClassLibrary.Models;
 
 namespace TennisWebsite.ClassLibrary.Services
@@ -6,11 +11,16 @@ namespace TennisWebsite.ClassLibrary.Services
     public class GearService : IGearService
     {
         #region Instances
-        private List<Gear> _gearRepo;
+        private string queryString = "SELECT * FROM TennisGear";
+        private string filterByIdSql = "SELECT * FROM TennisGear WHERE GearID = @ID";
+        private string filterByTypeSql = "SELECT * FROM TennisGear WHERE Name = @Name";
+        private string insertSql = "INSERT INTO TennisGear Values(@Name, @Description)";
+        private string deleteSql = "DELETE FROM TennisGear WHERE GearID = @ID";
+        private string updateSql = "UPDATE TennisGear SET Name = @Name, Description = @Description WHERE GearID = @ID";
+        //private string connectionString = ConnectionManager.ConnectionString; // static, call when needed
         #endregion
 
         #region Properties
-        public int Count { get { return _gearRepo.Count(); } }
         public bool Status { get; set; }
         #endregion
 
@@ -22,44 +32,216 @@ namespace TennisWebsite.ClassLibrary.Services
         #endregion
 
         #region Methods
-        public async Task<bool> AddGear(string name, string? description)
+        public async Task<bool> AddGear(Gear gear)
         {
-            throw new NotImplementedException();
-        }
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(insertSql, connection);
+                    command.Parameters.AddWithValue("@Name", gear.Name);
+                    command.Parameters.AddWithValue("@Description", gear.Description);
+                    await connection.OpenAsync();
 
+                    int numberOfRows = await command.ExecuteNonQueryAsync();
+
+                    return numberOfRows > 0;
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                    return false;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
         public async Task<bool> BookGear(int bookingID, int gearID)
         {
             throw new NotImplementedException();
         }
-
-        public async Task<bool> CheckStatus(int id)
+        public async Task<bool> CheckStatus(int id) // not finished
         {
-            throw new NotImplementedException();
-        }
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+                try
+                {
+                SqlCommand command = new SqlCommand(filterByIdSql, connection);
+                command.Parameters.AddWithValue("@GearID", id);
+                await connection.OpenAsync();
 
+                int numberOfRows = await command.ExecuteNonQueryAsync();
+
+                return numberOfRows > 0;
+                
+                //foreach (var item in _gearRepo)
+                //{
+                //    if (item.Status == true)
+                //    {
+                //        return true;
+                //    }
+                //    else if (item.Status == false)
+                //    {
+                //        Console.WriteLine("Equipment is unavailable.");
+                //        return false;
+                //    }
+                //}
+            }
+            catch (SqlException sqlExp)
+            {
+                Console.WriteLine("Database error: " + sqlExp.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
+        }
         public async Task<bool> DeleteGear(int id)
         {
-            throw new NotImplementedException();
-        }
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(deleteSql, connection);
+                    command.Parameters.AddWithValue("@ID", id);
+                    await connection.OpenAsync();
 
-        public async Task<List<Gear>> GetAll()
-        {
-            throw new NotImplementedException();
+                    int numberOfRows = await command.ExecuteNonQueryAsync();
+                    if (numberOfRows == 0) { return false; }
+                    return true;
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+                return false;
+            }
         }
-
-        public async Task<Gear> GetByIdAsync(int id)
+        public async Task<List<Gear>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            List<Gear> gears = new List<Gear>();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    await command.Connection.OpenAsync();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        int gearID = reader.GetInt32("GearID");
+                        string gearName = reader.GetString("Name");
+                        string gearDescription = reader.GetString("Description");
+                        Gear gear = new Gear(gearID, gearName, gearDescription);
+                        gears.Add(gear);
+                    }
+                    await reader.CloseAsync();
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+            return gears;
         }
-
-        public async Task<Gear> GetByTypeAsync(string type)
+        public async Task<Gear> GetByTypeAsync(string name)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                Gear gear = null;
+
+                try
+                {
+                    SqlCommand command = new SqlCommand(filterByTypeSql, connection);
+                    command.Parameters.AddWithValue("@Name", name);
+                    await connection.OpenAsync();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    if (await reader.ReadAsync())
+                    {
+                        string? gearDescription = reader.GetString("Description");
+                        gear = new Gear(name, gearDescription);
+                    }
+                    await reader.CloseAsync();
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+                return gear;
+            }
         }
-
-        public async Task<Gear> GetGear(int id)
+        public async Task<Gear> GetGearAsync(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                Gear gear = null;
+
+                try
+                {
+                    SqlCommand command = new SqlCommand(filterByIdSql, connection);
+                    command.Parameters.AddWithValue("@ID", id);
+                    await connection.OpenAsync();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    if (await reader.ReadAsync())
+                    {
+                        string gearName = reader.GetString("Name");
+                        string? gearDescription = reader.GetString("Description");
+                        gear = new Gear(id, gearName, gearDescription);
+                    }
+                    await reader.CloseAsync();
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+                return gear;
+            }
         }
         #endregion
     }
