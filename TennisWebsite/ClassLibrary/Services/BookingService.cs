@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
@@ -97,7 +98,7 @@ namespace TennisLibrary.Services
                         User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                         User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
                         Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
-                        bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                        bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), reader.GetString("Type")));
                     }
                     return bookings;
                 }
@@ -136,7 +137,7 @@ namespace TennisLibrary.Services
                             User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
                             Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
-                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), reader.GetString("Type")));
                         }
                     }
                     return bookings;
@@ -174,7 +175,7 @@ namespace TennisLibrary.Services
                         {
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
                             Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
-                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), reader.GetString("Type")));
                         }
                     }
                     return bookings;
@@ -212,7 +213,7 @@ namespace TennisLibrary.Services
                         {
                             User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                             Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
-                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), reader.GetString("Type")));
                         }
                     }
                     return bookings;
@@ -389,11 +390,11 @@ namespace TennisLibrary.Services
                         DateTime tempStart = reader.GetDateTime("StartDate");
                         DateTime tempEnd = reader.GetDateTime("EndDate");
                         User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
-                        if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End) && Player1.Name == Username)
+                        if (((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End)) && Player1.Username == Username)
                         {
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
                             Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
-                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), reader.GetString("Type")));
                         }
                     }
                     return bookings;
@@ -429,11 +430,172 @@ namespace TennisLibrary.Services
                         DateTime tempStart = reader.GetDateTime("StartDate");
                         DateTime tempEnd = reader.GetDateTime("EndDate");
                         User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
-                        if ((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End) && Player2.Name == Username)
+                        if (((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End)) && Player2.Username == Username)
                         {
-                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
                             Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
-                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate")));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), reader.GetString("Type")));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByTrainer(string Username)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                        string Type = reader.GetString("Type");
+                        if (Type == "Træning" && Player1.Name == Username)
+                        {
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), Type));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByType(string Type)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        string TypeDB = reader.GetString("Type");
+                        if (Type == TypeDB)
+                        {
+                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), Type));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByTypeAndDates(string Type, DateTime Start, DateTime End)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        string TypeDB = reader.GetString("Type");
+                        DateTime tempStart = reader.GetDateTime("StartDate");
+                        DateTime tempEnd = reader.GetDateTime("EndDate");
+                        if (((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End)) && Type == TypeDB)
+                        {
+                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), Type));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByTrainerAndDates(string Username, DateTime Start, DateTime End)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        string Type = reader.GetString("Type");
+                        User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                        DateTime tempStart = reader.GetDateTime("StartDate");
+                        DateTime tempEnd = reader.GetDateTime("EndDate");
+
+                        if (((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End)) && Type == "Træning" && Player1.Username == Username)
+                        {
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), Type));
                         }
                     }
                     return bookings;

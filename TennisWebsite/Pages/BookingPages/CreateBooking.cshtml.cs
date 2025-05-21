@@ -1,6 +1,7 @@
     using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq.Expressions;
 using TennisLibrary.Helpers;
 using TennisLibrary.Interfaces;
 using TennisLibrary.Models;
@@ -19,6 +20,9 @@ namespace TennisWebsite.Pages.BookingPages
         
         [BindProperty]
         public string player2 { get; set; }
+
+        [BindProperty]
+        public string bookingType { get; set; }
 
         private User Player1;
 
@@ -64,7 +68,6 @@ namespace TennisWebsite.Pages.BookingPages
 
             if (Player1 != null)
             {
-                Console.WriteLine("not null");
                 if (time.IsNullOrEmpty())
                 {
                     if (Player1.AccessLevel >= AccessLevel.Admin)
@@ -88,6 +91,7 @@ namespace TennisWebsite.Pages.BookingPages
                     booking.End = tempTime.AddHours(1);
                     player1 = Player1.Name + " (" + Player1.Username + ")";
                     Admin = false;
+                    bookingType = "Booking";
                     Page();
                 }
             }
@@ -99,28 +103,29 @@ namespace TennisWebsite.Pages.BookingPages
 
         public async Task<IActionResult> OnPostCreateAsync()
         {
-
             if (player2 != null && booking.Court != null && booking.Start >= DateTime.Now && booking.End > booking.Start)
             {
                 string player1UN = player1.Split('(')[1];
                 User Player1 = await us.GetUserAsAdminAsync(player1UN.Split(')')[0]);
                 User Player2 = await us.GetUserAsAdminAsync(player2);
+                
                 if (Player1 == null || Player2 == null)
                 {
+                    //return error: no player
                     return Page();
                 }
                 if (Player1.Username == Player2.Username)
                 {
+                    // return error: same players
                     return Page();
                 }
 
                 List<Booking> bookingsP1 = await bs.GetBookingsByDatesAndUserAsync(Player1.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1));
                 List<Booking> bookingsP2 = await bs.GetBookingsByDatesAndUser2Async(Player2.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1));
-                Console.WriteLine("P1 bookings: " + bookingsP1.Count);
-                Console.WriteLine("P2 bookings: " + bookingsP2.Count);
                 if (bookingsP1.Count >= 4)
                 {
-                    Console.WriteLine("P1 too many bookings");
+                    // return error, too many bookings
+                    ModelState.AddModelError("@Model.player1", "Du har allerede 4 bookinger");
                     return Page();
                 }
                 else if (bookingsP2.Count >= 4)
@@ -129,7 +134,7 @@ namespace TennisWebsite.Pages.BookingPages
                     return Page();
                 }
 
-                Booking newBooking = new Booking(Player1, Player2, booking.Court, booking.Start, booking.End);
+                Booking newBooking = new Booking(Player1, Player2, booking.Court, booking.Start, booking.End, booking.Type);
                 try
                 {
                     await bs.AddBookingUserAsync(newBooking);
