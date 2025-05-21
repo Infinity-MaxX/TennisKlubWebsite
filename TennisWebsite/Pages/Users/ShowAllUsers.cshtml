@@ -5,22 +5,123 @@
 @{
     ViewData["Title"] = "UsersAdminView";
 }
+@Html.AntiForgeryToken();
+
+<style>
+    @{/*https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816 */}
+    .range_container {
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+    }
+
+    .sliders_control {
+        position: relative;
+        height: 20px;
+    }
+
+    .form_control {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        color: #635a5a
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        pointer-events: all;
+        width: 24px;
+        height: 24px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px #C6C6C6;
+        cursor: pointer;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        pointer-events: all;
+        width: 24px;
+        height: 24px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px #C6C6C6;
+        cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+        background: #f7f7f7;
+    }
+
+    input[type=range]::-webkit-slider-thumb:active {
+        box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+        -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+    }
+
+    input[type="number"] {
+        color: #8a8383;
+        width: 50px;
+        height: 30px;
+        font-size: 20px;
+        border: none;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 2px;
+        width: 100%;
+        position: absolute;
+        background-color: #C6C6C6;
+        pointer-events: none;
+    }
+
+    #fromSlider {
+        height: 0;
+        z-index: 1;
+    }
+</style>
 
 <div class="container p-4 Container-Background">
+
+
+
+
+
+
+
     <div>
         <btn>
             <a asp-page="RegisterNewUser">Register</a>
         </btn>
 
-        <div class="dldropdown">
-            <input class="dlinput" id="queryField" type="text" oninput="searchFunc(queryField.value, 'testDropDown', 'queryField', 'usernameField')" />
-            <input type="hidden" id="usernameField" asp-for="@Model.SelectedUsername" />
-
-            <div id="testDropDown" class="dldropdown-content">
-            </div>
+    <div class="range_container">
+        <div class="sliders_control">
+            <input id="fromSlider" type="range" value="10" min="0" max="100" />
+            <input id="toSlider" type="range" value="40" min="0" max="100" />
         </div>
+        <fieldset class="form_control">
+            <div class="form_control_container">
+                <label for="fromInput">Min</label>
+                <input type="number" id="fromInput" value="10" min="0" max="100"/>
+            </div>
+        </fieldset>
+        <fieldset class="form_control">
+            <div class="form_control_container">
+                <label for="toInput">Max</label>
+                <input type="number" id="toInput" value="40" min="0" max="100"/>
+            </div>
+        </fieldset>
+    </div>
 
-        <table  class="table">
+        <input id="queryField" type="text") />
+
+        <table class="table">
             <thead>
                 <tr>
                     <th>Username</th>
@@ -36,7 +137,7 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="userListTable">
                 @foreach(User user in Model.Users)
                 {
                     <tr>
@@ -77,9 +178,6 @@
                             <a asp-page="EditUser" asp-route-Username="@user.Username" asp-route-KeepImage="@true">
                                 <img src="~/Images/pencil-square.svg" alt="Edit">
                             </a>
-                            <form asp-page-handler="Delete" asp-route-Username="@user.Username">
-                                <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
-                            </form>
                         </td>
                     </tr>
                 }
@@ -94,49 +192,171 @@
 @section scripts
 {
     <script>
-        async function searchFunc(query, dropDownID, displayFieldID, inputFieldID) {
-            document.getElementById("testDropDown").classList.add("dlshow");
-            const response = await fetch(`?handler=Update&query=${query}`); //Apparently this is a lot of data, not just my data.
+        async function searchFunc(query, fromInput, toInput) {
+            const response = await fetch(`?handler=Update&query=${query}&minAge=${fromInput.value}&maxAge=${toInput.value}`); //Apparently this is a lot of data, not just my data.
             const valuePairs = await response.json(); //This is my data, as transferred? Returned? with return JsonResult([my list of things here])
-            updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID);
+            updateTable(valuePairs);
         }
 
-        function updateDropDown(valuePairs, dropDownID, displayFieldID, inputFieldID) {
-            const dropdown = document.getElementById(dropDownID); //Refer to the table in the actual html
-            dropdown.innerHTML = ''; // Clear existing rows in the table
+        function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6','#25daa5',controlSlider);
+            if(from>to) {
+                fromSlider.value = to;
+                fromInput.value = to;
+            } else {
+                fromSlider.value=from;
+            }
+        }
+
+        function controlToInput(toSlider, fromInput, toInput, controlSlider) {
+            const [from, to] = getParsed(fromInput, toInput);
+            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5',controlSlider);
+            setToggleAccessible(toInput);
+            if(from <= to) {
+                toSlider.value = to;
+                toInput.value = to;
+            } else {
+                toInput.value = from;
+            }
+        }
+
+        function controlFromSlider(fromSlider, toSlider, fromInput) {
+            const [from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+            if (from > to) {
+                fromSlider.value = to;
+                fromInput.value = to;
+            } else {
+                fromInput.value = from;
+            }
+        }
+
+        function controlToSlider(fromSlider, toSlider, toInput) {
+            const[from, to] = getParsed(fromSlider, toSlider);
+            fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+            setToggleAccessible(toSlider);
+            if (from <= to) {
+                toSlider.value = to;
+                toInput.value = to;
+            } else {
+                toInput.value = from;
+                toSlider.value = from;
+            }
+        }
+
+        function getParsed(currentFrom, currentTo) {
+            const from = parseInt(currentFrom.value, 10);
+            const to = parseInt(currentTo.value, 10);
+            return [from, to];
+        }
+
+        function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
+            const rangeDistance = to.max - to.min;
+            const fromPosition = from.value - to.min;
+            const toPosition = to.value - to.min;
+            controlSlider.style.background = `linear-gradient(
+                to right,
+                ${sliderColor} 0%,
+                ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
+                ${rangeColor} ${(fromPosition)/(rangeDistance)*100}%,
+                ${rangeColor} ${(toPosition)/(rangeDistance)*100}%, 
+                ${sliderColor} ${(toPosition)/(rangeDistance)*100}%, 
+                ${sliderColor} 100%)`;
+        }
+
+        function setToggleAccessible(currentTarget) {
+            const toSlider = document.querySelector('#toSlider');
+
+            if (Number(currentTarget.value) <= 0 ) {
+                toSlider.style.zIndex = 2;
+            } else {
+                toSlider.style.zIndex = 0;
+            }
+        }
+        const fromSlider = document.querySelector('#fromSlider');
+        const toSlider = document.querySelector('#toSlider');
+        const fromInput = document.querySelector('#fromInput');
+        const toInput = document.querySelector('#toInput');
+        const searchField = document.querySelector('#queryField');
+
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+        setToggleAccessible(toSlider);
+
+        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
+        fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
+        toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+        searchField.oninput = () => searchFunc(searchField.value, fromInput, toInput);
+
+        const accessLevelNames = {
+            0: "Guest",
+            1: "Member",
+            2: "GuestTrainer",
+            3: "Trainer",
+            4: "Admin",
+            5: "Chairman"
+        };
+
+        function updateTable(valuePairs) {
+            //Updates the ENTIRE table when filtering and/or searching the stored users
+            const tableBody = document.getElementById('userListTable');
+            tableBody.innerHTML = '';
+
+            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+            const tokenValue = tokenElement ? tokenElement.value : null;
+
+            const keepImage = true;
 
             valuePairs.forEach(item => {
-                const option = document.createElement('div');
-                option.onclick = function() {
-                    selectItem(item, dropDownID, displayFieldID, inputFieldID)
-                }
-                option.innerHTML = `
-                    ${item.dlString}
-                    <br />
-                    <i>#${item.data.username}</i>
-                    <br />
+                const row = document.createElement('tr');
+
+                const accessName = accessLevelNames[item.data.accessLevel];
+
+                row.innerHTML = `
+                    <td>
+                        ${item.data.username}
+                    </td>
+                    <td>
+                        ${item.dlString}
+                    </td>
+                    <td>
+                        ${item.data.gender}
+                    </td>
+                    <td>
+                        ${item.data.phone}
+                    </td>
+                    <td>
+                        ${item.data.email}
+                    </td>
+                    <td>
+                        ${item.data.address}
+                    </td>
+                    <td>
+                        ${item.data.homeMunicipality}
+                    </td>
+                    <td>
+                        ${item.data.birthDate}
+                    </td>
+                    <td>
+                        ${accessName}
+                    </td>
+                    <td>
+                        <img src="/Images/MemberImages/${item.data.imageName}" width="140px" height="140px">
+                    </td>
+                    <td>
+                        <form method="post" action="?handler=Delete&Username=${item.data.username}" onsubmit="return confirm('Are you sure you want to delete the User ${item.data.username} (${item.data.name}) ?')">
+                            <input type="image" src="/Images/trash3.svg">
+                            <input name="__RequestVerificationToken" type="hidden" value="${tokenValue}" />
+                        </form>
+                        <a class="svg-link" href="/Users/EditUser?Username=${item.data.username}&KeepImage=${keepImage}">
+                            <img src="/Images/pencil-square.svg" alt="Edit">
+                        </a>
+                    </td>
                 `;
-                dropdown.appendChild(option);
+                tableBody.appendChild(row);
             });
         }
 
-        function selectItem(item, dropDownID, displayFieldID, inputFieldID) {
-            document.getElementById(displayFieldID).value = item.dlString;
-            document.getElementById(inputFieldID).value = item.username;
-            openDropdown.classList.remove(dropDownID);
-        }
-
-        window.onclick = function(event) {
-            if(!event.target.matches('dlinput')) {
-                var dropdowns = document.getElementsByClassName("dldropdown-content");
-                var i;
-                for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if(openDropdown.classList.contains('dlshow')) {
-                        openDropdown.classList.remove('dlshow');
-                    }
-                }
-            }
-        }
     </script>
 }
