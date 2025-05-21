@@ -202,7 +202,7 @@ namespace TennisLibrary.Services
                 for(int i = 0; i<genders.Length; i++)
                 {
                     queryForFilter += " @gender" + i + " = Gender";
-                    if (i + 1 != genders.Length) queryForFilter += " AND";
+                    if (i + 1 != genders.Length) queryForFilter += " OR";
                 }
             }
 

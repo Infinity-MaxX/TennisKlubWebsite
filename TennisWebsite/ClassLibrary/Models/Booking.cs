@@ -17,22 +17,24 @@ namespace TennisLibrary.Models
         {
 
         }
-        public Booking(User player1, User player2, Court courtName, DateTime start)
+        public Booking(User player1, User player2, Court courtName, DateTime start, string type)
         {
             Player1 = player1;
             Player2 = player2;
             Court = courtName;
             Start = start;
             End = start.AddHours(1);
+            Type = type;
         }
 
-        public Booking(User player1, User player2, Court courtName, DateTime start, DateTime end)
+        public Booking(User player1, User player2, Court courtName, DateTime start, DateTime end, string type)
         {
             Player1 = player1;
             Player2 = player2;
             Court = courtName;
             Start = start;
             End = end;
+            Type = type;
         }
         #endregion
 
@@ -46,6 +48,8 @@ namespace TennisLibrary.Models
         public DateTime Start { get; set; }
 
         public DateTime End { get; set; }
+
+        public string Type { get; set; }
 
         public int ID { get; }
 

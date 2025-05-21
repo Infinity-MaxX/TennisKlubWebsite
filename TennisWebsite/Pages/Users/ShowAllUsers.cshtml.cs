@@ -36,9 +36,9 @@ namespace TennisWebsite.Pages.Users
             return RedirectToPage("/Index");
         }
 
-        public async Task<IActionResult> OnGetUpdateAsync(string query)
+        public async Task<IActionResult> OnGetUpdateAsync(string query, int minAge, int maxAge)
         {
-            Users = await _userService.GetAllUsersAsync();
+            Users = await _userService.GetAllUsersFilteredAsync(['a','m','k'], minAge, maxAge);
             if (String.IsNullOrEmpty(query)) return new JsonResult(DLStringComparer<User>.ConvertIfNoQuery(Users, x => x.Name));
 
             return new JsonResult(DLStringComparer<User>.Matches(Users, x => x.Name, query));

@@ -20,7 +20,16 @@ namespace TennisLibrary.Interfaces
         Task<List<Booking>> GetBookingsByDatesAsync(DateTime Start, DateTime End);
 
         Task<List<Booking>> GetBookingsByDatesAndUserAsync(string Username, DateTime Start, DateTime End);
+        
         Task<List<Booking>> GetBookingsByDatesAndUser2Async(string Username, DateTime Start, DateTime End);
+
+        Task<List<Booking>> GetBookingsByTrainer(string Username);
+
+        Task<List<Booking>> GetBookingsByType(string Type);
+
+        Task<List<Booking>> GetBookingsByTypeAndDates(string Type, DateTime Start, DateTime End);
+
+        Task<List<Booking>> GetBookingsByTrainerAndDates(string Username, DateTime Start, DateTime End);
 
         Task<bool> DeleteBooking(int ID);
 

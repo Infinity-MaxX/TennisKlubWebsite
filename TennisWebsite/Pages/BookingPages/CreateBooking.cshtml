@@ -14,10 +14,11 @@
                 <div class="mb-3">
                     <label asp-for="@Model.player1" class="control-label"> Spiller 1 </label>
                     <input asp-for="@Model.player1" class="form-control" readonly required />
+                    <span asp-validation-for="@Model.player1" class="text-danger"></span>
                 </div>
 
                 <div class="dldropdown">
-                    <input class="dlinput form-control" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" />
+                    <input class="dlinput form-control" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" required />
                     <input type="hidden" id="player2UsernameField" asp-for="@Model.player2" />
 
                     <div id="player2DropDown" class="dldropdown-content">
@@ -45,8 +46,8 @@
                 <div class="dldropdown">
                     <label asp-for="@Model.booking.Player1" class="control-label"> Spiller 1</label>
                     <br />
-                    <input class="dlinput" id="player1QueryField" type="text" oninput="searchFunc(player1QueryField.value, 'player1DropDown', 'player1QueryField', 'player1UsernameField')" />
-                    <input type="hidden" id="player1UsernameField" asp-for="@Model.player1" />
+                    <input class="dlinput" id="player1QueryField" type="text" oninput="searchFunc(player1QueryField.value, 'player1DropDown', 'player1QueryField', 'player1UsernameField')" required />
+                    <input type="hidden" id="player1UsernameField" asp-for="@Model.player1"/>
 
                     <div id="player1DropDown" class="dldropdown-content">
                     </div>
@@ -55,11 +56,22 @@
                 <div class="dldropdown">
                     <label asp-for="@Model.booking.Player2" class="control-label"> Spiller 2</label>
                     <br />
-                    <input class="dlinput" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" />
+                    <input class="dlinput" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" required />
                     <input type="hidden" id="player2UsernameField" asp-for="@Model.player2" />
 
                     <div id="player2DropDown" class="dldropdown-content">
                     </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="@Model.booking.Type" class="control-label">Booking type</label>
+                    <select class="form-select" aria-label="Default select example" asp-for="@Model.booking.Court.Name">
+                        <option selected>Admin</option>
+                        <option>Booking</option>
+                        <option>Træning</option>
+                        <option>Turnering</option>
+                        <option>Event</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">
