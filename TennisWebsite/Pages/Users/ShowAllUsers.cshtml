@@ -11,13 +11,16 @@
     @{/*https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816 */}
     .range_container {
         display: flex;
-        flex-direction: column;
-        width: 200px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
     }
 
     .sliders_control {
         position: relative;
-        height: 20px;
+        width: 20%;
+        display: block;
     }
 
     .form_control {
@@ -96,30 +99,70 @@
 
 
     <div>
-        <btn>
-            <a asp-page="RegisterNewUser">Register</a>
-        </btn>
 
-    <div class="range_container">
-        <div class="sliders_control">
-            <input id="fromSlider" type="range" value="10" min="0" max="100" />
-            <input id="toSlider" type="range" value="40" min="0" max="100" />
+        <div class="range_container">
+            <a class="btn btn-primary" asp-page="RegisterNewUser">Register</a>
+
+
+            <input id="queryField" type="text") />
+
+            <h4>Aldersinterval:</h4>
+
+            <label for="fromInput">Min</label>
+            <input type="number" id="fromInput" value="10" min="0" max="100"/>
+
+            <span class="sliders_control">
+                <input id="fromSlider" type="range" value="10" min="0" max="100" />
+                <input id="toSlider" type="range" value="40" min="0" max="100" />
+            </span>
+
+            <label for="toInput">Max</label>
+            <input type="number" id="toInput" value="40" min="0" max="100"/>
+
         </div>
-        <fieldset class="form_control">
-            <div class="form_control_container">
-                <label for="fromInput">Min</label>
-                <input type="number" id="fromInput" value="10" min="0" max="100"/>
-            </div>
-        </fieldset>
-        <fieldset class="form_control">
-            <div class="form_control_container">
-                <label for="toInput">Max</label>
-                <input type="number" id="toInput" value="40" min="0" max="100"/>
-            </div>
-        </fieldset>
-    </div>
 
-        <input id="queryField" type="text") />
+
+        @* Here the following is used *@
+        @* https://getbootstrap.com/docs/5.3/components/card/#grid-cards *@
+        @* https://getbootstrap.com/docs/5.1/components/card/#masonry *@
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 card-group">
+            @for(int i = 0; i < Model.Users.Count; i++)
+            {
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body text-center">
+                        <img src="~/Images/MemberImages/@Model.Users[i].ImageName" class="card-img-top"/>
+                            <h4 class="card-title">@Model.Users[i].Name</h4>
+                            <div class="row row-cols-1 row-cols-md-2 g-4">
+                                <div>
+                                    <div class="card">
+                                        <p class="card-text"><b>Køn:</b> @Model.Users[i].Gender</p>
+                                        <p class="card-text"><b>Fødselsdato:</b> @Model.Users[i].BirthDate</p>
+                                    </div>
+                                    <br />
+                                    <div class="card">
+                                    <p class="card-text"><b>Telefonnummer:</b> @Model.Users[i].Phone</p>
+                                    <p class="card-text"><b>Emailadresse:</b> @Model.Users[i].Email</p>
+                                    </div>
+                                    <br />
+                                    <div class="card">
+                                    <p class="card-text"><b>Adresse:</b> @Model.Users[i].Address</p>
+                                    <p class="card-text"><b>Kommune:</b> @Model.Users[i].HomeMunicipality</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="card">
+                                    <p class="card-text"><b>Brugernavn:</b> @Model.Users[i].Username</p>
+                                    <p class="card-text"><b>Brugertype:</b> @((AccessLevel)@Model.Users[i].AccessLevel)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
 
         <table class="table">
             <thead>
@@ -283,10 +326,23 @@
         fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
         setToggleAccessible(toSlider);
 
-        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
-        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
-        fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
-        toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput, searchField);
+        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput, searchField);
+        
+        
+        fromInput.oninput = () => {
+            controlFromInput(fromSlider, fromInput, toInput, toSlider, searchField);
+            searchFunc(searchField.value, fromInput, toInput);
+
+        };
+        toInput.oninput = () => {
+            controlToInput(toSlider, fromInput, toInput, toSlider, searchField);
+            searchFunc(searchField.value, fromInput, toInput);
+        }
+
+
+        fromSlider.onmouseup = () => searchFunc(searchField.value, fromInput, toInput);
+        toSlider.onmouseup = () => searchFunc(searchField.value, fromInput, toInput);
         searchField.oninput = () => searchFunc(searchField.value, fromInput, toInput);
 
         const accessLevelNames = {

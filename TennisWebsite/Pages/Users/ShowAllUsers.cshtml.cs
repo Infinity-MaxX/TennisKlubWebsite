@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TennisLibrary.Models;
-using TennisLibrary.Interfaces;
-using TennisLibrary.Services;
 using TennisLibrary.Helpers;
+using TennisLibrary.Interfaces;
+using TennisLibrary.Models;
+using TennisLibrary.Services;
 using TennisWebsite.ClassLibrary.Helpers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TennisWebsite.Pages.Users
 {
@@ -29,7 +30,7 @@ namespace TennisWebsite.Pages.Users
             if (AccessLevel == null) return RedirectToPage("Login", new { OriginalDestination = "/Users/ShowAllUsers" });
             if(AccessLevel >= _siteAccesLevel)
             {
-                Users = await _userService.GetAllUsersAsync();
+                Users = await _userService.GetAllUsersFilteredAsync(['a', 'm', 'k'], null, null);
                 return Page();
 
             }
