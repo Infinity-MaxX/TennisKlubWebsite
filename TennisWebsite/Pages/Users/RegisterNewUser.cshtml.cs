@@ -65,7 +65,7 @@ namespace TennisWebsite.Pages.Users
 
         public void OnGet()
         {
-
+            BirthDate = DateOnly.FromDateTime(DateTime.Now.AddYears(-5));
 
         }
 

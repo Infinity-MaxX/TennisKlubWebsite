@@ -187,10 +187,10 @@ namespace TennisLibrary.Services
                     maxAge = null;
                 }
 
-                queryForFilter += " @oldestAcceptedBirthday < Birthdate AND @newestAcceptedBirthday > Birthdate";
+                queryForFilter += " (@oldestAcceptedBirthday < Birthdate AND @newestAcceptedBirthday > Birthdate)";
 
-            } else if(minAge != null) queryForFilter += "@newestAcceptedBirthday > Birthdate";
-            else if(maxAge != null) queryForFilter += "@oldestAcceptedBirthday < Birthdate";
+            } else if(minAge != null) queryForFilter += "(@newestAcceptedBirthday > Birthdate)";
+            else if(maxAge != null) queryForFilter += "@(oldestAcceptedBirthday < Birthdate)";
 
 
             if(!genders.IsNullOrEmpty())
@@ -199,12 +199,16 @@ namespace TennisLibrary.Services
                 {
                     queryForFilter += " AND";
                 }
+                queryForFilter += "(";
                 for(int i = 0; i<genders.Length; i++)
                 {
                     queryForFilter += " @gender" + i + " = Gender";
                     if (i + 1 != genders.Length) queryForFilter += " OR";
                 }
+                queryForFilter += ")";
             }
+
+            queryForFilter += " ORDER BY Name";
 
             List<User> results = new List<User>();
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
@@ -215,8 +219,8 @@ namespace TennisLibrary.Services
                     SqlCommand searchCommand = new SqlCommand(queryForFilter, connection);
 
 
-                    if (minAge != null) searchCommand.Parameters.AddWithValue("@newestAcceptedBirthday", DateTime.Now.AddDays(-(int)(minAge * 365.25)));
-                    if (maxAge != null) searchCommand.Parameters.AddWithValue("@oldestAcceptedBirthday", DateTime.Now.AddDays(-(int)(maxAge * 365.25)));
+                    if (minAge != null) searchCommand.Parameters.AddWithValue("@newestAcceptedBirthday", DateTime.Now.AddDays(-(double)(minAge * 365.25)));
+                    if (maxAge != null) searchCommand.Parameters.AddWithValue("@oldestAcceptedBirthday", DateTime.Now.AddDays(-(double)(maxAge * 365.25)));
                     if (!genders.IsNullOrEmpty())
                     {
                         for (int i = 0; i < genders.Length; i++)
