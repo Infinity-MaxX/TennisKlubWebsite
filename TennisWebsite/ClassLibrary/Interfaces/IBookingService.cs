@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TennisLibrary.Models;
+using TennisLibrary.Services;
 
 namespace TennisLibrary.Interfaces
 {
@@ -42,5 +43,9 @@ namespace TennisLibrary.Interfaces
         Task<bool> UpdateBookingTimeAdmin(int ID, DateTime Start, DateTime End);
         
         Task<bool> UpdateBookingTimeAndPlayer2Admin(int ID, User Player2, DateTime Start, DateTime End);
+
+        Task<List<Booking>> GetBookingsByTimePlayerAndType(string Username, DateTime Start, DateTime End, string Type);
+
+        Task<List<Booking>> GetBookingsByTimePlayer2AndType(string Username, DateTime Start, DateTime End, string Type);
     }
 }

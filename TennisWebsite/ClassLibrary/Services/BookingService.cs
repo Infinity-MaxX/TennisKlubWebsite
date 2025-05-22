@@ -15,7 +15,7 @@ namespace TennisLibrary.Services
 {
     public class BookingService : IBookingService
     {
-        private string insertQuery = "INSERT into TennisBooking Values(@Court, @Player1, @Player2, @Start, @End)";
+        private string insertQuery = "INSERT into TennisBooking Values(@Court, @Player1, @Player2, @Start, @End, @Type)";
         private string deleteSQL = "DELETE from TennisBooking where BookingID = @BookingID";
         private string updateSQLTime = "Update TennisBooking set Start = @start and End = @end where BookingID = @ID";
         private string updateSQLTimeAndPlayer = "Update TennisBooking set Player2 = @Player2 and set Start = @start and End = @end where BookingID = @ID";
@@ -36,13 +36,13 @@ namespace TennisLibrary.Services
                     insertCommand.Parameters.AddWithValue("@Start", newBooking.Start);
                     insertCommand.Parameters.AddWithValue("@End", newBooking.End);
                     insertCommand.Parameters.AddWithValue("@Court", newBooking.Court.Name);
+                    insertCommand.Parameters.AddWithValue("@Type", newBooking.Type);
+
                     return 0 < await insertCommand.ExecuteNonQueryAsync();
                 }
                 catch (SqlException sqlx)
                 {
-                    Console.WriteLine(sqlx.Number);
-                    Console.WriteLine(sqlx.Message);
-                    return false;
+                    throw sqlx;
                 }
                 finally
                 {
@@ -596,6 +596,90 @@ namespace TennisLibrary.Services
                             User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
                             Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
                             bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), Type));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByTimePlayerAndType(string Username, DateTime Start, DateTime End, string Type)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        string TypeDB = reader.GetString("Type");
+                        DateTime tempStart = reader.GetDateTime("StartDate");
+                        DateTime tempEnd = reader.GetDateTime("EndDate");
+                        User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+
+                        if (((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End)) && Player1.Username == Username && TypeDB == Type)
+                        {
+                            User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), TypeDB));
+                        }
+                    }
+                    return bookings;
+                }
+                catch (SqlException sqlExp)
+                {
+                    throw sqlExp;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Booking>> GetBookingsByTimePlayer2AndType(string Username, DateTime Start, DateTime End, string Type)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+
+                    List<Booking> bookings = new List<Booking>();
+
+                    SqlCommand command = new SqlCommand(getSQLBookings, connection);
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    IUserService tempUserService = new UserService();
+                    ICourtService tempCourtService = new CourtService();
+
+                    while (reader.Read())
+                    {
+                        string TypeDB = reader.GetString("Type");
+                        DateTime tempStart = reader.GetDateTime("StartDate");
+                        DateTime tempEnd = reader.GetDateTime("EndDate");
+                        User Player2 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player2"));
+
+                        if (((tempStart > Start && tempStart < End) || (tempEnd > Start && tempEnd < End) || (tempStart < Start && tempEnd > End)) && Player2.Username == Username && TypeDB == Type)
+                        {
+                            User Player1 = await tempUserService.GetUserAsAdminAsync(reader.GetString("Player1"));
+                            Court Court = await tempCourtService.GetCourtAsync(reader.GetString("CourtName"));
+                            bookings.Add(new Booking(Player1, Player2, Court, reader.GetDateTime("StartDate"), reader.GetDateTime("EndDate"), TypeDB));
                         }
                     }
                     return bookings;
