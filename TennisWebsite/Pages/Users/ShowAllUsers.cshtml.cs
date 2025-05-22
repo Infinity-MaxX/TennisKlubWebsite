@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TennisLibrary.Models;
-using TennisLibrary.Interfaces;
-using TennisLibrary.Services;
 using TennisLibrary.Helpers;
+using TennisLibrary.Interfaces;
+using TennisLibrary.Models;
+using TennisLibrary.Services;
 using TennisWebsite.ClassLibrary.Helpers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TennisWebsite.Pages.Users
 {
@@ -18,9 +19,13 @@ namespace TennisWebsite.Pages.Users
 
         public List<User> Users { get; set; }
 
-        public ShowAllUsersModel()
+        public (char, string)[] Genders = new[] { ('M', "Mænd"), ('K', "Kvinder"), ('A', "Andre") };
+        public bool[] FilteredGendersCheck = {true, true, true};
+        public List<char> FilteredGendersInput = new List<char>();
+
+        public ShowAllUsersModel(IUserService userService)
         {
-            _userService = new UserService();
+            _userService = userService;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -29,16 +34,23 @@ namespace TennisWebsite.Pages.Users
             if (AccessLevel == null) return RedirectToPage("Login", new { OriginalDestination = "/Users/ShowAllUsers" });
             if(AccessLevel >= _siteAccesLevel)
             {
-                Users = await _userService.GetAllUsersAsync();
+                Users = await _userService.GetAllUsersFilteredAsync(['a', 'm', 'k'], null, null);
                 return Page();
 
             }
             return RedirectToPage("/Index");
         }
 
-        public async Task<IActionResult> OnGetUpdateAsync(string query, int minAge, int maxAge)
+        public async Task<IActionResult> OnGetUpdateAsync(string query, string genderInput, int minAge, int maxAge)
         {
-            Users = await _userService.GetAllUsersFilteredAsync(['a','m','k'], minAge, maxAge);
+            if(!String.IsNullOrEmpty(genderInput))
+            {
+                foreach(char c in genderInput)
+                {
+                    FilteredGendersInput.Add(c);
+                }
+            }
+            Users = await _userService.GetAllUsersFilteredAsync(FilteredGendersInput, minAge, maxAge);
             if (String.IsNullOrEmpty(query)) return new JsonResult(DLStringComparer<User>.ConvertIfNoQuery(Users, x => x.Name));
 
             return new JsonResult(DLStringComparer<User>.Matches(Users, x => x.Name, query));

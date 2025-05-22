@@ -1,5 +1,6 @@
     using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.IdentityModel.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq.Expressions;
 using TennisLibrary.Helpers;
@@ -25,6 +26,7 @@ namespace TennisWebsite.Pages.BookingPages
         public string bookingType { get; set; }
 
         private User Player1;
+        private bool ErrorHappened;
 
         public bool Admin = false;
         public int Error = 0;
@@ -55,8 +57,7 @@ namespace TennisWebsite.Pages.BookingPages
         }
 
         public async Task OnGetAsync(string time, string court)
-        {
-            
+        {    
             bs= new BookingService();
             cs = new CourtService();
             booking= new Booking();
@@ -91,7 +92,7 @@ namespace TennisWebsite.Pages.BookingPages
                     booking.End = tempTime.AddHours(1);
                     player1 = Player1.Name + " (" + Player1.Username + ")";
                     Admin = false;
-                    bookingType = "Booking";
+                    booking.Type = "Booking";
                     Page();
                 }
             }
@@ -103,34 +104,70 @@ namespace TennisWebsite.Pages.BookingPages
 
         public async Task<IActionResult> OnPostCreateAsync()
         {
+            ModelState.ClearValidationState("player1");
+            ModelState.ClearValidationState("player2");
+            ErrorHappened = false;
             if (player2 != null && booking.Court != null && booking.Start >= DateTime.Now && booking.End > booking.Start)
             {
                 string player1UN = player1.Split('(')[1];
+                string player2UN = player2.Split('(')[1];
                 User Player1 = await us.GetUserAsAdminAsync(player1UN.Split(')')[0]);
-                User Player2 = await us.GetUserAsAdminAsync(player2);
+                User Player2 = await us.GetUserAsAdminAsync(player2UN.Split(')')[0]);
                 
-                if (Player1 == null || Player2 == null)
+                if (Player1 == null)
                 {
                     //return error: no player
-                    return Page();
+                    ModelState.AddModelError("player1", "Vælg en rigtig bruger");
+                    ErrorHappened = true;
                 }
+                
+                if (Player2 == null)
+                {
+                    //return error: no player
+                    ModelState.AddModelError("player2", "Vælg en rigtig bruger");
+                    ErrorHappened = true;
+                }
+
                 if (Player1.Username == Player2.Username)
                 {
                     // return error: same players
+                    ModelState.AddModelError("player1", "De to brugere er de samme");
+                    ModelState.AddModelError("player2", "De to brugere er de samme");
+                    ErrorHappened = true;
+                }
+                if (ErrorHappened == true)
+                {
                     return Page();
                 }
+                List<Booking> bookingsP1 = await bs.GetBookingsByTimePlayerAndType(Player1.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1), "Booking");
+                List<Booking> bookingsP2 = await bs.GetBookingsByTimePlayer2AndType(Player1.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1), "Booking");
 
-                List<Booking> bookingsP1 = await bs.GetBookingsByDatesAndUserAsync(Player1.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1));
-                List<Booking> bookingsP2 = await bs.GetBookingsByDatesAndUser2Async(Player2.Username, DateTime.Now.AddHours(1), DateTime.Now.AddYears(1));
-                if (bookingsP1.Count >= 4)
+                if (bookingsP1.Count >= 4 && booking.Type == "Booking")
                 {
                     // return error, too many bookings
-                    ModelState.AddModelError("@Model.player1", "Du har allerede 4 bookinger");
-                    return Page();
+                    ModelState.AddModelError("player1", "Du har allerede 4 bookinger");
+                    ErrorHappened = true;
                 }
-                else if (bookingsP2.Count >= 4)
+                if (bookingsP2.Count >= 4 && booking.Type == "Booking")
                 {
-                    Console.WriteLine("P2 too many bookings");
+                    ModelState.AddModelError("player2", "Spilleren har allerede 4 bookinger");
+                    ErrorHappened = true;
+                }
+
+                if (booking.Start < DateTime.Now)
+                {
+                    ModelState.AddModelError("booking.Start","Start tiden er i fortiden");
+                    ErrorHappened = true;
+                }
+
+                if (booking.End < booking.Start)
+                {
+                    ModelState.AddModelError("booking.End", "Slut tiden er tidligere end start tiden");
+                    ErrorHappened = true;
+                }
+
+                if (ErrorHappened == true)
+                {
                     return Page();
                 }
 
