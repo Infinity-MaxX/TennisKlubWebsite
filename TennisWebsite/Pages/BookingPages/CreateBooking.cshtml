@@ -12,71 +12,78 @@
             @if (Model.Admin == false)
             {
                 <div class="mb-3">
-                    <label asp-for="@Model.player1" class="control-label"> Spiller 1 </label>
-                    <input asp-for="@Model.player1" class="form-control" readonly required />
-                    <span asp-validation-for="@Model.player1" class="text-danger"></span>
+                    <label asp-for="player1" class="control-label"> Spiller 1 </label>
+                    <input asp-for="player1" class="form-control" readonly required />
+                    <span asp-validation-for="player1" class="text-danger"></span>
                 </div>
 
                 <div class="dldropdown">
-                    <input class="dlinput form-control" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" required />
-                    <input type="hidden" id="player2UsernameField" asp-for="@Model.player2" />
-
+                    <label asp-for="player2" class="control-label"> Spiller2 </label>
+                    <input class="dlinput form-control" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" />
+                    <input type="hidden" id="player2UsernameField" asp-for="player2" />
                     <div id="player2DropDown" class="dldropdown-content">
                     </div>
+                    <span asp-validation-for="player2" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.booking.Court.Name" class="control-label"> Bane </label>
-                    <input asp-for="@Model.booking.Court.Name" class="form-control" readonly required />
+                    <label asp-for="booking.Court.Name" class="control-label"> Bane </label>
+                    <input asp-for="booking.Court.Name" class="form-control" readonly required />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.booking.Start" class="control-label"> Start tid </label>
-                    <input asp-for="@Model.booking.Start" class="form-control" readonly required />
+                    <label asp-for="booking.Start" class="control-label"> Start tid </label>
+                    <input asp-for="booking.Start" class="form-control" readonly required />
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.booking.End" class="control-label"> Slut tid </label>
-                    <input asp-for="@Model.booking.End" class="form-control" readonly required />
+                    <label asp-for="booking.End" class="control-label"> Slut tid </label>
+                    <input asp-for="booking.End" class="form-control" readonly required />
+                </div>
+                <div class="mb-3">
+                    <input asp-for="booking.Type" class="form-control" readonly hidden/>
                 </div>
             }
             
-            @if (@Model.Admin)
+            @if (Model.Admin)
             {
                 <div class="dldropdown">
-                    <label asp-for="@Model.booking.Player1" class="control-label"> Spiller 1</label>
+                    <label asp-for="booking.Player1" class="control-label"> Spiller 1</label>
                     <br />
                     <input class="dlinput" id="player1QueryField" type="text" oninput="searchFunc(player1QueryField.value, 'player1DropDown', 'player1QueryField', 'player1UsernameField')" required />
-                    <input type="hidden" id="player1UsernameField" asp-for="@Model.player1"/>
+                    <input type="hidden" id="player1UsernameField" asp-for="player1"/>
 
                     <div id="player1DropDown" class="dldropdown-content">
                     </div>
+                    <span asp-validation-for="player1" class="text-danger"></span>
                 </div>
                 <br />
                 <div class="dldropdown">
-                    <label asp-for="@Model.booking.Player2" class="control-label"> Spiller 2</label>
+                    <label asp-for="booking.Player2" class="control-label"> Spiller 2</label>
                     <br />
                     <input class="dlinput" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" required />
-                    <input type="hidden" id="player2UsernameField" asp-for="@Model.player2" />
+                    <input type="hidden" id="player2UsernameField" asp-for="player2" />
 
                     <div id="player2DropDown" class="dldropdown-content">
                     </div>
+                    <span asp-validation-for="player2" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.booking.Type" class="control-label">Booking type</label>
-                    <select class="form-select" aria-label="Default select example" asp-for="@Model.booking.Court.Name">
+                    <label asp-for="booking.Type" class="control-label">Booking type</label>
+                    <select class="form-select" aria-label="Default select example" asp-for="booking.Court.Name">
                         <option selected>Admin</option>
                         <option>Booking</option>
                         <option>Træning</option>
                         <option>Turnering</option>
                         <option>Event</option>
                     </select>
+                    <span asp-validation-for="booking.Type" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.booking.Court.Name" class="control-label"> Bane</label>
-                    <select class="form-select" aria-label="Default select example" asp-for="@Model.booking.Court.Name">
+                    <label asp-for="booking.Court.Name" class="control-label"> Bane</label>
+                    <select class="form-select" aria-label="Default select example" asp-for="booking.Court.Name">
                         @foreach (Court court in Model.Courts)
                         {
                             if (court == Model.booking.Court) {
@@ -88,16 +95,19 @@
                             }
                         }
                     </select>
+                    <span asp-validation-for="booking.Court.Name" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.booking.Start" class="control-label"> Start tid </label>
-                    <input asp-for="@Model.booking.Start" class="form-control" required />
+                    <label asp-for="booking.Start" class="control-label"> Start tid </label>
+                    <input asp-for="booking.Start" class="form-control" required />
+                    <span asp-validation-for="booking.Start" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="@Model.booking.End" class="control-label"> Slut tid </label>
-                    <input asp-for="@Model.booking.End" class="form-control" required />
+                    <label asp-for="booking.End" class="control-label"> Slut tid </label>
+                    <input asp-for="booking.End" class="form-control" required />
+                    <span asp-validation-for="booking.End" class="text-danger"></span>
                 </div>
             }
 
@@ -191,7 +201,7 @@
         }
 
         function selectItem(item, dropDownID, displayFieldID, inputFieldID) {
-            document.getElementById(displayFieldID).value = item.dlString;
+            document.getElementById(displayFieldID).value = item.dlString + "(" + item.data.username + ")";
             document.getElementById(inputFieldID).value = item.data.username;
             openDropdown.classList.remove(dropDownID);
         }
