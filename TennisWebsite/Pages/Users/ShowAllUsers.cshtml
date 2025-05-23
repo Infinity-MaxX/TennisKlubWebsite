@@ -120,15 +120,17 @@
             <input type="number" id="toInput" value="40" min="0" max="100"/>
 
 
-            <div>
                 @for(int i=0; i<Model.Genders.Length;i++)
                 {
+            <div>
                     <label asp-for="@Model.Genders[i]">@Model.Genders[i].Item2</label>
                     <input type="checkbox" name="genderBox" value="@Model.Genders[i].Item1"/>
-                }
             </div>
+                }
 
         </div>
+
+        <br />
 
 
         @* Here the following is used *@
@@ -139,103 +141,47 @@
             @for(int i = 0; i < Model.Users.Count; i++)
             {
                 <div class="col">
-                    <div class="card">
-                        <div class="card-body text-center">
+                    <div class="card h-100">
+                        <div class="card-body text-center d-flex flex-column">
                         <img src="~/Images/MemberImages/@Model.Users[i].ImageName" class="card-img-top"/>
                             <h4 class="card-title">@Model.Users[i].Name</h4>
                             <div class="row row-cols-1 row-cols-md-2 g-4">
-                                <div>
-                                    <div class="card">
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="card flex-fill" style="height: 100%;">
                                         <p class="card-text"><b>Køn:</b> @Model.Users[i].Gender</p>
                                         <p class="card-text"><b>Fødselsdato:</b> @Model.Users[i].BirthDate</p>
                                     </div>
                                     <br />
-                                    <div class="card">
-                                    <p class="card-text"><b>Telefonnummer:</b> @Model.Users[i].Phone</p>
-                                    <p class="card-text"><b>Emailadresse:</b> @Model.Users[i].Email</p>
-                                    </div>
-                                    <br />
-                                    <div class="card">
-                                    <p class="card-text"><b>Adresse:</b> @Model.Users[i].Address</p>
-                                    <p class="card-text"><b>Kommune:</b> @Model.Users[i].HomeMunicipality</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="card">
+                                    <div class="card flex-fill" style="height: 100%;">
                                     <p class="card-text"><b>Brugernavn:</b> @Model.Users[i].Username</p>
                                     <p class="card-text"><b>Brugertype:</b> @((AccessLevel)@Model.Users[i].AccessLevel)</p>
                                     </div>
                                 </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="card flex-fill" style="height: 100%;">
+                                        <p class="card-text"><b>Telefonnummer:</b> @Model.Users[i].Phone</p>
+                                        <p class="card-text"><b>Emailadresse:</b> @Model.Users[i].Email</p>
+                                    </div>
+                                    <br />
+                                    <div class="card flex-fill" style="height: 100%;">
+                                        <p class="card-text"><b>Adresse:</b> @Model.Users[i].Address</p>
+                                        <p class="card-text"><b>Kommune:</b> @Model.Users[i].HomeMunicipality</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-auto d-flex justify-content-center gap-3">
+                                <form asp-page-handler="Delete" asp-route-Username="@Model.Users[i].Username" class="m-0">
+                                    <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @Model.Users[i].Username (@Model.Users[i].Name) ?');">
+                                </form>
+                                <a asp-page="EditUser" asp-route-Username="@Model.Users[i].Username" asp-route-KeepImage="@true" class="m-0">
+                                    <img src="~/Images/pencil-square.svg" alt="Edit">
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             }
         </div>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Navn</th>
-                    <th>Køn</th>
-                    <th>Telefonnummer</th>
-                    <th>Email</th>
-                    <th>Addresse</th>
-                    <th>Hjemmekommune</th>
-                    <th>Fødselsdato</th>
-                    <th>Autoritettsniveau</th>
-                    <th>Profilbillede</th>
-                </tr>
-            </thead>
-
-            <tbody id="userListTable">
-                @foreach(User user in Model.Users)
-                {
-                    <tr>
-                        <td>
-                            @user.Username
-                        </td>
-                        <td>
-                            @user.Name
-                        </td>
-                        <td>
-                            @user.Gender
-                        </td>
-                        <td>
-                            @user.Phone
-                        </td>
-                        <td>
-                            @user.Email
-                        </td>
-                        <td>
-                            @user.Address
-                        </td>
-                        <td>
-                            @user.HomeMunicipality
-                        </td>
-                        <td>
-                            @user.BirthDate
-                        </td>
-                        <td>
-                            @((AccessLevel)user.AccessLevel)
-                        </td>
-                        <td>
-                            <img src="~/Images/MemberImages/@(user.ImageName)" width="140px" height="140px">
-                        </td>
-                        <td>
-                            <form asp-page-handler="Delete" asp-route-Username="@user.Username">
-                                <input type="image" src="~/Images/trash3.svg" onclick="return confirm('Are you sure you want to delete the User @user.Username (@user.Name) ?');">
-                            </form>
-                            <a asp-page="EditUser" asp-route-Username="@user.Username" asp-route-KeepImage="@true">
-                                <img src="~/Images/pencil-square.svg" alt="Edit">
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-
-        </table>
     </div>
 </div>
 
@@ -449,34 +395,44 @@
                 const accessName = accessLevelNames[item.data.accessLevel];
 
                 column.innerHTML = `
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body text-center">
                         <img src="/Images/MemberImages/${item.data.imageName}" class="card-img-top"/>
                             <h4 class="card-title">${item.data.name}</h4>
                             <div class="row row-cols-1 row-cols-md-2 g-4">
-                                <div>
-                                    <div class="card">
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="card flex-fill" style="height: 100%;">
                                         <p class="card-text"><b>Køn:</b> ${item.data.gender}</p>
                                         <p class="card-text"><b>Fødselsdato:</b> ${item.data.birthDate}</p>
                                     </div>
                                     <br />
-                                    <div class="card">
+                                    <div class="card flex-fill" style="height: 100%;">
+                                        <p class="card-text"><b>Brugernavn:</b> ${item.data.username}</p>
+                                        <p class="card-text"><b>Brugertype:</b> ${accessName}</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="card flex-fill" style="height: 100%;">
                                     <p class="card-text"><b>Telefonnummer:</b> ${item.data.phone}</p>
                                     <p class="card-text"><b>Emailadresse:</b> ${item.data.email}</p>
                                     </div>
                                     <br />
-                                    <div class="card">
+                                    <div class="card flex-fill" style="height: 100%;">
                                     <p class="card-text"><b>Adresse:</b> ${item.data.address}</p>
                                     <p class="card-text"><b>Kommune:</b> ${item.data.homeMunicipality}</p>
                                     </div>
                                 </div>
-                                <div>
-                                    <div class="card">
-                                    <p class="card-text"><b>Brugernavn:</b> ${item.data.username}</p>
-                                    <p class="card-text"><b>Brugertype:</b> ${accessName}</p>
-                                    </div>
-                                </div>
                             </div>
+                            <div class="mt-auto d-flex justify-content-center gap-3">
+                                <form class="m-0" method="post" action="?handler=Delete&Username=${item.data.username}" onsubmit="return confirm('Are you sure you want to delete the User ${item.data.username} (${item.data.name}) ?')">
+                                    <input type="image" src="/Images/trash3.svg">
+                                    <input name="__RequestVerificationToken" type="hidden" value="${tokenValue}" />
+                                </form>
+                                <a class="svg-link m-0" href="/Users/EditUser?Username=${item.data.username}&KeepImage=${keepImage}">
+                                    <img src="/Images/pencil-square.svg" alt="Edit">
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 `;
