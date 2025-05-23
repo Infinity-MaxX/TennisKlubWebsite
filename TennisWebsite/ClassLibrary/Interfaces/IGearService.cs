@@ -10,12 +10,10 @@ public interface IGearService
 {
     bool Status { get; set; }
     Task<bool> AddGear(Gear gear);
-    Task<bool> BookGear(int bookingID, int gearID);
-    //Task<bool> BorrowGear(int id);
-    Task<bool> CheckStatus(int id);
+    Task<bool> BookGear(int bookingID, int gearID, int count);
+    Task<int> CheckStatus(int gearID);
     Task<bool> DeleteGear(int id);
     Task<List<Gear>> GetAllAsync();
     Task<Gear> GetByTypeAsync(string name);
     Task<Gear> GetGearAsync(int id);
-    //Task<bool> ReturnGear(int id);
 }
