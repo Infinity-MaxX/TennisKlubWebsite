@@ -19,7 +19,7 @@ namespace TennisWebsite.Interfaces
         Task<List<Event>> GetEventsByOrganiser(string orgName);
         Task<bool> JoinEvent(int eventID, string userName);
         Task<bool> LeaveEvent(int eventID, string userName);
-        Task<bool> UpdateEvent(string organiser, string name, string description, 
-            string start, string end, int maxParticipants, int minParticipants);
+        public Task<bool> UpdateEvent(int eventID, string organiser, string name, string description, 
+            string start, string end, string type, int maxParticipants, int minParticipants);
     }
 }
