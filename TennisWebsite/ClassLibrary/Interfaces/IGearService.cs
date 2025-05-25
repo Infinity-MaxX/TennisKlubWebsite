@@ -8,7 +8,6 @@ using TennisWebsite.ClassLibrary.Models;
 namespace TennisWebsite.ClassLibrary.Interfaces;
 public interface IGearService
 {
-    bool Status { get; set; }
     Task<bool> AddGear(Gear gear);
     Task<bool> BookGear(int bookingID, int gearID, int count);
     Task<int> CheckStatus(int gearID);
