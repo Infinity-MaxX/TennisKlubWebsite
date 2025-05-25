@@ -31,9 +31,9 @@ namespace TennisWebsite.ClassLibrary.Services
             
         }
         #endregion
-
+         
         #region Methods
-        public async Task<bool> AddGear(Gear gear)
+        public async Task<bool> AddGearAsync(Gear gear)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -64,7 +64,7 @@ namespace TennisWebsite.ClassLibrary.Services
                 }
             }
         }
-        public async Task<bool> BookGear(int bookingID, int gearID, int count)
+        public async Task<bool> BookGearAsync(int bookingID, int gearID, int count)
         {
             int status = await CheckStatus(gearID);
             if (status - count < 0) { return false; }
@@ -98,7 +98,7 @@ namespace TennisWebsite.ClassLibrary.Services
                 }
             }
         }
-        public async Task<int> CheckStatus(int gearID)
+        public async Task<int> CheckStatusAsync(int gearID)
         {
             Gear gear = await GetGearAsync(gearID);
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
@@ -130,7 +130,7 @@ namespace TennisWebsite.ClassLibrary.Services
                 }
             }
         }
-        public async Task<bool> DeleteGear(int id)
+        public async Task<bool> DeleteGearAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
