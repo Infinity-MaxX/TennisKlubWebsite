@@ -66,7 +66,7 @@ namespace TennisWebsite.ClassLibrary.Services
         }
         public async Task<bool> BookGearAsync(int bookingID, int gearID, int count)
         {
-            int status = await CheckStatus(gearID);
+            int status = await CheckStatusAsync(gearID);
             if (status - count < 0) { return false; }
 
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
