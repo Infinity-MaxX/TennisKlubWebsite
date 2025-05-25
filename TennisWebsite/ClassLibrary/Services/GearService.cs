@@ -14,7 +14,7 @@ namespace TennisWebsite.ClassLibrary.Services
         private string queryString = "SELECT * FROM TennisGear";
         private string filterByIdSql = "SELECT * FROM TennisGear WHERE GearID = @ID";
         private string filterByTypeSql = "SELECT * FROM TennisGear WHERE Name = @Name";
-        private string insetBookingGearSql = "INSERT INTO TennisBookedGear Values(@BookingID, @GearID, @Count)";
+        private string insertBookingGearSql = "INSERT INTO TennisBookedGear Values(@BookingID, @GearID, @Count)";
         private string insertSql = "INSERT INTO TennisGear Values(@Name, @Description)";
         private string deleteSql = "DELETE FROM TennisGear WHERE GearID = @ID";
         private string updateSql = "UPDATE TennisGear SET Name = @Name, Description = @Description WHERE GearID = @ID";
@@ -73,7 +73,7 @@ namespace TennisWebsite.ClassLibrary.Services
             {
                 try
                 {
-                    SqlCommand command = new SqlCommand(insetBookingGearSql, connection);
+                    SqlCommand command = new SqlCommand(insertBookingGearSql, connection);
                     command.Parameters.AddWithValue("@BookingID", bookingID);
                     command.Parameters.AddWithValue("@GearID", gearID);
                     command.Parameters.AddWithValue("@Count", count);
