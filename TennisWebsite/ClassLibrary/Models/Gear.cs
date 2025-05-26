@@ -4,19 +4,17 @@
     {
         #region Instances
         private int _id;
-        private bool _isAvailable;
         #endregion
 
         #region Properties
-        public int Count { get; set; }
-        public int ID { get { return _id; } }
+        public int ID 
+        {
+            get { return _id; }
+            private set { _id = value; } 
+        }
         public string Name { get; set; }
         public string? Description { get; set; }
-        public bool Status
-        {
-            get { return _isAvailable; }
-            set { _isAvailable = value; }
-        }
+        public int Count { get; set; }
         #endregion
 
         #region Constructor
@@ -30,13 +28,11 @@
         public Gear(string name, string? description)
         {
             _id++;
-            _isAvailable = true;
             if (null != description) { Description = description; }
         }
         public Gear(int id, string name, string? description)
         {
             _id = id;
-            _isAvailable = true;
             if (null != description) { Description = description; }
         }
         #endregion

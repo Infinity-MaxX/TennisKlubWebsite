@@ -14,6 +14,7 @@ namespace TennisWebsite.ClassLibrary.Services
         private string queryString = "SELECT * FROM TennisGear";
         private string filterByIdSql = "SELECT * FROM TennisGear WHERE GearID = @ID";
         private string filterByTypeSql = "SELECT * FROM TennisGear WHERE Name = @Name";
+        private string insertBookingGearSql = "INSERT INTO TennisBookedGear Values(@BookingID, @GearID, @Count)";
         private string insertSql = "INSERT INTO TennisGear Values(@Name, @Description)";
         private string deleteSql = "DELETE FROM TennisGear WHERE GearID = @ID";
         private string updateSql = "UPDATE TennisGear SET Name = @Name, Description = @Description WHERE GearID = @ID";
@@ -30,9 +31,9 @@ namespace TennisWebsite.ClassLibrary.Services
             
         }
         #endregion
-
+         
         #region Methods
-        public async Task<bool> AddGear(Gear gear)
+        public async Task<bool> AddGearAsync(Gear gear)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -63,52 +64,73 @@ namespace TennisWebsite.ClassLibrary.Services
                 }
             }
         }
-        public async Task<bool> BookGear(int bookingID, int gearID)
+        public async Task<bool> BookGearAsync(int bookingID, int gearID, int count)
         {
-            throw new NotImplementedException();
-        }
-        public async Task<bool> CheckStatus(int id) // not finished
-        {
+            int status = await CheckStatusAsync(gearID);
+            if (status - count < 0) { return false; }
+
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
                 try
                 {
-                SqlCommand command = new SqlCommand(filterByIdSql, connection);
-                command.Parameters.AddWithValue("@GearID", id);
-                await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand(insertBookingGearSql, connection);
+                    command.Parameters.AddWithValue("@BookingID", bookingID);
+                    command.Parameters.AddWithValue("@GearID", gearID);
+                    command.Parameters.AddWithValue("@Count", count);
+                    await connection.OpenAsync();
 
-                int numberOfRows = await command.ExecuteNonQueryAsync();
-
-                return numberOfRows > 0;
-                
-                //foreach (var item in _gearRepo)
-                //{
-                //    if (item.Status == true)
-                //    {
-                //        return true;
-                //    }
-                //    else if (item.Status == false)
-                //    {
-                //        Console.WriteLine("Equipment is unavailable.");
-                //        return false;
-                //    }
-                //}
-            }
-            catch (SqlException sqlExp)
-            {
-                Console.WriteLine("Database error: " + sqlExp.Message);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-                return false;
-            }
-            finally
-            {
-                await connection.CloseAsync();
+                    int numberOfRows = await command.ExecuteNonQueryAsync();
+                    return numberOfRows > 0;
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                    return false;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
             }
         }
-        public async Task<bool> DeleteGear(int id)
+        public async Task<int> CheckStatusAsync(int gearID)
+        {
+            Gear gear = await GetGearAsync(gearID);
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(filterByIdSql, connection);
+                    command.Parameters.AddWithValue("@GearID", gearID);
+                    await connection.OpenAsync();
+
+                    return gear.Count;
+                    //int amount = gear.Count;
+                    //if (amount == 0) { return false; }
+                    //return true;
+                }
+                catch (SqlException sqlExp)
+                {
+                    Console.WriteLine("Database error: " + sqlExp.Message);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                    throw;
+                }
+                finally
+                {
+                    await connection.CloseAsync();
+                }
+            }
+        }
+        public async Task<bool> DeleteGearAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
