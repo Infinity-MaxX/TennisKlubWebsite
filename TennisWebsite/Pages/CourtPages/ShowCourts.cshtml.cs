@@ -39,7 +39,7 @@ namespace TennisWebsite.Pages.CourtPages
             {
                 date = DateOnly.FromDateTime(DateTime.Now);
             }
-            courts = await cs.GetAllCourts();
+            courts = await cs.GetAllCourtsAsync();
             bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
             foreach (Booking b in bookings)
             {
@@ -49,7 +49,7 @@ namespace TennisWebsite.Pages.CourtPages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            courts = await cs.GetAllCourts();
+            courts = await cs.GetAllCourtsAsync();
             bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
             foreach (Booking b in bookings)
             {
@@ -61,7 +61,7 @@ namespace TennisWebsite.Pages.CourtPages
         public async Task<IActionResult> OnPostPreviousDayAsync()
         {
             date = date.AddDays(-1);
-            courts = await cs.GetAllCourts();
+            courts = await cs.GetAllCourtsAsync();
             bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
             foreach (Booking b in bookings)
             {
@@ -73,7 +73,7 @@ namespace TennisWebsite.Pages.CourtPages
         public async Task<IActionResult> OnPostNextDayAsync()
         {
             date = date.AddDays(1);
-            courts = await cs.GetAllCourts();
+            courts = await cs.GetAllCourtsAsync();
             bookings = await bs.GetBookingsByDatesAsync(date.ToDateTime(new TimeOnly()), date.ToDateTime(new TimeOnly()).AddDays(1));
             foreach (Booking b in bookings)
             {
