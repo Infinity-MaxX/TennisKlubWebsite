@@ -89,17 +89,13 @@ namespace TennisWebsite.ClassLibrary.Helpers
 
                 penalty += (splitQuery[0].ToLower()[0] == splitToCompare[0].ToLower()[0]) ? 0 : 4;
 
-                if (splitQuery[0].Length < 3)
+                int startLetterPenalty = 4;
+                for (int i = 0; i < (Math.Min(splitQuery[0].Length, Math.Min(splitToCompare[0].Length, startLetterPenalty))); i++)
                 {
-                    for (int i = 0; i < (Math.Min(splitQuery[0].Length, splitToCompare[0].Length)); i++)
-                    {
-                        penalty += (splitQuery[0].ToLower()[i] == splitToCompare[0].ToLower()[i]) ? 0 : 4 - i;
-                    }
-
+                    penalty += (splitQuery[0].ToLower()[i] == splitToCompare[0].ToLower()[i]) ? 0 : startLetterPenalty - i;
                 }
 
                 int totalScore = 0;
-
 
                 for(int i = 0; i < splitQuery.Length; i++)
                 {
@@ -112,7 +108,7 @@ namespace TennisWebsite.ClassLibrary.Helpers
                         {
                             bestScoreForWord[j] = score;
                         }
-                        else score += bestScoreForWord[j] + 1 - score;
+                        else score += score + 1 - bestScoreForWord[j];
 
                         if (bestScoreValue > score) bestScoreValue = score;
                     }
