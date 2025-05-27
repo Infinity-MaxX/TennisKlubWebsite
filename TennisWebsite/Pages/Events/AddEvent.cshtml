@@ -2,3 +2,48 @@
 @model TennisWebsite.Pages.Events.AddEventModel
 @{
 }
+<div class="container Container-Background">
+    <div>
+        <form method="post">
+
+            <div class="form-floating mt-2 mb-2">
+                <input asp-for="NewEvent.Name" class="form-control" required="true" id="EventName" placeholder="" />
+                <label for="EventName">Event navn</label>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input asp-for="NewEvent.Description" class="form-control" required="true" id="Description" placeholder="" />
+                <label for="Description">Event beskrivelse</label>
+            </div>
+
+            <div class="form-floating mb-2">
+                <input asp-for="NewEvent.Type" class="form-control" required="true" id="Type" placeholder="" />
+                <label for="Type">Bane navn</label>
+            </div>
+
+            <div class="form-group mb-2">
+                <label asp-for="NewEvent.MinParticipants"></label>
+                <input asp-for="NewEvent.MinParticipants" type="number" required />
+            </div>
+
+            <div class="form-group mb-2">
+                <label asp-for="NewEvent.MaxParticipants"></label>
+                <input asp-for="NewEvent.MaxParticipants" type="number" required />
+            </div>
+
+            <div class="form-group mb-2">
+                <label asp-for="NewEvent.Start"></label>
+                <input asp-for="NewEvent.Start" type="date" />
+            </div>
+
+            <div class="form-group mb-2">
+                <label asp-for="NewEvent.End"></label>
+                <input asp-for="NewEvent.End" type="date" />
+            </div>
+
+            <div class="formgroup mt-2 mb-2">
+                <input type="submit" value="opræt Event" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
