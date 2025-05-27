@@ -17,7 +17,7 @@ namespace TennisWebsite.Models
         #endregion
 
         #region Properties
-        public int ID { get { return _id; } private set {_id = value; } }
+        public int ID { get { return _id; } set {_id = value; } }
         public int MaxParticipants { get; set; }
         public int MinParticipants { get; set; }
         public string Organiser { get; set; }
@@ -30,6 +30,12 @@ namespace TennisWebsite.Models
 
         #region Constructors
         // default constructor
+        public Event()
+        {
+
+        }
+
+
         public Event(int id)
         {
             ID = id;

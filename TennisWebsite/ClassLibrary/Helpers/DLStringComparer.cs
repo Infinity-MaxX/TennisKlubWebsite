@@ -73,11 +73,11 @@ namespace TennisWebsite.ClassLibrary.Helpers
         //Example selector x => x.Username, if it is a user
         {
             List<DLStringScoreObject<T>> results = new List<DLStringScoreObject<T>>();
+            string[] splitQuery = query.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             foreach (T matchable in matchables)
             {
                 string toCompare = selector(matchable);
                 string[] splitToCompare =toCompare.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                string[] splitQuery = query.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
                 int[] bestScoreForWord = new int[splitToCompare.Length];
                 for(int i = 0; i < bestScoreForWord.Length; i++)
@@ -89,17 +89,13 @@ namespace TennisWebsite.ClassLibrary.Helpers
 
                 penalty += (splitQuery[0].ToLower()[0] == splitToCompare[0].ToLower()[0]) ? 0 : 4;
 
-                if (splitQuery[0].Length < 3)
+                int startLetterPenalty = 4;
+                for (int i = 0; i < (Math.Min(splitQuery[0].Length, Math.Min(splitToCompare[0].Length, startLetterPenalty))); i++)
                 {
-                    for (int i = 0; i < (Math.Min(splitQuery[0].Length, splitToCompare[0].Length)); i++)
-                    {
-                        penalty += (splitQuery[0].ToLower()[i] == splitToCompare[0].ToLower()[i]) ? 0 : 4 - i;
-                    }
-
+                    penalty += (splitQuery[0].ToLower()[i] == splitToCompare[0].ToLower()[i]) ? 0 : startLetterPenalty - i;
                 }
 
                 int totalScore = 0;
-
 
                 for(int i = 0; i < splitQuery.Length; i++)
                 {
@@ -107,12 +103,12 @@ namespace TennisWebsite.ClassLibrary.Helpers
 
                     for(int j = 0; j < splitToCompare.Length; j++)
                     {
-                        int score = Compare(splitToCompare[j], splitQuery[i]) + Math.Max(0, (int)Math.Pow(Math.Abs(splitToCompare[j].Length - splitQuery[i].Length), 1.5));
+                        int score = Compare(splitToCompare[j], splitQuery[i]) + Math.Max(0, (int)Math.Pow(Math.Abs(splitToCompare[j].Length - splitQuery[i].Length), 1.1));
                         if (bestScoreForWord[j] > score)
                         {
                             bestScoreForWord[j] = score;
                         }
-                        else score += bestScoreForWord[j] + 1 - score;
+                        else score += score + 1 - bestScoreForWord[j];
 
                         if (bestScoreValue > score) bestScoreValue = score;
                     }
