@@ -7,10 +7,14 @@
         #endregion
 
         #region Properties
-        public int Count { get; set; }
-        public int ID { get { return _id; } }
+        public int ID 
+        {
+            get { return _id; }
+            private set { _id = value; } 
+        }
         public string Name { get; set; }
         public string? Description { get; set; }
+        public int Count { get; set; }
         #endregion
 
         #region Constructor

@@ -75,7 +75,7 @@ namespace TennisLibrary.Services
             }
         }
 
-        public async Task<List<Court>> GetAllCourts()
+        public async Task<List<Court>> GetAllCourtsAsync()
         {
             List<Court> courts = new List<Court>();
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))

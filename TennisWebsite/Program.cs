@@ -1,5 +1,7 @@
 using TennisLibrary.Interfaces;
 using TennisLibrary.Services;
+using TennisWebsite.Interfaces;
+using TennisWebsite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICourtService, CourtService>();
 builder.Services.AddTransient<IBlogService, BlogService>();
 builder.Services.AddTransient<IBookingService, BookingService>();
+builder.Services.AddTransient<IEventService, EventService>();
 
 var app = builder.Build();
 

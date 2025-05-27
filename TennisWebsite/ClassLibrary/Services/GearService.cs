@@ -14,7 +14,7 @@ namespace TennisWebsite.ClassLibrary.Services
         private string queryString = "SELECT * FROM TennisGear";
         private string filterByIdSql = "SELECT * FROM TennisGear WHERE GearID = @ID";
         private string filterByTypeSql = "SELECT * FROM TennisGear WHERE Name = @Name";
-        private string insetBookingGearSql = "INSERT INTO TennisBookedGear Values(@BookingID, @GearID, @Count)";
+        private string insertBookingGearSql = "INSERT INTO TennisBookedGear Values(@BookingID, @GearID, @Count)";
         private string insertSql = "INSERT INTO TennisGear Values(@Name, @Description)";
         private string deleteSql = "DELETE FROM TennisGear WHERE GearID = @ID";
         private string updateSql = "UPDATE TennisGear SET Name = @Name, Description = @Description WHERE GearID = @ID";
@@ -31,9 +31,9 @@ namespace TennisWebsite.ClassLibrary.Services
             
         }
         #endregion
-
+         
         #region Methods
-        public async Task<bool> AddGear(Gear gear)
+        public async Task<bool> AddGearAsync(Gear gear)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -64,16 +64,16 @@ namespace TennisWebsite.ClassLibrary.Services
                 }
             }
         }
-        public async Task<bool> BookGear(int bookingID, int gearID, int count)
+        public async Task<bool> BookGearAsync(int bookingID, int gearID, int count)
         {
-            int status = await CheckStatus(gearID);
+            int status = await CheckStatusAsync(gearID);
             if (status - count < 0) { return false; }
 
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
                 try
                 {
-                    SqlCommand command = new SqlCommand(insetBookingGearSql, connection);
+                    SqlCommand command = new SqlCommand(insertBookingGearSql, connection);
                     command.Parameters.AddWithValue("@BookingID", bookingID);
                     command.Parameters.AddWithValue("@GearID", gearID);
                     command.Parameters.AddWithValue("@Count", count);
@@ -98,7 +98,7 @@ namespace TennisWebsite.ClassLibrary.Services
                 }
             }
         }
-        public async Task<int> CheckStatus(int gearID)
+        public async Task<int> CheckStatusAsync(int gearID)
         {
             Gear gear = await GetGearAsync(gearID);
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
@@ -130,7 +130,7 @@ namespace TennisWebsite.ClassLibrary.Services
                 }
             }
         }
-        public async Task<bool> DeleteGear(int id)
+        public async Task<bool> DeleteGearAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {

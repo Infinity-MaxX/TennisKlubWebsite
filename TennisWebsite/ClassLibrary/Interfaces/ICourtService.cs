@@ -12,7 +12,7 @@ namespace TennisLibrary.Interfaces
         Task<bool> CreateCourtAsync(Court court);
         Task<Court> GetCourtAsync(string name);
         Task<List<Court>> GetCourtsOfTypeAsync(string type);
-        Task<List<Court>> GetAllCourts();
+        Task<List<Court>> GetAllCourtsAsync();
         Task<bool> UpdateCourtAsync(string oldCourt, Court newCourt);
         Task<bool> DeleteCourtAsync(string name);
     }

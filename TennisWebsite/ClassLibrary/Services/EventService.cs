@@ -142,7 +142,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<Event> GetEvent(int id)
+        public async Task<Event> GetEventAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -176,7 +176,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<List<Event>> GetEventsByType(string type)
+        public async Task<List<Event>> GetEventsByTypeAsync(string type)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -211,7 +211,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<List<Event>> GetEventsByOrganiser(string orgName)
+        public async Task<List<Event>> GetEventsByOrganiserAsync(string orgName)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -273,7 +273,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<bool> JoinEvent(int eventID, string userName)
+        public async Task<bool> JoinEventAsync(int eventID, string userName)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -293,7 +293,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<bool> LeaveEvent(int eventID, string userName)
+        public async Task<bool> LeaveEventAsync(int eventID, string userName)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -315,7 +315,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<bool> UpdateEvent(int eventID, string organiser, string name, string description, string start, string end, string type,int maxParticipants, int minParticipants)
+        public async Task<bool> UpdateEventAsync(int eventID, string organiser, string name, string description, string start, string end, string type,int maxParticipants, int minParticipants)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
