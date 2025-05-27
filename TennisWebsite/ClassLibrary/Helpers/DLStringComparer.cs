@@ -103,7 +103,7 @@ namespace TennisWebsite.ClassLibrary.Helpers
 
                     for(int j = 0; j < splitToCompare.Length; j++)
                     {
-                        int score = Compare(splitToCompare[j], splitQuery[i]) + Math.Max(0, (int)Math.Pow(Math.Abs(splitToCompare[j].Length - splitQuery[i].Length), 1.5));
+                        int score = Compare(splitToCompare[j], splitQuery[i]) + Math.Max(0, (int)Math.Pow(Math.Abs(splitToCompare[j].Length - splitQuery[i].Length), 1.1));
                         if (bestScoreForWord[j] > score)
                         {
                             bestScoreForWord[j] = score;
