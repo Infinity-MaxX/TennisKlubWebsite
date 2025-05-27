@@ -24,8 +24,9 @@ namespace TennisWebsite.Pages.Events
 
         public async Task<IActionResult> OnPostAsync()
         {
+            NewEvent.Organiser = HttpContext.Session.GetString("Username");
             await _eventService.CreateEventAsync(NewEvent);
-            return RedirectToPage("/Pages/Events/ShowEvents");
+            return RedirectToPage("/index");
         }
     }
 }
