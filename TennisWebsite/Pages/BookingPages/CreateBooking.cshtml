@@ -8,7 +8,9 @@
 <div class="container p-4 Container-Background">
     <div class="w-75">
         <form method="post" asp-page-handler="Create">
-
+            <div class="mb-3">
+                <input asp-for="@Model.Admin" class="form-control" readonly hidden />
+            </div>
             @if (Model.Admin == false)
             {
                 <div class="mb-3">
@@ -71,7 +73,7 @@
 
                 <div class="mb-3">
                     <label asp-for="booking.Type" class="control-label">Booking type</label>
-                    <select class="form-select" aria-label="Default select example" asp-for="booking.Court.Name">
+                    <select class="form-select" aria-label="Default select example" asp-for="booking.Type">
                         <option selected>Admin</option>
                         <option>Booking</option>
                         <option>Træning</option>

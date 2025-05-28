@@ -73,11 +73,11 @@ namespace TennisWebsite.ClassLibrary.Helpers
         //Example selector x => x.Username, if it is a user
         {
             List<DLStringScoreObject<T>> results = new List<DLStringScoreObject<T>>();
+            string[] splitQuery = query.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             foreach (T matchable in matchables)
             {
                 string toCompare = selector(matchable);
                 string[] splitToCompare =toCompare.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                string[] splitQuery = query.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
                 int[] bestScoreForWord = new int[splitToCompare.Length];
                 for(int i = 0; i < bestScoreForWord.Length; i++)

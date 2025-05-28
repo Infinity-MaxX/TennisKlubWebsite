@@ -25,10 +25,13 @@ namespace TennisWebsite.Pages.BookingPages
         [BindProperty]
         public string bookingType { get; set; }
 
-        private User Player1;
+        [BindProperty]
+        public bool Admin { get; set; }
+
+
         private bool ErrorHappened;
 
-        public bool Admin = false;
+        
         public int Error = 0;
         
         public List<User> Users = new List<User>();
@@ -106,13 +109,21 @@ namespace TennisWebsite.Pages.BookingPages
         {
             ModelState.ClearValidationState("player1");
             ModelState.ClearValidationState("player2");
+            Console.WriteLine(player2);
             ErrorHappened = false;
             if (player2 != null && booking.Court != null && booking.Start >= DateTime.Now && booking.End > booking.Start)
             {
-                string player1UN = player1.Split('(')[1];
-                string player2UN = player2.Split('(')[1];
-                User Player1 = await us.GetUserAsAdminAsync(player1UN.Split(')')[0]);
-                User Player2 = await us.GetUserAsAdminAsync(player2UN.Split(')')[0]);
+                User Player1;
+                if (Admin == false)
+                {
+                    string player1UN = player1.Split('(')[1];
+                    Player1 = await us.GetUserAsAdminAsync(player1UN.Split(')')[0]);
+                }
+                else
+                {
+                    Player1 = await us.GetUserAsAdminAsync(player1);
+                }
+                User Player2 = await us.GetUserAsAdminAsync(player2);
                 
                 if (Player1 == null)
                 {
@@ -182,7 +193,14 @@ namespace TennisWebsite.Pages.BookingPages
                 }
                 return RedirectToPage("/index");
             }
-            return RedirectToPage("CreateBooking", new { time = booking.Start.ToString(), court = booking.Court.Name });
+            if (Admin == false)
+            {
+                return RedirectToPage("CreateBooking", new { time = booking.Start.ToString(), court = booking.Court.Name });
+            }
+            else
+            {
+                return RedirectToPage("CreateBooking", new {time = "", court = booking.Court.Name });
+            }
         }
     }
 }

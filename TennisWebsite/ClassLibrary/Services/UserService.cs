@@ -113,7 +113,7 @@ namespace TennisLibrary.Services
 
 
 
-                    while (reader.Read())
+                    if(reader.Read())
                     {
                         string imagePath = reader.GetString("ImagePath");
                         string name = reader.GetString("Name");
