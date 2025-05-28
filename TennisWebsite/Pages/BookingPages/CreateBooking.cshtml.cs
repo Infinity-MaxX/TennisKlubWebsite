@@ -65,7 +65,7 @@ namespace TennisWebsite.Pages.BookingPages
             cs = new CourtService();
             booking= new Booking();
             us =new UserService();
-            Courts = await cs.GetAllCourts();
+            Courts = await cs.GetAllCourtsAsync();
             User Player1 = await us.GetUserAsAdminAsync(HttpContext.Session.GetString("Username"));
             Admin = false;
             Error = 0;

@@ -113,7 +113,7 @@ namespace TennisLibrary.Services
 
 
 
-                    while (reader.Read())
+                    if(reader.Read())
                     {
                         string imagePath = reader.GetString("ImagePath");
                         string name = reader.GetString("Name");
@@ -175,7 +175,7 @@ namespace TennisLibrary.Services
             return results;
         }
 
-        public async Task<List<User>> GetAllUsersFilteredAsync(char[] genders, double? minAge, double? maxAge)
+        public async Task<List<User>> GetAllUsersFilteredAsync(List<char> genders, double? minAge, double? maxAge)
         {
             if (genders.IsNullOrEmpty() && minAge == null && maxAge == null) return await GetAllUsersAsync();
             string queryForFilter = "Select * From TennisUser Where ";
@@ -200,10 +200,10 @@ namespace TennisLibrary.Services
                     queryForFilter += " AND";
                 }
                 queryForFilter += "(";
-                for(int i = 0; i<genders.Length; i++)
+                for(int i = 0; i<genders.Count; i++)
                 {
                     queryForFilter += " @gender" + i + " = Gender";
-                    if (i + 1 != genders.Length) queryForFilter += " OR";
+                    if (i + 1 != genders.Count) queryForFilter += " OR";
                 }
                 queryForFilter += ")";
             }
@@ -223,7 +223,7 @@ namespace TennisLibrary.Services
                     if (maxAge != null) searchCommand.Parameters.AddWithValue("@oldestAcceptedBirthday", DateTime.Now.AddDays(-(double)(maxAge * 365.25)));
                     if (!genders.IsNullOrEmpty())
                     {
-                        for (int i = 0; i < genders.Length; i++)
+                        for (int i = 0; i < genders.Count; i++)
                         {
                             searchCommand.Parameters.AddWithValue("@gender" + i, genders[i]);
                         }

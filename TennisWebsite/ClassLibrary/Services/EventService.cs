@@ -25,6 +25,11 @@ namespace TennisWebsite.Services
         private string deleteSql = "DELETE FROM TENNISEVENT WHERE EventID = @Id";
         private string selectSql = "SELECT * From TennisEvent";
         private string selectAttendeeSql = "SELECT * FROM TennisEvent";
+        private string insertAttendeeSql = "Insert Into TennisAttendees (@EventID, @Username";
+        private string deleteAttendeeSql = "Delete from TennisAttendees where Username = @Username and EventID = @eventID";
+        private string updateEventSql = "Update TennisEvent Set " +
+            "OrgUsername = @orgUser, StartDate = @start, EndDate = @end, EventType = @type, Name = @name, Description = @des, " +
+            "MinAttendees = @min, MaxAttendees = @max where EventID = @id";
         #endregion
 
         #region Constructors
@@ -137,7 +142,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<Event> GetEvent(int id)
+        public async Task<Event> GetEventAsync(int id)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -171,7 +176,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<List<Event>> GetEventsByType(string type)
+        public async Task<List<Event>> GetEventsByTypeAsync(string type)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -206,7 +211,7 @@ namespace TennisWebsite.Services
             }
         }
 
-        public async Task<List<Event>> GetEventsByOrganiser(string orgName)
+        public async Task<List<Event>> GetEventsByOrganiserAsync(string orgName)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
             {
@@ -268,19 +273,74 @@ namespace TennisWebsite.Services
             }
         }
 
-        public Task<bool> JoinEvent(int eventID, string userName)
+        public async Task<bool> JoinEventAsync(int eventID, string userName)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand(insertAttendeeSql, connection);
+                    command.Parameters.AddWithValue("@EventID", eventID);
+                    command.Parameters.AddWithValue("@Username", userName);
+
+                    return 0 < await command.ExecuteNonQueryAsync();
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
         }
 
-        public Task<bool> LeaveEvent(int eventID, string userName)
+        public async Task<bool> LeaveEventAsync(int eventID, string userName)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand(deleteAttendeeSql, connection);
+
+                    command.Parameters.AddWithValue("@eventID", eventID);
+                    command.Parameters.AddWithValue("@Username", userName);
+
+                    return 0 < await command.ExecuteNonQueryAsync();
+                }
+
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
         }
 
-        public Task<bool> UpdateEvent(string organiser, string name, string description, string start, string end, int maxParticipants, int minParticipants)
+        public async Task<bool> UpdateEventAsync(int eventID, string organiser, string name, string description, string start, string end, string type,int maxParticipants, int minParticipants)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(ConnectionManager.ConnectionString))
+            {
+                try
+                {
+                    await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand(updateEventSql, connection);
+
+                    command.Parameters.AddWithValue("@orgUser", organiser);
+                    command.Parameters.AddWithValue("@start", start);
+                    command.Parameters.AddWithValue("@end", end);
+                    command.Parameters.AddWithValue("@type", type);
+                    command.Parameters.AddWithValue("@name", name);
+                    command.Parameters.AddWithValue("@des", description);
+                    command.Parameters.AddWithValue("@min", minParticipants);
+                    command.Parameters.AddWithValue("@max", maxParticipants);
+                    command.Parameters.AddWithValue("@id", eventID);
+
+                    return 0 < await command.ExecuteNonQueryAsync();
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
         }
         #endregion
     }
