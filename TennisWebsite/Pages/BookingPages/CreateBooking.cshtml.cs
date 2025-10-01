@@ -69,11 +69,14 @@ namespace TennisWebsite.Pages.BookingPages
             User Player1 = await us.GetUserAsAdminAsync(HttpContext.Session.GetString("Username"));
             Admin = false;
             Error = 0;
-
+            
+            //tjekker om brugeren er logget ind
             if (Player1 != null)
             {
+                //tjekker om det er en admin booking
                 if (time.IsNullOrEmpty())
                 {
+                    //tjekker om brugeren har adminstrator rettigheder
                     if (Player1.AccessLevel >= AccessLevel.Admin)
                     {
                         booking.Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, 0, 0);
@@ -81,12 +84,15 @@ namespace TennisWebsite.Pages.BookingPages
                         booking.Court = await cs.GetCourtAsync(court);
                         Admin = true;
                     }
+                    
+                    //giver fejlmeddelse 1
                     else
                     {
                         Error = 1;
                     }
                 }
 
+                //laver siden som en normal booking
                 else
                 {
                     DateTime tempTime = DateTime.Parse(time);
@@ -99,6 +105,8 @@ namespace TennisWebsite.Pages.BookingPages
                     Page();
                 }
             }
+
+            //giver fejlmeddelse 2
             else
             {
                 Error = 2;

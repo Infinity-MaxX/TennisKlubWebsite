@@ -13,12 +13,14 @@
             </div>
             @if (Model.Admin == false)
             {
+                //Player 1
                 <div class="mb-3">
                     <label asp-for="player1" class="control-label"> Spiller 1 </label>
                     <input asp-for="player1" class="form-control" readonly required />
                     <span asp-validation-for="player1" class="text-danger"></span>
                 </div>
 
+                //Player 2
                 <div class="dldropdown">
                     <label asp-for="player2" class="control-label"> Spiller2 </label>
                     <input class="dlinput form-control" id="player2QueryField" type="text" oninput="searchFunc(player2QueryField.value, 'player2DropDown', 'player2QueryField', 'player2UsernameField')" />
@@ -28,20 +30,25 @@
                     <span asp-validation-for="player2" class="text-danger"></span>
                 </div>
 
+                //Court
                 <div class="mb-3">
                     <label asp-for="booking.Court.Name" class="control-label"> Bane </label>
                     <input asp-for="booking.Court.Name" class="form-control" readonly required />
                 </div>
 
+                //Starttid
                 <div class="mb-3">
                     <label asp-for="booking.Start" class="control-label"> Start tid </label>
                     <input asp-for="booking.Start" class="form-control" readonly required />
                 </div>
 
+                //Sluttid
                 <div class="mb-3">
                     <label asp-for="booking.End" class="control-label"> Slut tid </label>
                     <input asp-for="booking.End" class="form-control" readonly required />
                 </div>
+
+                //Booking type
                 <div class="mb-3">
                     <input asp-for="booking.Type" class="form-control" readonly hidden/>
                 </div>
@@ -49,6 +56,7 @@
             
             @if (Model.Admin)
             {
+                //Player 1
                 <div class="dldropdown">
                     <label asp-for="booking.Player1" class="control-label"> Spiller 1</label>
                     <br />
@@ -57,9 +65,11 @@
 
                     <div id="player1DropDown" class="dldropdown-content">
                     </div>
-                    <span asp-validation-for="player1" class="text-danger"></span>
+                    <span asp-validation-for="player1" class="text-danger"></span>  
+                    <br />
                 </div>
-                <br />
+
+                //Player 2
                 <div class="dldropdown">
                     <label asp-for="booking.Player2" class="control-label"> Spiller 2</label>
                     <br />
@@ -71,6 +81,7 @@
                     <span asp-validation-for="player2" class="text-danger"></span>
                 </div>
 
+                //Booking type
                 <div class="mb-3">
                     <label asp-for="booking.Type" class="control-label">Booking type</label>
                     <select class="form-select" aria-label="Default select example" asp-for="booking.Type">
@@ -83,6 +94,7 @@
                     <span asp-validation-for="booking.Type" class="text-danger"></span>
                 </div>
 
+                //Court
                 <div class="mb-3">
                     <label asp-for="booking.Court.Name" class="control-label"> Bane</label>
                     <select class="form-select" aria-label="Default select example" asp-for="booking.Court.Name">
@@ -100,12 +112,14 @@
                     <span asp-validation-for="booking.Court.Name" class="text-danger"></span>
                 </div>
 
+                //Starttid
                 <div class="mb-3">
                     <label asp-for="booking.Start" class="control-label"> Start tid </label>
                     <input asp-for="booking.Start" class="form-control" required />
                     <span asp-validation-for="booking.Start" class="text-danger"></span>
                 </div>
 
+                //Sluttid
                 <div class="mb-3">
                     <label asp-for="booking.End" class="control-label"> Slut tid </label>
                     <input asp-for="booking.End" class="form-control" required />
