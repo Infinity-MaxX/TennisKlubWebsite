@@ -6,6 +6,23 @@
 
 ## Web funktionalitet
 
+
+### Administration / Log-in
+
+
+### Brugerliste
+
+
+### Baner
+
+
+### Booking
+
+
+### Blog
+
+
 ### Billeder
+
 
 ## Læringer
