@@ -6,5 +6,6 @@
 
 ## Web funktionalitet
 
+### Billeder
 
-## Hvad jeg lærte
+## Læringer
